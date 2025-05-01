@@ -10,10 +10,10 @@
 #NetWalk td {
     padding: 0;
     position: relative;
-    line-height: 1;
 
     width: 1ch;
     height: 1em;
+    overflow: hidden;
 }
 
 #NetWalk div.emoji {
