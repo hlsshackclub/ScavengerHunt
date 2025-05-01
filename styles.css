@@ -19,3 +19,15 @@ body {
     padding: 0;
     font-family: 'Times New Roman', Times, serif;
 }
+
+.terminal {
+    display: none;
+}
+
+.cyaHeading {
+    color: cyan;
+}
+
+.cyaContent {
+    display: none;
+}
