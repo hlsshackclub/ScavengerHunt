@@ -38,7 +38,7 @@ p {
 }
 
 #NetWalk div.emoji {
-    font-size: 8px;
+    font-size: 7px;
 
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -55,4 +55,12 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#NetWalk div.gray {
+    color: gray
+}
+
+#NetWalk div.blue {
+    color: lightblue
 }
