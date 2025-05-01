@@ -25,7 +25,8 @@ p {
 }
 
 #NetWalk table {
-    border-collapse: collapse
+    border-collapse: collapse;
+    font-size: 80px;
 }
 
 #NetWalk td {
@@ -38,8 +39,7 @@ p {
 }
 
 #NetWalk div.emoji {
-    font-size: 7px;
-
+    font-size: 28px;
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     display: flex;
@@ -49,7 +49,6 @@ p {
 }
 
 #NetWalk div.not-emoji {
-    font-size: 20px;
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     display: flex;
@@ -58,16 +57,31 @@ p {
 }
 
 #NetWalk div.gray {
-    color: gray
+    color: gray;
 }
 
 #NetWalk div.blue {
-    color: lightblue
+    color: lightblue;
     font-family: 'Times New Roman', Times, serif;
 }
 
-.terminal {
+#NetWalk {
     display: none;
+}
+
+#terminalContainer {
+    display: none;
+}
+
+#terminalBox {
+    background-color: black;
+    color: white;
+    border: 0;
+    outline: none;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
 }
 
 .cyaHeading {

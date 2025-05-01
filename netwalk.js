@@ -3,6 +3,16 @@ window.onload = function () {
     onloads.forEach(fn => fn())
 };
 
+function openNetWalk() {
+    const netwalk = document.getElementById("NetWalk");
+
+    if (netwalk.style.display === "none") {
+        netwalk.style.display = "block";
+    } else {
+        netwalk.style.display = "none";
+    }
+}
+
 function isSubset(subset, superset, compareFn) {
     outer: for (const a of subset) {
         for (const b of superset) {

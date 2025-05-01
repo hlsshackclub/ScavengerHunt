@@ -7,9 +7,9 @@
     <script src="cya.js"></script>
 </head>
 <body class="prevent-select">
-    <div class="cya">{HELLO} content wooo {button@test(this)} {button2@test(this)}</div>
+    <div class="cya">{HELLO} content wooo {Terminal@openTerminal()} {NetWalk@openNetWalk()}</div>
     <div class="cya">{HELLO2} contenklvlvndt wooo</div>
-    <div class="terminal">
+    <div id="terminalContainer">
         <p id="terminal"></p>
         <form action="javascript:;" onsubmit=" enter( this ) ">
             <label>[root@HLSS]$ </label>
