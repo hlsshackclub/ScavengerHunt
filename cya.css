@@ -1,0 +1,19 @@
+.cyaHeading {
+    color: var(--button-color-default);;
+    background-color: var(--button-highlight-color-default);
+}
+
+.cyaContent {
+    display: none;
+}
+
+.cyaButton:hover {
+    background-color: var(--button-highlight-color-highlighted);
+    color: var(--button-color-highlighted);
+}
+
+.cyaButton {
+    background-color: var(--button-highlight-color-default);
+    color: var(--button-color-default);
+    display: inline;
+}
