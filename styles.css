@@ -12,6 +12,7 @@
     --font-size-default: 20px;
     --font-size-emoji: 7px;
     --font-family-default: monospace;
+    --line-height-default: 1.175;
 }
 
 
@@ -20,7 +21,6 @@ body {
     color: var(--text-color-default);
     font-size: var(--font-size-default);
     font-family: var(--font-family-default);
-    line-height: 100%;
     margin: 0;
     padding: 0;
 }

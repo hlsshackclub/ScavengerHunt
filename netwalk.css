@@ -12,7 +12,7 @@
     position: relative;
 
     width: 1ch;
-    height: 1em;
+    height: calc(1em * var(--line-height-default));
     overflow: hidden;
 }
 
