@@ -1,8 +1,25 @@
+:root {
+    --background-color-default: black;
+    --text-color-default: white;
+    --text-color-highlighted: black;
+    --highlight-color-default: black;
+    --highlight-color-highlighted: white;
+    --button-color-default: black;
+    --button-color-highlighted: white;
+    --button-highlight-color-default: white;
+    --button-highlight-color-highlighted: black;
+    --not-important-color: gray;
+    --font-size-default: 20px;
+    --font-size-emoji: 7px;
+    --font-family-default: monospace;
+}
+
+
 body {
-    background-color: black;
-    color: white;
-    font-size: 20px;
-    font-family: monospace;
+    background-color: var(--background-color-default);
+    color: var(--text-color-default);
+    font-size: var(--font-size-default);
+    font-family: var(--font-size-default);
     line-height: 100%;
     margin: 0;
     padding: 0;
@@ -24,11 +41,11 @@ p {
 
 #NetWalk table {
     border-collapse: collapse;
-    font-size: 80px;
+    font-size: calc(4 * var(--font-size-default));
 }
 
 #NetWalk td:hover {
-    background-color: lightcyan;
+    background-color: var(--highlight-color-highlighted);
 }
 
 #NetWalk td {
@@ -41,9 +58,12 @@ p {
 }
 
 #NetWalk div.emoji {
-    font-size: 28px;
+    font-size: calc(4 * var(--font-size-emoji));
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,19 +72,22 @@ p {
 
 #NetWalk div.not-emoji {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 #NetWalk div.gray {
-    color: gray;
+    color: var(--not-important-color);
 }
 
 #NetWalk div.blue {
     color: lightblue;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: var(--font-family-default);
 }
 
 #netwalkContainer {
@@ -76,19 +99,19 @@ p {
 }
 
 #terminalBox {
-    background-color: black;
-    color: white;
+    background-color: var(--background-color-default);
+    color: var(--text-color-default);
     border: 0;
     outline: none;
-    font-size: 20px;
+    font-size: var(--font-size-default);
     margin: 0;
     padding: 0;
-    font-family: monospace;
+    font-family: var(--font-family-default);
 }
 
 .cyaHeading {
-    color: black;
-    background-color: white;
+    color: var(--button-color-default);;
+    background-color: var(--button-highlight-color-default);
 }
 
 .cyaContent {
@@ -96,12 +119,12 @@ p {
 }
 
 .cyaButton:hover {
-    background-color: black;
-    color: white;
+    background-color: var(--button-highlight-color-highlighted);
+    color: var(--button-color-highlighted);
 }
 
 .cyaButton {
-    background-color: white;
-    color: black;
+    background-color: var(--button-highlight-color-default);
+    color: var(--button-color-default);
     display: inline;
 }
