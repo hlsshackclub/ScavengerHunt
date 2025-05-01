@@ -19,7 +19,7 @@ body {
     background-color: var(--background-color-default);
     color: var(--text-color-default);
     font-size: var(--font-size-default);
-    font-family: var(--font-size-default);
+    font-family: var(--font-family-default);
     line-height: 100%;
     margin: 0;
     padding: 0;
