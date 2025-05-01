@@ -1,5 +1,9 @@
 #terminalContainer {
-    display: none;
+    /* display: none; */
+    font-size: var(--font-size-default);
+    font-family: var(--font-family-default);
+    margin: 0;
+    padding: 0;
 }
 
 #terminalBox {
