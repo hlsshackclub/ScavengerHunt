@@ -2,21 +2,67 @@ body {
     background-color: black;
     color: white;
     font-size: 20px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: monospace
 }
 
-#terminal {
-    margin: 0;
-}
-
-#terminalBox {
-    background-color: black;
-    color: white;
-    border: 0;
-    outline: none;
-    font-size: 20px;
-    margin: 0;
+div {
     padding: 0;
+    margin: 0;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+.prevent-select {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
+}
+
+#NetWalk table {
+    border-collapse: collapse
+}
+
+#NetWalk td {
+    padding: 0;
+    position: relative;
+    line-height: 1;
+
+    width: 1ch;
+    height: 1em;
+}
+
+#NetWalk div.emoji {
+    font-size: 7px;
+
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+#NetWalk div.not-emoji {
+    font-size: 20px;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#NetWalk div.gray {
+    color: gray
+}
+
+#NetWalk div.blue {
+    color: lightblue
     font-family: 'Times New Roman', Times, serif;
 }
 
