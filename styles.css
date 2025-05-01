@@ -2,12 +2,10 @@ body {
     background-color: black;
     color: white;
     font-size: 20px;
-    font-family: monospace
-}
-
-div {
-    padding: 0;
+    font-family: monospace;
+    line-height: 100%;
     margin: 0;
+    padding: 0;
 }
 
 p {
@@ -27,6 +25,10 @@ p {
 #NetWalk table {
     border-collapse: collapse;
     font-size: 80px;
+}
+
+#NetWalk td:hover {
+    background-color: lightcyan;
 }
 
 #NetWalk td {
@@ -65,7 +67,7 @@ p {
     font-family: 'Times New Roman', Times, serif;
 }
 
-#NetWalk {
+#netwalkContainer {
     display: none;
 }
 
@@ -85,9 +87,21 @@ p {
 }
 
 .cyaHeading {
-    color: cyan;
+    color: black;
+    background-color: white;
 }
 
 .cyaContent {
     display: none;
+}
+
+.cyaButton:hover {
+    background-color: black;
+    color: white;
+}
+
+.cyaButton {
+    background-color: white;
+    color: black;
+    display: inline;
 }

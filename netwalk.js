@@ -4,10 +4,10 @@ window.onload = function () {
 };
 
 function openNetWalk() {
-    const netwalk = document.getElementById("NetWalk");
+    const netwalk = document.getElementById("netwalkContainer");
 
     if (netwalk.style.display === "none") {
-        netwalk.style.display = "block";
+        netwalk.style.display = "inline";
     } else {
         netwalk.style.display = "none";
     }

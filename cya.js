@@ -23,11 +23,11 @@ function setup() {
                 // If functionName is missing, skip or set a default
                 if (!label || !functionName) continue;
 
-                buttons += `<div style="display: inline;" class="cyaButton" onclick="${functionName}">${label}</div> `;
+                buttons += `<div class="cyaButton" onclick="${functionName}">${label}</div> `;
             }
     
             element.innerHTML =
-                '<div class="cyaHeading" onclick="dropDown(this)"><h1>' + heading + '</h1></div>' +
+                '<div class="cyaHeading" onclick="dropDown(this)">' + heading + '</div>' +
                 '<div class="cyaContent">' + cleanedText +
                 '<div class="cyaButtons">' + buttons + '</div>' + '</div>';
         }
