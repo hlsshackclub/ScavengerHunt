@@ -25,7 +25,7 @@ let currentPath = root;
 function initFileSystem(){
     currentPath.files.push(new Directory("test", currentPath, 777));
     currentPath.files.push(new Directory("test1", currentPath, 777));
-    getDirectoryByName("test", currentPath).files.push(new File("testing", getDirectoryByName("test", currentPath), 777));
+    getDirectoryByName("test", currentPath).files.push(new Directory("testing", getDirectoryByName("test", currentPath), 777));
 }
 
 initFileSystem();
@@ -45,26 +45,12 @@ function ls(args) {
 }
 
 function cd(args) {
-    let path = currentPath;
     if (args.length === 0) {
         currentPath = root;
         return;
     }
 
-    const parts = args[0].split("/");
-    for (let part of parts) {
-        if (args[0] === "..") {
-            if (currentPath.parent != "") path = path.parent;
-        } else {
-            const next = getDirectoryByName(part, path);
-            if (next) path = next;
-            else {
-                printToConsole("Directory not found.");
-                return;
-            }
-        }
-    }
-    currentPath = path;
+    currentPath = getDirectoryByName(args[0], currentPath);
 }
 
 function sudo(args){}
@@ -83,8 +69,21 @@ function getPathString(p) {
     return "/" + segments.filter(seg => seg !== "").join("/");
 }
 
-function getDirectoryByName(name, path) {
-  return path.files.find(file => file instanceof Directory && file.name === name);
+function getDirectoryByName(name, p) {
+    let path = p;
+    const parts = name.split("/");
+    for (let part of parts) {
+	if (part === "..") {
+	    if (path.parent != "") path = path.parent;
+	} else {
+	    const next = path.files.find(file => file instanceof Directory && file.name === part);
+	    if (next) path = next;
+	    else {
+		return null;
+	    }
+	}
+    }
+    return path;
 }
 
 function enter(x) {
