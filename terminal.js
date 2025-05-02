@@ -53,9 +53,97 @@ function cd(args) {
     currentPath = getDirectoryByName(args[0], currentPath);
 }
 
+/*TODO: make perms work*/
 function sudo(args){}
 
-function rm(args){}
+/*TODO: cat files*/
+function cat(args){}
+
+/*TODO: combine mkdir and touch*/
+function mkdir(args){
+    if (args.length === 0) {
+	printToConsole("mkdir: missing operand");
+	return;
+    }
+
+    const path = getDirectoryByName(args[0], currentPath);
+    if (path) {
+	printToConsole(`mkdir: '${args[0]}': Directory exists`);
+	return
+    }
+
+    let dir = currentPath
+    if(args[0].includes("/")) {
+	let p = args[0].split(0,args[0].lastIndexOf("/"));
+	dir = getDirectoryByName(p, currentDirectory);
+    }
+
+    const newDirectory = new Directory(args[0], dir, 777);
+    dir.files.push(newDirectory);
+    printToConsole(`Created directory ${args[0]}`);
+}
+
+function touch(args){
+    if (args.length === 0) {
+	printToConsole("touch: missing operand");
+	return;
+    }
+
+    const path = getFileByName(args[0], currentPath);
+    if (path) {
+	printToConsole(`touch: '${args[0]}': File exists`);
+	return;
+    }
+    
+    let dir = currentPath
+
+    if (args[0].includes("/")) {
+	/*remove file name (text after the last /) to get path*/
+	let p = args[0].split(0,args[0].lastIndexOf("/"));
+	dir = getDirectoryByName(p, currentDirectory);
+    }
+
+    const newFile = new File(args[0], dir, 777);
+    dir.files.push(newFile);
+    printToConsole(`Created file ${args[0]}`);
+}
+
+/*TODO: Combine rmdir and rm*/
+function rmdir(args){
+    if (args.length === 0) {
+	printToConsole("rm: missing operand");
+	return;
+    }
+
+    const path = getDirectoryByName(args[0], currentPath);
+    if (path) {
+	const index = currentPath.files.indexOf(path);
+	if (index > -1) {
+	    currentPath.files.splice(index, 1);
+	    printToConsole(`Removed ${path.name}`);
+	}
+    } else {
+	printToConsole(`rm: cannot remove '${args[0]}': No such directory`);
+    }
+}
+
+function rm(args) {
+    if (args.length === 0) {
+	printToConsole("rm: missing operand");
+	return;
+    }
+
+    const path = getFileByName(args[0], currentPath);
+    if (path) {
+	const index = currentPath.files.indexOf(path);
+	if (index > -1) {
+	    currentPath.files.splice(index, 1);
+	    printToConsole(`Removed ${path.name}`);
+	}
+    } else {
+	printToConsole(`rm: cannot remove '${args[0]}': No such file`);
+    }
+}
 
 function getPathString(p) {
     let path = p;
@@ -67,6 +155,24 @@ function getPathString(p) {
     }
 
     return "/" + segments.filter(seg => seg !== "").join("/");
+}
+
+/*TODO: combine gFBN and gDBN, also add root indexing (/) and home indexing (~/)*/
+function getFileByName(name, p) {
+    let path = p;
+    const parts = name.split("/");
+    for (let part of parts) {
+	if (part === "..") {
+	    if (path.parent != "") path = path.parent;
+	} else {
+	    const next = path.files.find(file => file instanceof File && file.name === part);
+	    if (next) path = next;
+	    else {
+		return null;
+	    }
+	}
+    }
+    return path;
 }
 
 function getDirectoryByName(name, p) {
@@ -103,6 +209,7 @@ function printToConsole(s){
     terminalMessages.push(s);
 }
 
+/*TODO: echo piping*/
 function echo(args){
     printToConsole(args.join(" "));
 }
@@ -136,6 +243,10 @@ function executeCommand(input){
         ls,
         rm,
         sudo,
+	rmdir,
+	touch,
+	mkdir,
+	cat,
     };
     const func = functions[funcName];
 
