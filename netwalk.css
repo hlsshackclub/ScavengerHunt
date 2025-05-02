@@ -17,7 +17,7 @@
 }
 
 #NetWalk div.emoji {
-    font-size: calc(4 * var(--font-size-emoji));
+    font-size: calc(5 * var(--font-size-emoji));
     position: absolute;
     top: 0;
     left: 0;
@@ -30,6 +30,7 @@
 }
 
 #NetWalk div.not-emoji {
+    font-size: calc(5 * var(--font-size-default));
     position: absolute;
     top: 0;
     left: 0;
