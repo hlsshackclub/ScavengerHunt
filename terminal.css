@@ -4,6 +4,11 @@
     font-family: var(--font-family-default);
     margin: 0;
     padding: 0;
+    height: var(--line-height-default);
+}
+
+#terminalLabel {
+    height: var(--line-height-default);
 }
 
 #terminalBox {
@@ -15,4 +20,5 @@
     margin: 0;
     padding: 0;
     font-family: var(--font-family-default);
+    height: var(--line-height-default);
 }

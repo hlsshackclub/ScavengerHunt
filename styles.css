@@ -12,7 +12,7 @@
     --font-size-default: 20px;
     --font-size-emoji: 7px;
     --font-family-default: monospace;
-    --line-height-default: 1.175;
+    --line-height-default: 1.3rem;
 }
 
 
@@ -23,6 +23,8 @@ body {
     font-family: var(--font-family-default);
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    line-height: var(--line-height-default);
 }
 
 p {

@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="netwalk.css">
     <link rel="stylesheet" href="terminal.css">
     <link rel="stylesheet" href="cya.css">
+    <script src="lineHeight.js"></script>
     <script src="netwalk.js"></script>
     <script src="terminal.js"></script>
     <script src="cya.js"></script>
@@ -17,7 +18,7 @@
         <div id="terminalContainer">
             <p id="terminal"></p>
             <form action="javascript:;" onsubmit=" enter( this ) ">
-                <label>[root@HLSS]$ </label>
+                <label id="terminalLabel">[root@HLSS/]$ </label>
                 <input id="terminalBox" type="text">
             </form>
         </div>

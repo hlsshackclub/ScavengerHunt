@@ -15,5 +15,9 @@
 .cyaButton {
     background-color: var(--button-highlight-color-default);
     color: var(--button-color-default);
-    display: inline;
+    display: inline-block;
+}
+
+.cyaButtons {
+    overflow:hidden;
 }
