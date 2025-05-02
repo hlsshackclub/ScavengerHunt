@@ -32,6 +32,11 @@ p {
     margin: 0;
 }
 
+pre {
+    padding: 0;
+    margin: 0;
+}
+
 .prevent-select {
     -webkit-user-select: none;
     /* Safari */
