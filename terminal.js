@@ -1,11 +1,98 @@
-const terminalMessages = []
-const root = "[root@HLSS]$ "
+const terminalMessages = [];
+const terminalPrompt = "[root@HLSS";
+
+class Directory {
+    constructor(name, parent, perms) {
+        this.name = name;
+        this.parent = parent;
+        this.perms = perms;
+        this.files = [];
+    }
+}
+
+class File {
+    constructor(name, parent, perms) {
+        this.name = name;
+        this.parent = parent;
+        this.perms = perms;
+        this.content = "";
+    }
+}
+
+const root = new Directory("","",777);
+let currentPath = root;
+
+function initFileSystem(){
+    currentPath.files.push(new Directory("test", currentPath, 777));
+    currentPath.files.push(new Directory("test1", currentPath, 777));
+    getDirectoryByName("test", currentPath).files.push(new File("testing", getDirectoryByName("test", currentPath), 777));
+}
+
+initFileSystem();
+
+function ls(args) {
+    let path = currentPath;
+    if (args.length !== 0) {
+        const dir = getDirectoryByName(args[0], currentPath);
+        if (dir) path = dir;
+    }
+
+    const output = path.files.map(file => {
+        if (file instanceof Directory) return `[DIR] ${file.name}`;
+        else return file.name;
+    }).join(" ");
+    printToConsole(output);
+}
+
+function cd(args) {
+    let path = currentPath;
+    if (args.length === 0) {
+        currentPath = root;
+        return;
+    }
+
+    const parts = args[0].split("/");
+    for (let part of parts) {
+        if (args[0] === "..") {
+            if (currentPath.parent != "") path = path.parent;
+        } else {
+            const next = getDirectoryByName(part, path);
+            if (next) path = next;
+            else {
+                printToConsole("Directory not found.");
+                return;
+            }
+        }
+    }
+    currentPath = path;
+}
+
+function sudo(args){}
+
+function rm(args){}
+
+function getPathString(p) {
+    let path = p;
+    const segments = [];
+
+    while (path) {
+        segments.unshift(path.name);
+        path = path.parent;
+    }
+
+    return "/" + segments.filter(seg => seg !== "").join("/");
+}
+
+function getDirectoryByName(name, path) {
+  return path.files.find(file => file instanceof Directory && file.name === name);
+}
 
 function enter(x) {
     let val = x.children[1].value;
     x.children[1].value = "";
-    terminalMessages.push(root + val);
+    terminalMessages.push(terminalPrompt + getPathString(currentPath) + "]$ " + val);
     executeCommand(val);
+    x.children[0].innerText = terminalPrompt + getPathString(currentPath) + "]$ ";
     let messagesString = terminalMessages[0];
     terminalMessages.slice(1).forEach(message => {
         messagesString += ("<br>" + htmlEscape(message));
@@ -22,8 +109,8 @@ function echo(args){
 }
 
 function help(args){
-    printToConsole("help - displays this message")
-    printToConsole("echo - display a line of text")
+    printToConsole("help - displays this message");
+    printToConsole("echo - display a line of text");
 }
 
 function parseArgs(input) {
@@ -46,7 +133,10 @@ function executeCommand(input){
     const functions = {
         echo,
         help,
-
+        cd,
+        ls,
+        rm,
+        sudo,
     };
     const func = functions[funcName];
 
