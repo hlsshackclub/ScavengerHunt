@@ -1,0 +1,55 @@
+#FlowFree table {
+    border-collapse: collapse;
+    font-size: calc(3 * var(--font-size-default));
+}
+
+#FlowFree td:hover {
+    background-color: var(--highlight-color-highlighted);
+}
+
+#FlowFree td {
+    padding: 0;
+    position: relative;
+
+    width: 1ch;
+    height: calc(3 * var(--line-height-default));
+    overflow: hidden;
+}
+
+#FlowFree div.emoji {
+    font-size: calc(3 * var(--font-size-emoji));
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+#FlowFree div.not-emoji {
+    font-size: calc(4 * var(--font-size-default));
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* #FlowFree div.gray {
+    color: var(--not-important-color);
+}
+
+#FlowFree div.blue {
+    color: lightblue;
+    font-family: var(--font-family-default);
+}
+
+#flowFreeContainer {
+    display: none;
+} */

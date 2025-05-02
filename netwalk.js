@@ -1,8 +1,3 @@
-let onloads = []
-window.onload = function () {
-    onloads.forEach(fn => fn())
-};
-
 function openNetWalk() {
     const netwalk = document.getElementById("netwalkContainer");
 
@@ -26,49 +21,6 @@ function isSubset(subset, superset, compareFn) {
 }
 
 function setupNetWalk() {
-    const rotate = {
-        "🗄️": "🗄️",
-        "🖥️": "🖥️",
-
-        "─": "│",
-        "│": "─",
-
-        "┌": "┐",
-        "┐": "┘",
-        "┘": "└",
-        "└": "┌",
-
-        "├": "┬",
-        "┬": "┤",
-        "┤": "┴",
-        "┴": "├",
-
-        "╶": "╷",
-        "╷": "╴",
-        "╴": "╵",
-        "╵": "╶",
-    };
-
-    const connections = {
-        "─": [[-1, 0], [1, 0]], // left + right
-        "│": [[0, -1], [0, 1]], // up + down
-
-        "┌": [[1, 0], [0, 1]],    // right + down
-        "┐": [[-1, 0], [0, 1]],   // left + down
-        "┘": [[-1, 0], [0, -1]],  // left + up
-        "└": [[1, 0], [0, -1]],   // right + up
-
-        "├": [[1, 0], [0, -1], [0, 1]],   // right + up + down
-        "┬": [[-1, 0], [1, 0], [0, 1]],   // left + right + down
-        "┤": [[-1, 0], [0, -1], [0, 1]],  // left + up + down
-        "┴": [[-1, 0], [1, 0], [0, -1]],  // left + right + up
-
-        "╶": [[1, 0]],    // connects to right
-        "╷": [[0, 1]],    // connects down
-        "╴": [[-1, 0]],   // connects to left
-        "╵": [[0, -1]],   // connects up
-    };
-
     const board = [
         ["🖥️╶", "🖥️╶", "🖥️╵", "├", "🖥️╴"],
         ["│", "┌", "├", "┐", "🖥️╵"],
@@ -195,4 +147,5 @@ function setupNetWalk() {
     document.getElementById("NetWalk").appendChild(table);
     showConnections()
 }
-onloads.push(setupNetWalk)
+
+document.addEventListener("DOMContentLoaded", setupNetWalk);
