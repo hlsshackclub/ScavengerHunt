@@ -19,10 +19,10 @@ class File {
     }
 }
 
-const root = new Directory("","",777);
+const root = new Directory("", "", 777);
 let currentPath = root;
 
-function initFileSystem(){
+function initFileSystem() {
     currentPath.files.push(new Directory("test", currentPath, 777));
     currentPath.files.push(new Directory("test1", currentPath, 777));
     getDirectoryByName("test", currentPath).files.push(new Directory("testing", getDirectoryByName("test", currentPath), 777));
@@ -54,28 +54,28 @@ function cd(args) {
 }
 
 /*TODO: make perms work*/
-function sudo(args){}
+function sudo(args) { }
 
 /*TODO: cat files*/
-function cat(args){}
+function cat(args) { }
 
 /*TODO: combine mkdir and touch*/
-function mkdir(args){
+function mkdir(args) {
     if (args.length === 0) {
-	printToConsole("mkdir: missing operand");
-	return;
+        printToConsole("mkdir: missing operand");
+        return;
     }
 
     const path = getDirectoryByName(args[0], currentPath);
     if (path) {
-	printToConsole(`mkdir: '${args[0]}': Directory exists`);
-	return
+        printToConsole(`mkdir: '${args[0]}': Directory exists`);
+        return
     }
 
     let dir = currentPath
-    if(args[0].includes("/")) {
-	let p = args[0].split(0,args[0].lastIndexOf("/"));
-	dir = getDirectoryByName(p, currentDirectory);
+    if (args[0].includes("/")) {
+        let p = args[0].split(0, args[0].lastIndexOf("/"));
+        dir = getDirectoryByName(p, currentDirectory);
     }
 
     const newDirectory = new Directory(args[0], dir, 777);
@@ -83,24 +83,24 @@ function mkdir(args){
     printToConsole(`Created directory ${args[0]}`);
 }
 
-function touch(args){
+function touch(args) {
     if (args.length === 0) {
-	printToConsole("touch: missing operand");
-	return;
+        printToConsole("touch: missing operand");
+        return;
     }
 
     const path = getFileByName(args[0], currentPath);
     if (path) {
-	printToConsole(`touch: '${args[0]}': File exists`);
-	return;
+        printToConsole(`touch: '${args[0]}': File exists`);
+        return;
     }
-    
+
     let dir = currentPath
 
     if (args[0].includes("/")) {
-	/*remove file name (text after the last /) to get path*/
-	let p = args[0].split(0,args[0].lastIndexOf("/"));
-	dir = getDirectoryByName(p, currentDirectory);
+        /*remove file name (text after the last /) to get path*/
+        let p = args[0].split(0, args[0].lastIndexOf("/"));
+        dir = getDirectoryByName(p, currentDirectory);
     }
 
     const newFile = new File(args[0], dir, 777);
@@ -109,39 +109,39 @@ function touch(args){
 }
 
 /*TODO: Combine rmdir and rm*/
-function rmdir(args){
+function rmdir(args) {
     if (args.length === 0) {
-	printToConsole("rm: missing operand");
-	return;
+        printToConsole("rm: missing operand");
+        return;
     }
 
     const path = getDirectoryByName(args[0], currentPath);
     if (path) {
-	const index = currentPath.files.indexOf(path);
-	if (index > -1) {
-	    currentPath.files.splice(index, 1);
-	    printToConsole(`Removed ${path.name}`);
-	}
+        const index = currentPath.files.indexOf(path);
+        if (index > -1) {
+            currentPath.files.splice(index, 1);
+            printToConsole(`Removed ${path.name}`);
+        }
     } else {
-	printToConsole(`rm: cannot remove '${args[0]}': No such directory`);
+        printToConsole(`rm: cannot remove '${args[0]}': No such directory`);
     }
 }
 
 function rm(args) {
     if (args.length === 0) {
-	printToConsole("rm: missing operand");
-	return;
+        printToConsole("rm: missing operand");
+        return;
     }
 
     const path = getFileByName(args[0], currentPath);
     if (path) {
-	const index = currentPath.files.indexOf(path);
-	if (index > -1) {
-	    currentPath.files.splice(index, 1);
-	    printToConsole(`Removed ${path.name}`);
-	}
+        const index = currentPath.files.indexOf(path);
+        if (index > -1) {
+            currentPath.files.splice(index, 1);
+            printToConsole(`Removed ${path.name}`);
+        }
     } else {
-	printToConsole(`rm: cannot remove '${args[0]}': No such file`);
+        printToConsole(`rm: cannot remove '${args[0]}': No such file`);
     }
 }
 
@@ -162,15 +162,15 @@ function getFileByName(name, p) {
     let path = p;
     const parts = name.split("/");
     for (let part of parts) {
-	if (part === "..") {
-	    if (path.parent != "") path = path.parent;
-	} else {
-	    const next = path.files.find(file => file instanceof File && file.name === part);
-	    if (next) path = next;
-	    else {
-		return null;
-	    }
-	}
+        if (part === "..") {
+            if (path.parent != "") path = path.parent;
+        } else {
+            const next = path.files.find(file => file instanceof File && file.name === part);
+            if (next) path = next;
+            else {
+                return null;
+            }
+        }
     }
     return path;
 }
@@ -179,15 +179,15 @@ function getDirectoryByName(name, p) {
     let path = p;
     const parts = name.split("/");
     for (let part of parts) {
-	if (part === "..") {
-	    if (path.parent != "") path = path.parent;
-	} else {
-	    const next = path.files.find(file => file instanceof Directory && file.name === part);
-	    if (next) path = next;
-	    else {
-		return null;
-	    }
-	}
+        if (part === "..") {
+            if (path.parent != "") path = path.parent;
+        } else {
+            const next = path.files.find(file => file instanceof Directory && file.name === part);
+            if (next) path = next;
+            else {
+                return null;
+            }
+        }
     }
     return path;
 }
@@ -205,16 +205,16 @@ function enter(x) {
     document.getElementById("terminal").innerHTML = messagesString;
 }
 
-function printToConsole(s){
+function printToConsole(s) {
     terminalMessages.push(s);
 }
 
 /*TODO: echo piping*/
-function echo(args){
+function echo(args) {
     printToConsole(args.join(" "));
 }
 
-function help(args){
+function help(args) {
     printToConsole("help - displays this message");
     printToConsole("echo - display a line of text");
 }
@@ -233,7 +233,7 @@ function parseArgs(input) {
     return args;
 }
 
-function executeCommand(input){
+function executeCommand(input) {
     const args = parseArgs(input);
     const [funcName, ...funcArgs] = args;
     const functions = {
@@ -243,10 +243,10 @@ function executeCommand(input){
         ls,
         rm,
         sudo,
-	rmdir,
-	touch,
-	mkdir,
-	cat,
+        rmdir,
+        touch,
+        mkdir,
+        cat,
     };
     const func = functions[funcName];
 
