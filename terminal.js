@@ -2,17 +2,20 @@ const terminalMessages = [];
 const terminalPrompt = "@HLSS";
 
 class User {
-    constructor(name, home) {
+    constructor(name, home, group) {
 	this.name = name;
 	this.home = home;
+	this.group = group;
+	this.groups = [];
     }
 }
 
 class Directory {
-    constructor(name, parent, perms) {
+    constructor(name, parent, perms, owner) {
         this.name = name;
         this.parent = parent;
         this.perms = perms;
+	this.owner = owner;
         this.files = [];
     }
 
@@ -22,10 +25,11 @@ class Directory {
 }
 
 class File {
-    constructor(name, parent, perms) {
+    constructor(name, parent, perms, owner) {
         this.name = name;
         this.parent = parent;
         this.perms = perms;
+	this.owner = owner;
         this.content = "";
     }
 
@@ -34,7 +38,7 @@ class File {
     }
 }
 
-const root = new Directory("", "", 777);
+const root = new Directory("", "", 755, "root");
 let currentPath = root;
 let admin = {};
 let user = {}
@@ -42,31 +46,63 @@ let currentUser = {};
 let users = [];
 
 function initSystem() {
+    admin = new User("root", {}, "root");
+    users.push(admin);
+    currentUser = admin;
+    root.owner = admin;
     mkdir(["home"]);
     mkdir(["home/hacker"]);
+    mkdir(["home/root"]);
+    admin.home = getByName("/home/root", root, Directory);
+    user = new User("hacker", getByName("/home/hacker", root, Directory), "users");
+    users.push(user);
+    getByName("/home/hacker", root, Directory).owner = user;
     mkdir(["etc"]);
     mkdir(["bin"]);
     mkdir(["lib"]);
-    mkdir(["home/root"]);
     mkdir(["home/root/SuperSecretFolder"]);
     touch(["home/root/SuperSecretFolder/password.txt"]);
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
-    user = new User("hacker", getByName("/home/hacker", root, Directory));
     currentUser = user;
-    users.push(user);
-    admin = new User("root", getByName("/home/root", root, Directory));
-    users.push(admin);
 }
 
 initSystem();
+
+function parsePerms(perms) {
+    return [
+        (perms >> 6) & 7, // Owner
+        (perms >> 3) & 7, // Group
+        perms & 7         // Others
+    ];
+}
+
+function getActionBit(action) {
+    return { r: 4, w: 2, x: 1 }[action] || 0;
+}
+
+function checkPerms(file, user, action) {
+    const [ownerPerm, groupPerm, otherPerm] = parsePerms(parseInt(file.perms, 8));
+    const actionBit = getActionBit(action);
+
+    return (
+        (file.owner === user && (ownerPerm & actionBit)) ||  // Owner check
+        (user.group === file.owner.group && (groupPerm & actionBit)) || // Group check
+        (user.groups.includes(file.owner.group) && (groupPerm & actionBit)) || // Additional groups
+        (otherPerm & actionBit) // Others check
+    ) > 0;
+}
+
 
 function ls(args) {
     let path = currentPath;
     if (args.length !== 0) {
         const dir = getByName(args[0], currentPath, Directory);
         if (dir) path = dir;
+	else return `ls: ${args[0]}: Directory not found`
     }
 
+    if (!checkPerms(path, currentUser, "r")) return `ls: ${path.name}: Permission denied`;
+    
     const output = path.files.map(file => {
         if (file instanceof Directory) return `[DIR] ${file.name}`;
         else return file.name;
@@ -80,8 +116,14 @@ function cd(args) {
         return "Changed directory to /";
     }
 
-    currentPath = getByName(args[0], currentPath, Directory);
-    return `Changed directory to ${args[0]}`;
+    path = getByName(args[0], currentPath, Directory);
+    if (path) {
+	if (!checkPerms(path, currentUser, "r")) return `cd: ${args[0]}: Permission denied`;
+	currentPath = path;
+    	return `Changed directory to ${args[0]}`;
+    } else {
+	return `cd: ${args[0]}: Directory not found`;
+    }
 }
 
 /*TODO: make perms work*/
@@ -93,6 +135,7 @@ function cat(args) {
     }
 
     const path = getByName(args[0], currentPath, File);
+    if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
     if (path) {
 	return(path.content);
     } else {
@@ -100,15 +143,15 @@ function cat(args) {
     }
 }
 
-function mkdir(args) {
-    return create(args, Directory, "mkdir");
+function mkdir(args, owner = currentUser) {
+    return create(args, Directory, "mkdir", owner);
 }
 
-function touch(args) {
-    return create(args, File, "touch");
+function touch(args, owner = currentUser) {
+    return create(args, File, "touch", owner);
 }
 
-function create(args, type, command) {
+function create(args, type, command, owner) {
     if (args.length === 0) {
         return(`${command}: missing operand`);
     }
@@ -128,7 +171,9 @@ function create(args, type, command) {
         dir = getByName(p, currentPath, Directory);
     }
 
-    const n = new type(name, dir, 777);
+    if (!checkPerms(dir, currentUser, "w")) return `${command}: Permission denied`;
+
+    const n = new type(name, dir, dir.perms, owner);
     dir.files.push(n);
     return(`Created ${args[0]}`);
 }
@@ -152,6 +197,7 @@ function r(args, type, command) {
 	if (path instanceof Directory && path.files.length > 0) {
 	    return(`${command}: '${args[0]}': Directory not empty`);
 	}
+    	if (!checkPerms(path, currentUser, "w")) return `${command}: Permission denied`;
         path.parent.files.splice(index, 1);
         return(`Removed ${path.name}`);
     } else {
