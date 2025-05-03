@@ -16,6 +16,14 @@
     overflow: hidden;
 }
 
+#FlowFree .cb0 {
+    background-color: black;
+}
+
+#FlowFree .cb1 {
+    background-color: rgb(30, 30, 30);
+}
+
 #FlowFree div.emoji {
     font-size: calc(3 * var(--font-size-emoji));
     position: absolute;
@@ -39,6 +47,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#FlowFree .c0 {
+    color: red;
+}
+
+#FlowFree .c1 {
+    color: rgb(0, 255, 0);
+}
+
+#FlowFree .c2 {
+    color: blue;
+}
+
+#FlowFree .c3 {
+    color: cyan;
+}
+
+#FlowFree .c4 {
+    color: magenta;
+}
+
+#FlowFree .c5 {
+    color: yellow;
+}
+
+#FlowFree .c6 {
+    color: orange;
 }
 
 /* #FlowFree div.gray {
