@@ -20,15 +20,7 @@ function isSubset(subset, superset, compareFn) {
     return true;
 }
 
-function setupNetWalk() {
-    const board = [
-        ["🖥️╶", "🖥️╶", "🖥️╵", "├", "🖥️╴"],
-        ["│", "┌", "├", "┐", "🖥️╵"],
-        ["└", "🗄️┤", "├", "🖥️╷", "─"],
-        ["🖥️╶", "┐", "│", "─", "┬"],
-        ["┌", "─", "─", "─", "└"]
-    ];
-
+function setupNetWalk(board, winFunc) {
     const height = board.length;
     const width = board[0].length;
 
@@ -55,7 +47,7 @@ function setupNetWalk() {
     })();
 
     let cells = []
-    function showConnections() {
+    function showConnectionsAndCheckWin() {
         cells.forEach(row => row.forEach(cell => {
             cell.querySelector(".not-emoji").classList.add("gray");
             cell.querySelector(".not-emoji").classList.remove("blue");
@@ -99,6 +91,7 @@ function setupNetWalk() {
 
         return isSubset(computerPositions, seen, (a, b) => a[0] == b[0] && a[1] == b[1])
     }
+    let wonAlready = false
 
     const table = document.createElement("table");
     const tbody = document.createElement("tbody");
@@ -133,7 +126,11 @@ function setupNetWalk() {
             td.addEventListener("click", event => {
                 const notEmoji = event.currentTarget.querySelector(".not-emoji");
                 notEmoji.innerText = rotate[notEmoji.innerText];
-                console.log(showConnections())
+                const wonYet = showConnectionsAndCheckWin()
+                if(wonYet && !wonAlready) {
+                    wonAlready = true;
+                    winFunc();
+                }
             })
 
             tr.appendChild(td);
@@ -145,7 +142,13 @@ function setupNetWalk() {
 
     table.appendChild(tbody);
     document.getElementById("NetWalk").appendChild(table);
-    showConnections()
+    showConnectionsAndCheckWin()
 }
 
-document.addEventListener("DOMContentLoaded", setupNetWalk);
+document.addEventListener("DOMContentLoaded", () => setupNetWalk(
+    [["🖥️╶", "🖥️╶", "🖥️╵", "├", "🖥️╴"],
+    ["│", "┌", "├", "┐", "🖥️╵"],
+    ["└", "🗄️┤", "├", "🖥️╷", "─"],
+    ["🖥️╶", "┐", "│", "─", "┬"],
+    ["┌", "─", "─", "─", "└"]],
+    () => console.log("win netwalk")));

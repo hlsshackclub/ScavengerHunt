@@ -1,20 +1,7 @@
-function setupFlowFree() {
+function setupFlowFree(width, height, starts, winFunc) {
     let currentPath = undefined
 
     let cells = []
-
-    const width = 7;
-    const height = 7;
-
-    const starts = [
-        [[0, 1], [4, 0]],
-        [[6, 1], [6, 6]],
-        [[0, 3], [4, 1]],
-        [[0, 5], [2, 2]],
-        [[4, 6], [5, 4]],
-        [[1, 5], [4, 2]],
-        [[0, 6], [6, 0]],
-    ];
 
     const paths = []
     for (let i = 0; i < starts.length; i++) {
@@ -28,7 +15,7 @@ function setupFlowFree() {
                 return i
             }
         }
-        
+
         for (const [i, path] of paths.entries()) {
             for (let pathCell of path) {
                 if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
@@ -44,16 +31,16 @@ function setupFlowFree() {
         let pathFound = undefined
         let startUsed = undefined
         outer: for (const [i, startPair] of starts.entries()) {
-            for(const [j, start] of startPair.entries()) {
-                if(v2Eq(start, cell)) {
+            for (const [j, start] of startPair.entries()) {
+                if (v2Eq(start, cell)) {
                     pathFound = i
                     startUsed = j
                     break outer
                 }
             }
         }
-        if(pathFound !== undefined 
-            && paths[pathFound].length != 0 
+        if (pathFound !== undefined
+            && paths[pathFound].length != 0
             && !v2Eq(paths[pathFound][0], starts[pathFound][startUsed])
             && v2MDist(paths[pathFound].slice(-1)[0], cell) > 1) {
             paths[pathFound].length = 0
@@ -107,13 +94,13 @@ function setupFlowFree() {
     }
 
     function won() {
-        for(const startPair of starts) {
-            checkStart: for(const start of startPair) {
-                for(const path of paths) {
-                    if(path.length == 0) {
+        for (const startPair of starts) {
+            checkStart: for (const start of startPair) {
+                for (const path of paths) {
+                    if (path.length == 0) {
                         continue;
                     }
-                    if(v2Eq(start, path[0]) || v2Eq(start, path.slice(-1)[0])) {
+                    if (v2Eq(start, path[0]) || v2Eq(start, path.slice(-1)[0])) {
                         continue checkStart;
                     }
                 }
@@ -122,6 +109,7 @@ function setupFlowFree() {
         }
         return true;
     }
+    let wonAlready = false
 
     const table = document.createElement("table");
     const tbody = document.createElement("tbody");
@@ -176,7 +164,10 @@ function setupFlowFree() {
                 trimPath(cell)
                 paths[currentPath].push(cell);
                 render();
-                //console.log(won());
+                if (!wonAlready && won()) {
+                    wonAlready = true
+                    winFunc()
+                }
             })
             td.addEventListener("mouseout", event => {
             })
@@ -188,6 +179,10 @@ function setupFlowFree() {
                 trimPath(cell)
                 paths[currentPath].push(cell);
                 render();
+                if (!wonAlready && won()) {
+                    wonAlready = true
+                    winFunc()
+                }
             })
             td.addEventListener("mouseup", event => {
                 currentPath = undefined;
@@ -204,4 +199,12 @@ function setupFlowFree() {
     document.getElementById("FlowFree").appendChild(table);
 }
 
-document.addEventListener("DOMContentLoaded", setupFlowFree);
+document.addEventListener("DOMContentLoaded", () => setupFlowFree(7, 7,
+    [[[0, 1], [4, 0]],
+    [[6, 1], [6, 6]],
+    [[0, 3], [4, 1]],
+    [[0, 5], [2, 2]],
+    [[4, 6], [5, 4]],
+    [[1, 5], [4, 2]],
+    [[0, 6], [6, 0]]],
+    () => console.log("win flow free")));
