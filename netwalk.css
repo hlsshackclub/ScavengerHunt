@@ -30,7 +30,7 @@
 }
 
 #NetWalk div.not-emoji {
-    font-size: calc(4 * var(--font-size-default));
+    font-size: calc(4 * var(--font-size-default)); /*4 instead of 3 to remove gaps */
     position: absolute;
     top: 0;
     left: 0;
