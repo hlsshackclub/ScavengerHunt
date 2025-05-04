@@ -1,13 +1,12 @@
 function setupFlowFree() {
-    let oldCell = undefined
-    let clickStartCell = undefined
+    let currentPath = undefined
 
     let cells = []
 
     const width = 7;
     const height = 7;
 
-    const paths = [
+    const starts = [
         [[0, 1], [4, 0]],
         [[6, 1], [6, 6]],
         [[0, 3], [4, 1]],
@@ -17,23 +16,89 @@ function setupFlowFree() {
         [[0, 6], [6, 0]],
     ];
 
-    const board = (() => {
-        let b = []
-        for(let row = 0; row < height; row++) {
-            b.push([]);
-            for(let col = 0; col < width; col++) {
-                b[row].push("");
+    const paths = []
+    for (let i = 0; i < starts.length; i++) {
+        paths.push([]);
+    }
+
+    function getCurrentPath(cell) {
+        for (const [i, startPair] of starts.entries()) {
+            if ((startPair[0][0] == cell[0] && startPair[0][1] == cell[1])
+                || (startPair[1][0] == cell[0] && startPair[1][1] == cell[1])) {
+                return i
+            }
+        }
+        for (const [i, path] of paths.entries()) {
+            for (let pathCell of path) {
+                if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
+                    return i
+                }
+            }
+        }
+        return undefined
+    }
+
+    function trimPath(cell) {
+        for (const path of paths) {
+            for (const [j, pathCell] of path.entries()) {
+                if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
+                    path.length = j
+                }
+            }
+        }
+    }
+
+    function render() {
+        for (let row = 0; row < height; row++) {
+            for (let col = 0; col < width; col++) {
+                for (let i = 0; i < starts.length; i++) {
+                    cells[col][row].notEmojiDiv.classList.remove(`c${i}`);
+                    cells[col][row].notEmojiDiv.innerText = ""
+                }
             }
         }
 
-        for(let i = 0; i < paths.length; i++) {
-            let poses = paths[i];
-            b[poses[0][1]][poses[0][0]] = `${i}`;
-            b[poses[1][1]][poses[1][0]] = `${i}`;
+        for (const [i, path] of paths.entries()) {
+            for (const [j, pathCell] of path.entries()) {
+                cells[pathCell[1]][pathCell[0]].notEmojiDiv.classList.add(`c${i}`);
+                let text = undefined
+                if (path.length == 1) {
+                    text = '';
+                } else {
+                    if (j == 0) {
+                        text = connectionsBackwards[JSON.stringify([v2Sub(path[j + 1], pathCell)])];
+                    } else if (j < path.length - 1) {
+                        text = connectionsBackwards[JSON.stringify([v2Sub(path[j + 1], pathCell), v2Sub(path[j - 1], pathCell)])];
+                    } else {
+                        text = connectionsBackwards[JSON.stringify([v2Sub(path[j - 1], pathCell)])];
+                    }
+                }
+                cells[pathCell[1]][pathCell[0]].notEmojiDiv.innerText = text
+            }
         }
+    }
 
-        return b;
-    })();
+    function isEnd(cell) {
+        const possibleStart1 = starts[currentPath][0];
+        const possibleStart2 = starts[currentPath][1];
+        const thisStart = paths[currentPath][0];
+        return !v2Eq(cell, thisStart) && (v2Eq(cell, possibleStart1) || v2Eq(cell, possibleStart2));
+    }
+
+    function won() {
+        for(const startPair of starts) {
+            checkStart: for(const start of startPair) {
+                for(const path in paths) {
+                    if(v2Eq(start, path[0]) || v2Eq(start, path.slice(-1)[0])) {
+                        continue checkStart;
+                    }
+                }
+                console.log(startPair)
+                return false;
+            }
+        }
+        return true;
+    }
 
     const table = document.createElement("table");
     const tbody = document.createElement("tbody");
@@ -41,59 +106,72 @@ function setupFlowFree() {
         const tr = document.createElement("tr");
         cells.push([]);
         for (let col = 0; col < width; col++) {
+            const cell = [col, row];
             const td = document.createElement("td");
             td.classList.add(`cb${(row + col) % 2}`);
-            const cellText = board[row][col];
-            if (cellText !== '') {
-                const emojiDiv = document.createElement("div");
-                emojiDiv.classList.add("emoji");
-                emojiDiv.innerText = '⬤';
-                emojiDiv.classList.add(`c${cellText}`);
 
-                const otherCharDiv = document.createElement("div");
-                otherCharDiv.classList.add("not-emoji");
+            const div = document.createElement("div");
+            div.classList.add("not-emoji");
+            td.appendChild(div);
 
-                td.appendChild(emojiDiv);
-                td.appendChild(otherCharDiv);
-            } else {
-                const div = document.createElement("div");
-                div.classList.add("not-emoji");
-
-                td.appendChild(div);
-            }
-            td.addEventListener("mouseover", event => {                
-                if(clickStartCell !== undefined) {
-                    const cell = [col, row];
-                    const oldCellNotEmoji = cells[oldCell[1]][oldCell[0]].querySelector(".not-emoji")
-
-                    const d = [cell[0] - oldCell[0], cell[1] - oldCell[1]];
-                    const minusD = [oldCell[0] - cell[0], oldCell[1] - cell[1]];
-                    const newConnectorChar = connectionsBackwards[JSON.stringify([minusD])];
-                    let oldConnectorChar = ''
-                    if(oldCellNotEmoji.innerText !== '') {
-                        oldConnectorChar = connectionsBackwards[JSON.stringify([d, connections[oldCellNotEmoji.innerText][0]])]
-                    }
-                    
-                    oldCellNotEmoji.innerText = oldConnectorChar;
-
-                    const notEmoji = event.currentTarget.querySelector(".not-emoji");
-                    notEmoji.innerText = newConnectorChar;
+            let emojiDiv = undefined
+            for (const [i, startPair] of starts.entries()) {
+                if ((startPair[0][0] == cell[0] && startPair[0][1] == cell[1])
+                    || (startPair[1][0] == cell[0] && startPair[1][1] == cell[1])) {
+                    emojiDiv = document.createElement("div");
+                    emojiDiv.classList.add("emoji");
+                    emojiDiv.classList.add(`c${i}`);
+                    emojiDiv.innerText = "⬤"
+                    td.appendChild(emojiDiv);
+                    break;
                 }
+            }
+
+            td.addEventListener("mouseover", event => {
+                if (currentPath === undefined) {
+                    return;
+                }
+                if (paths[currentPath].length >= 1 && isEnd(paths[currentPath].slice(-1)[0]) && getCurrentPath(cell) != currentPath) { //past the end
+                    return;
+                }
+                let isDiffStart = false;
+                for (const [i, startPair] of starts.entries()) {
+                    if (currentPath == i) {
+                        continue;
+                    }
+                    if ((startPair[0][0] == cell[0] && startPair[0][1] == cell[1])
+                        || (startPair[1][0] == cell[0] && startPair[1][1] == cell[1])) {
+                        isDiffStart = true
+                    }
+                }
+                const isRightPos = paths[currentPath].length == 0
+                    || Math.abs(paths[currentPath].slice(-1)[0][0] - cell[0]) + Math.abs(paths[currentPath].slice(-1)[0][1] - cell[1]) == 1
+                const isOnSamePath = getCurrentPath(cell) == currentPath
+                if (isDiffStart || (!isRightPos && !isOnSamePath)) {
+                    return
+                }
+                trimPath(cell)
+                paths[currentPath].push(cell);
+                render();
+                console.log(won());
             })
-            td.addEventListener("mouseout", event => { //TODO: this might not work consistently
-                oldCell = [col, row];
+            td.addEventListener("mouseout", event => {
             })
             td.addEventListener("mousedown", event => {
-                clickStartCell = [col, row];
-                // const notEmoji = event.currentTarget.querySelector(".not-emoji");
-                // notEmoji.innerText = rotate[notEmoji.innerText];
+                currentPath = getCurrentPath(cell);
+                if (currentPath === undefined) {
+                    return;
+                }
+                trimPath(cell)
+                paths[currentPath].push(cell);
+                render();
             })
             td.addEventListener("mouseup", event => {
-                clickStartCell = undefined
+                currentPath = undefined;
             })
 
             tr.appendChild(td);
-            cells[row].push(td);
+            cells[row].push({ td: td, emojiDiv: emojiDiv, notEmojiDiv: div });
         }
 
         tbody.appendChild(tr);
