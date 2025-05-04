@@ -28,6 +28,7 @@ function setupFlowFree() {
                 return i
             }
         }
+        
         for (const [i, path] of paths.entries()) {
             for (let pathCell of path) {
                 if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
@@ -39,10 +40,30 @@ function setupFlowFree() {
     }
 
     function trimPath(cell) {
-        for (const path of paths) {
-            for (const [j, pathCell] of path.entries()) {
-                if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
-                    path.length = j
+        //account for the fact you can break a path and start from the other side
+        let pathFound = undefined
+        let startUsed = undefined
+        outer: for (const [i, startPair] of starts.entries()) {
+            for(const [j, start] of startPair.entries()) {
+                if(v2Eq(start, cell)) {
+                    pathFound = i
+                    startUsed = j
+                    break outer
+                }
+            }
+        }
+        if(pathFound !== undefined 
+            && paths[pathFound].length != 0 
+            && !v2Eq(paths[pathFound][0], starts[pathFound][startUsed])
+            && v2MDist(paths[pathFound].slice(-1)[0], cell) > 1) {
+            paths[pathFound].length = 0
+        } else {
+            //trim the path normally
+            for (const path of paths) {
+                for (const [j, pathCell] of path.entries()) {
+                    if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
+                        path.length = j
+                    }
                 }
             }
         }
@@ -88,12 +109,14 @@ function setupFlowFree() {
     function won() {
         for(const startPair of starts) {
             checkStart: for(const start of startPair) {
-                for(const path in paths) {
+                for(const path of paths) {
+                    if(path.length == 0) {
+                        continue;
+                    }
                     if(v2Eq(start, path[0]) || v2Eq(start, path.slice(-1)[0])) {
                         continue checkStart;
                     }
                 }
-                console.log(startPair)
                 return false;
             }
         }
@@ -153,7 +176,7 @@ function setupFlowFree() {
                 trimPath(cell)
                 paths[currentPath].push(cell);
                 render();
-                console.log(won());
+                //console.log(won());
             })
             td.addEventListener("mouseout", event => {
             })
