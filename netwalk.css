@@ -46,7 +46,7 @@
 }
 
 #NetWalk div.blue {
-    color: lightblue;
+    color: rgb(144, 227, 255);
     font-family: var(--font-family-default);
 }
 
