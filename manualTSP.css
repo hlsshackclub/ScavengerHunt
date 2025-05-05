@@ -1,13 +1,13 @@
-#NetWalk table {
+#ManualTSP table {
     border-collapse: collapse;
     font-size: calc(3 * var(--font-size-default));
 }
 
-#NetWalk td:hover {
+#ManualTSP td:hover {
     background-color: var(--highlight-color-highlighted);
 }
 
-#NetWalk td {
+#ManualTSP td {
     padding: 0;
     position: relative;
 
@@ -16,7 +16,15 @@
     overflow: hidden;
 }
 
-#NetWalk div.emoji {
+#ManualTSP .cb0 {
+    background-color: black;
+}
+
+#ManualTSP .cb1 {
+    background-color: var(--background-color-checker)
+}
+
+#ManualTSP div.emoji {
     font-size: calc(3 * var(--font-size-emoji));
     position: absolute;
     top: 0;
@@ -29,7 +37,7 @@
     z-index: 1;
 }
 
-#NetWalk div.not-emoji {
+#ManualTSP div.not-emoji {
     font-size: calc(4 * var(--font-size-default)); /*4 instead of 3 to remove gaps */
     position: absolute;
     top: 0;
@@ -39,13 +47,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-#NetWalk div.gray {
-    color: var(--not-important-color);
-}
-
-#NetWalk div.blue {
-    color: rgb(144, 227, 255);
-    font-family: var(--font-family-default);
 }
