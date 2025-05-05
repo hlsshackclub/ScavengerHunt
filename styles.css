@@ -17,10 +17,13 @@
     --heading-highlight-color: white;
     --not-important-color: gray;
     --error-color: red;
+    --win-color: green;
     --font-size-default: 20px;
     --font-size-emoji: 7px;
     --font-family-default: monospace;
-    --line-height-default: 1.5rem;
+    --line-height-default: 1.1rem;
+
+    font-size: var(--font-size-default);
 }
 
 body {
@@ -94,8 +97,4 @@ input::placeholder {
     /* IE 10 and IE 11 */
     user-select: none;
     /* Standard syntax */
-}
-
-.error {
-    color: var(--error-color)
 }

@@ -14,3 +14,11 @@ input.inputbox {
 .hidden {
     display: none !important;
 }
+
+.error {
+    color: var(--error-color)
+}
+
+.win {
+    color: var(--win-color)
+}

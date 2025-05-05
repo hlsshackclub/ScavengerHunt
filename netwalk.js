@@ -151,4 +151,4 @@ document.addEventListener("DOMContentLoaded", () => setupNetWalk(
     ["└", "🗄️┤", "├", "🖥️╷", "─"],
     ["🖥️╶", "┐", "│", "─", "┬"],
     ["┌", "─", "─", "─", "└"]],
-    () => console.log("win netwalk")));
+    () => document.getElementById("netWalkWin").classList.remove("hidden")));
