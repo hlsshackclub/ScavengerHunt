@@ -21,7 +21,7 @@
 }
 
 #FlowFree .cb1 {
-    background-color: rgb(30, 30, 30);
+    background-color: var(--background-color-checker)
 }
 
 #FlowFree div.emoji {
@@ -77,15 +77,6 @@
     color: orange;
 }
 
-/* #FlowFree div.gray {
-    color: var(--not-important-color);
-}
-
-#FlowFree div.blue {
-    color: lightblue;
-    font-family: var(--font-family-default);
-} */
-
-#flowFreeContainer {
+/* #flowFreeContainer {
     display: none;
-}
+} */

@@ -1,5 +1,5 @@
 function openNetWalk() {
-    const netwalk = document.getElementById("netwalkContainer");
+    const netwalk = document.getElementById("networkingContainer");
 
     if (netwalk.style.display === "none") {
         netwalk.style.display = "inline";

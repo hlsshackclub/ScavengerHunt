@@ -1,23 +1,16 @@
-.cyaHeading {
-    color: var(--button-color-default);;
-    background-color: var(--button-highlight-color-default);
+input.codeinput {
+    width: 5ch;
 }
 
-.cyaContent {
-    display: none;
+input.inputbox {
+    background-color: var(--background-color-inputbox);
 }
 
-.cyaButton:hover {
-    background-color: var(--button-highlight-color-highlighted);
-    color: var(--button-color-highlighted);
+.heading {
+    color: var(--heading-color);
+    background-color: var(--heading-highlight-color);
 }
 
-.cyaButton {
-    background-color: var(--button-highlight-color-default);
-    color: var(--button-color-default);
-    display: inline;
-}
-
-.cyaButtons {
-    overflow:hidden;
+.hidden {
+    display: none !important;
 }

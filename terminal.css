@@ -10,7 +10,7 @@
     height: var(--line-height-default);
 }
 
-#terminalBox {
+/* #terminalBox {
     background-color: var(--background-color-default);
     color: var(--text-color-default);
     border: 0;
@@ -20,4 +20,4 @@
     padding: 0;
     font-family: var(--font-family-default);
     height: var(--line-height-default);
-}
+} */
