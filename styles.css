@@ -18,7 +18,7 @@
     --not-important-color: gray;
     --error-color: red;
     --win-color: rgb(0, 255, 0);
-    --font-size-default: calc(100vh/38 / 1.1);
+    --font-size-default: calc(min(max(10px, 100vh/40/1.1), 30px));
     --font-size-emoji: calc(7/20 * var(--font-size-default));
     --font-family-default: monospace;
     --font-weight-default: normal;
