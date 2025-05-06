@@ -1,7 +1,7 @@
-function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) {
+function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, showStatusFunc) {
     let cells = []
     const minLength = (() => {
-        let minLen = (width - 1 + height - 1) * computerPositions.length; //upper bound
+        let minLen = Infinity; //upper bound
         let computerPositionsPermutable = computerPositions.slice();
         for (const perm of permute(computerPositionsPermutable)) {
             let length = 0;
@@ -14,6 +14,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) 
         }
         return minLen
     })();
+    console.log(minLength)
 
     let oldCell = undefined
     let held = false
@@ -75,6 +76,45 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) 
         }
     }
 
+    let wonAlready = false
+    function showStatusAndCheckWin() {
+        let allComputersHit = true;
+        outer: for (let cPos of computerPositions) {
+            for (let pathCell of path) {
+                if (v2Eq(pathCell, cPos)) {
+                    continue outer;
+                }
+            }
+            allComputersHit = false;
+            break;
+        }
+        const loops = path.length >= 4 && v2MDist(path[0], path.slice(-1)[0]) === 1;
+
+        let good = false;
+        let status = '';
+        let length = Math.max(0, path.length - 1);
+        if (loops) {
+            length += 1;
+        }
+        if (!allComputersHit) {
+            status = 'Path misses some computers'
+        } else if (!loops) {
+            status = "Path doesn't loop back!"
+        } else if (length > minLength) {
+            status = 'Path is suboptimal.'
+        } else {
+            status = 'Optimal path found!'
+            good = true;
+            if (!wonAlready) {
+                showStatusFunc(length, status, good, wonAlready);
+                wonAlready = true;
+                winFunc(); //idk if this is the most intuitive place to call this but whatever
+                return; //jank flow :(
+            }
+        }
+        showStatusFunc(length, status, good, wonAlready);
+    }
+
     const table = document.createElement("table");
     const tbody = document.createElement("tbody");
     for (let row = 0; row < height; row++) {
@@ -94,7 +134,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) 
                 if (v2Eq(cell, pos)) {
                     emojiDiv = document.createElement("div");
                     emojiDiv.classList.add("emoji");
-                    if(i == serverIndex) {
+                    if (i == serverIndex) {
                         emojiDiv.innerText = "🗄️"
                     } else {
                         emojiDiv.innerText = "🖥️"
@@ -124,6 +164,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) 
                 trimPath(cell)
                 path.push(cell);
                 render();
+                showStatusAndCheckWin();
                 oldCell = cell
             })
             td.addEventListener("mousedown", event => {
@@ -142,6 +183,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) 
             td.addEventListener("dblclick", event => {
                 path.length = 0;
                 render();
+                showStatusAndCheckWin();
             })
             td.addEventListener("mouseup", event => {
                 held = false;
@@ -155,11 +197,28 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) 
         tbody.appendChild(tr);
     }
     render()
+    showStatusAndCheckWin();
 
     table.appendChild(tbody);
     document.getElementById("ManualTSP").appendChild(table);
 }
 
 document.addEventListener("DOMContentLoaded", () => setupManualTSP(25, 12,
-    [[12, 11], [12, 1], [20, 2], [4, 3], [7, 5], [15, 5], [17, 9], [2, 10], [20, 10]], 0,
-    () => console.log("win flow free")));
+    [[12, 11], [12, 0], [20, 2], [4, 3], [7, 5], [15, 5], [17, 9], [2, 10], [20, 10]], 0,
+    () => console.log("win tsp"),
+    (length, status, good, wonAlready) => {
+        const TSPLen = document.getElementById("manualTSPLength");
+        TSPLen.innerText = `Length: ${length}`;
+        if (wonAlready) {
+            return
+        }
+        const TSPStatus = document.getElementById("manualTSPStatus");
+        TSPStatus.innerText = status;
+        if (good) {
+            TSPStatus.classList.remove("error");
+            TSPStatus.classList.add("win");
+        } else {
+            TSPStatus.classList.add("error");
+            TSPStatus.classList.remove("win");
+        }
+    }));
