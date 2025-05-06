@@ -283,7 +283,7 @@ function echo(args) {
 	    return(`echo: '${fileName}': No such file`);
 	}
     }
-    printToConsole(args.join(" "));
+    return args.join(" ");
 }
 
 function help(args) {
