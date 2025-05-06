@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="flowfree.css">
     <link rel="stylesheet" href="manualTSP.css">
     <script src="boxDrawings.js"></script>
-    <script src="lineHeight.js"></script>
+    <!-- <script src="lineHeight.js"></script> -->
     <script src="netwalk.js"></script>
     <script src="terminal.js"></script>
     <script src="cya.js"></script>
@@ -29,7 +29,7 @@
             <label>Input Networking code:</label>
             <input id="input1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
             <button
-                onclick="validateAndShow('input1', 11111, 'networkingContainer', 'wrong1') /*toggleButton(this);*/">submit</button>
+                onclick="validateAndShow('input1', 11111, 'networkingContainer', 'wrong1')">submit</button>
             <label id="wrong1" class="hidden error">Wrong code.</label>
         </div>
         <div id="terminalContainer" class="hidden">
@@ -42,9 +42,9 @@
         <div id="networkingContainer" class="hidden">
             <br>
             <p class="heading">Networking</p>
-            <p>The AI has scrambled your network's connnections, and infected some computers with viruses!
-                You can either try to unscramble your network, disinfect some computers, or make a program to disinfect
-                all the computers.</p>
+            <p>The AI has scrambled your network's connnections, and infected your computers with viruses!
+                You can either try to unscramble your network, disinfect some computers manually, 
+                or make a program to disinfect all the computers.</p>
             <br>
             <button onclick="toggleButton(this); toggleShow('netWalkContainer')">Unscramble the network (Easy)</button>
             <button onclick="toggleButton(this); toggleShow('manualTSPContainer')">Disinfect some computers (Medium)</button>
