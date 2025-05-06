@@ -1,13 +1,3 @@
-function openFlowFree() {
-    const flowfree = document.getElementById("flowFreeContainer");
-
-    if (flowfree.style.display === "none") {
-        flowfree.style.display = "inline";
-    } else {
-        flowfree.style.display = "none";
-    }
-}
-
 function setupFlowFree(width, height, starts, winFunc) {
     let currentPath = undefined
 

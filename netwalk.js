@@ -1,13 +1,3 @@
-function openNetWalk() {
-    const netwalk = document.getElementById("networkingContainer");
-
-    if (netwalk.style.display === "none") {
-        netwalk.style.display = "inline";
-    } else {
-        netwalk.style.display = "none";
-    }
-}
-
 function isSubset(subset, superset, compareFn) {
     outer: for (const a of subset) {
         for (const b of superset) {

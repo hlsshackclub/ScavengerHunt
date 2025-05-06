@@ -1,13 +1,3 @@
-function openManualTSP() {
-    const manualTSP = document.getElementById("manualTSPContainer");
-
-    if (manualTSP.style.display === "none") {
-        manualTSP.style.display = "inline";
-    } else {
-        manualTSP.style.display = "none";
-    }
-}
-
 function setupManualTSP(width, height, computerPositions, serverIndex, winFunc) {
     let cells = []
     const minLength = (() => {
