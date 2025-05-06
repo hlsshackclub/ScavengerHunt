@@ -3,10 +3,6 @@
     font-size: calc(3 * var(--font-size-default));
 }
 
-#ManualTSP td:hover {
-    background-color: var(--highlight-color-highlighted);
-}
-
 #ManualTSP td {
     padding: 0;
     position: relative;
@@ -14,6 +10,18 @@
     width: 1ch;
     height: calc(3 * var(--line-height-default));
     overflow: hidden;
+}
+
+#ManualTSP td:hover, #ManualTSP td:hover.infected, #ManualTSP td:hover.disinfected {
+    background-color: var(--highlight-color-highlighted);
+}
+
+#ManualTSP td.infected {
+    background-color: rgb(85, 40, 40);
+}
+
+#ManualTSP td.disinfected {
+    background-color: rgb(41, 90, 51);
 }
 
 #ManualTSP .cb0 {
@@ -39,6 +47,7 @@
 
 #ManualTSP div.not-emoji {
     font-size: calc(4 * var(--font-size-default)); /*4 instead of 3 to remove gaps */
+    color: rgb(131, 255, 156);
     position: absolute;
     top: 0;
     left: 0;

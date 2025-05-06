@@ -18,10 +18,10 @@
 </head>
 
 <body>
-    <div class="prevent-select" style="padding: 1ch">
-        <div id="manualTSPContainer">
-
-        </div>
+    <div class="prevent-select" style="padding-left: 10ch; padding-right: 10ch; padding-top: 1ch; padding-bottom: 1ch">
+        <!-- <div id="manualTSPContainer">
+            <div id="ManualTSP"></div>
+        </div> -->
         <div>
             <p>You think you should head to Networking first, to see what damage the AI has caused
                 and what you can fix.
@@ -42,15 +42,17 @@
         <div id="networkingContainer" class="hidden">
             <br>
             <p class="heading">Networking</p>
-            <p>The AI has scrambled your network connnections, and infected some computers!
+            <p>The AI has scrambled your network's connnections, and infected some computers with viruses!
                 You can either try to unscramble your network, disinfect some computers, or make a program to disinfect
                 all the computers.</p>
+            <br>
             <button onclick="toggleButton(this); toggleShow('netWalkContainer')">Unscramble the network (Easy)</button>
-            <button onclick="toggleButton(this);">Disinfect some computers (Medium)</button>
+            <button onclick="toggleButton(this); toggleShow('manualTSPContainer')">Disinfect some computers (Medium)</button>
             <button onclick="toggleButton(this);">Disinfect ALL the computers (Hard)</button>
             <div id="netWalkContainer" class="hidden">
                 <br>
-                <p>NetWalk: rotate the cables to connect the server to all the computers.</p>
+                <p>Rotate the cables to connect the server to all the computers, allowing your network to function
+                    again.</p>
                 <p>#################</p>
                 <div style="display: flex; align-items: flex-start;">
                     <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
@@ -62,6 +64,27 @@
                 <p>#################</p>
                 <p id="netWalkWin" class="win hidden">You unscrambled the network!</p>
                 <p></p>
+            </div>
+            <div id="manualTSPContainer" class="hidden">
+                <br>
+                <p>You go to disinfect some computers manually.
+                    However, the computers are far apart, so you want to do this efficiently.
+                    Find the shortest path from the server room to the computers and back.</p>
+                <p>#############################################################################</p>
+                <div style="display: flex; align-items: flex-start;">
+                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        #<br>#<br>#<br>#<br>#<br>#<br>
+                    </p>
+                    <div id="ManualTSP"></div>
+                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        #<br>#<br>#<br>#<br>#<br>#<br>
+                    </p>
+                </div>
+                <p>#############################################################################</p>
             </div>
         </div>
         <div id="flowFreeContainer" class="hidden">
@@ -75,6 +98,7 @@
             </div>
             <p>#######################</p>
         </div>
+        <br><br><br><br>
     </div>
 </body>
 

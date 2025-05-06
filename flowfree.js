@@ -179,8 +179,6 @@ function setupFlowFree(width, height, starts, winFunc) {
                     winFunc()
                 }
             })
-            td.addEventListener("mouseout", event => {
-            })
             td.addEventListener("mousedown", event => {
                 currentPath = getCurrentPath(cell);
                 if (currentPath === undefined) {
