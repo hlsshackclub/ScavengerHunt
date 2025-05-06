@@ -17,7 +17,7 @@
     --heading-highlight-color: white;
     --not-important-color: gray;
     --error-color: red;
-    --win-color: green;
+    --win-color: rgb(0, 255, 0);
     --font-size-default: 20px;
     --font-size-emoji: 7px;
     --font-family-default: monospace;
