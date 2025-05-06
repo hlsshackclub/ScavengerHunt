@@ -1,5 +1,19 @@
 //TODO: make this not break with non-square boards because i mixed up row and col somewhere
 function setupFlowFree(width, height, starts, winFunc) {
+    const flowFreeContainer = document.getElementById("flowFreeContainer");
+    flowFreeContainer.innerHTML += `
+    <p>${"#".repeat(width * 3 + 2)}</p>
+    <div class="flex-table-holder-holder">
+        <p>${"#<br>".repeat(height * 3)}
+        </p>
+        <div class="flex-table-holder flowFree"></div>
+        <p>${"#<br>".repeat(height * 3)}
+        </p>
+    </div>
+    <p>${"#".repeat(width * 3 + 2)}</p>`
+    const ftss = flowFreeContainer.querySelectorAll(".flex-table-holder");
+    const flowFree = ftss[ftss.length - 1]; //add to the last one found bcs that's the one you just created
+
     let currentPath = undefined
 
     let cells = []
@@ -194,10 +208,19 @@ function setupFlowFree(width, height, starts, winFunc) {
     }
 
     table.appendChild(tbody);
-    document.getElementById("FlowFree").appendChild(table);
+    flowFree.appendChild(table);
 }
 
 document.addEventListener("DOMContentLoaded", () => setupFlowFree(7, 7,
+    [[[0, 1], [4, 0]],
+    [[6, 1], [6, 6]],
+    [[0, 3], [4, 1]],
+    [[0, 5], [2, 2]],
+    [[4, 6], [5, 4]],
+    [[1, 5], [4, 2]],
+    [[0, 6], [6, 0]]],
+    () => console.log("win flow free")));
+document.addEventListener("DOMContentLoaded", () => setupFlowFree(8, 8,
     [[[0, 1], [4, 0]],
     [[6, 1], [6, 6]],
     [[0, 3], [4, 1]],

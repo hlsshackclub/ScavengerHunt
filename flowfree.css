@@ -1,30 +1,29 @@
-#FlowFree table {
+.flowFree table {
     border-collapse: collapse;
     font-size: calc(3 * var(--font-size-default));
 }
 
-#FlowFree td:hover {
+.flowFree td:hover {
     background-color: var(--highlight-color-highlighted);
 }
 
-#FlowFree td {
+.flowFree td {
     padding: 0;
     position: relative;
-
     width: 1ch;
     height: calc(3 * var(--line-height-default));
     overflow: hidden;
 }
 
-#FlowFree .cb0 {
+.flowFree .cb0 {
     background-color: black;
 }
 
-#FlowFree .cb1 {
-    background-color: var(--background-color-checker)
+.flowFree .cb1 {
+    background-color: var(--background-color-checker);
 }
 
-#FlowFree div.emoji {
+.flowFree div.emoji {
     font-size: calc(3 * var(--font-size-emoji));
     position: absolute;
     top: 0;
@@ -37,8 +36,8 @@
     z-index: 1;
 }
 
-#FlowFree div.not-emoji {
-    font-size: calc(4 * var(--font-size-default)); /*4 instead of 3 to remove gaps */
+.flowFree div.not-emoji {
+    font-size: calc(4 * var(--font-size-default)); /* 4 instead of 3 to remove gaps */
     position: absolute;
     top: 0;
     left: 0;
@@ -49,30 +48,10 @@
     justify-content: center;
 }
 
-#FlowFree .c0 {
-    color: red;
-}
-
-#FlowFree .c1 {
-    color: rgb(0, 255, 0);
-}
-
-#FlowFree .c2 {
-    color: blue;
-}
-
-#FlowFree .c3 {
-    color: cyan;
-}
-
-#FlowFree .c4 {
-    color: magenta;
-}
-
-#FlowFree .c5 {
-    color: yellow;
-}
-
-#FlowFree .c6 {
-    color: orange;
-}
+.flowFree .c0 { color: red; }
+.flowFree .c1 { color: rgb(0, 255, 0); }
+.flowFree .c2 { color: blue; }
+.flowFree .c3 { color: cyan; }
+.flowFree .c4 { color: magenta; }
+.flowFree .c5 { color: yellow; }
+.flowFree .c6 { color: orange; }
