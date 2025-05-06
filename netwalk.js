@@ -10,6 +10,7 @@ function isSubset(subset, superset, compareFn) {
     return true;
 }
 
+//TODO: make this not break with non-square boards because i mixed up row and col somewhere
 function setupNetWalk(board, winFunc) {
     const height = board.length;
     const width = board[0].length;

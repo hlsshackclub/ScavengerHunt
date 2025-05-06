@@ -1,3 +1,4 @@
+//TODO: make this not break with non-square boards because i mixed up row and col somewhere
 function setupFlowFree(width, height, starts, winFunc) {
     let currentPath = undefined
 
