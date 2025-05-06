@@ -34,10 +34,20 @@
             <p>You think you should head to Manufacturing first, to see what the AI is up to.
             </p>
             <label>Input Manufacturing code:</label>
-            <input id="input1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+            <input id="input2" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
             <button
-                onclick="validateAndShow('input1', 11111, 'manufacturingContainer', 'wrong1')">submit</button>
-            <label id="wrong1" class="hidden error">Wrong code.</label>
+                onclick="validateAndShow('input2', 11111, 'manufacturingContainer', 'wrong2')">submit</button>
+            <label id="wrong2" class="hidden error">Wrong code.</label>
+        </div>
+        <br>
+        <div>
+            <p>You think you should head to Security first, to security idk.
+            </p>
+            <label>Input Security code:</label>
+            <input id="input3" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+            <button
+                onclick="validateAndShow('input3', 11111, 'securityContainer', 'wrong3')">submit</button>
+            <label id="wrong3" class="hidden error">Wrong code.</label>
         </div>
         <div id="networkingContainer" class="hidden">
             <br>
@@ -114,12 +124,21 @@
                 <p>#######################</p>
             </div>
         </div>
-        <div id="terminalContainer" class="hidden">
-            <pre id="terminal"></pre>
-            <form action="javascript:;" onsubmit=" enter(this) ">
-                <label id="terminalLabel">[hacker@HLSS/]$ </label>
-                <input id="terminalBox" type="text">
-            </form>
+        <div id="securityContainer" class="hidden">
+            <br>
+            <h2>Security</h2>
+            <p>You have hacked into the AI's file system. You need to find his password,
+                but you can also stick around and cause more damage. Navigate his file system using
+                the terminal below.
+            </p>
+            <br>
+            <div id="terminalContainer">
+                <pre id="terminal"></pre>
+                <form action="javascript:;" onsubmit=" enter(this) ">
+                    <label id="terminalLabel">[hacker@HLSS/]$ </label>
+                    <input id="terminalBox" type="text">
+                </form>
+            </div>
         </div>
         <br><br><br><br> <!-- so content doesn't end at very bottom -->
     </div>
