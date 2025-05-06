@@ -19,9 +19,6 @@
 
 <body>
     <div class="prevent-select" style="padding-left: 10ch; padding-right: 10ch; padding-top: 1ch; padding-bottom: 1ch">
-        <!-- <div id="manualTSPContainer">
-            <div id="ManualTSP"></div>
-        </div> -->
         <div>
             <p>You think you should head to Networking first, to see what damage the AI has caused
                 and what you can fix.
@@ -32,16 +29,19 @@
                 onclick="validateAndShow('input1', 11111, 'networkingContainer', 'wrong1')">submit</button>
             <label id="wrong1" class="hidden error">Wrong code.</label>
         </div>
-        <div id="terminalContainer" class="hidden">
-            <pre id="terminal"></pre>
-            <form action="javascript:;" onsubmit=" enter(this) ">
-                <label id="terminalLabel">[hacker@HLSS/]$ </label>
-                <input id="terminalBox" type="text">
-            </form>
+        <br>
+        <div>
+            <p>You think you should head to Manufacturing first, to see what the AI is up to.
+            </p>
+            <label>Input Manufacturing code:</label>
+            <input id="input1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+            <button
+                onclick="validateAndShow('input1', 11111, 'manufacturingContainer', 'wrong1')">submit</button>
+            <label id="wrong1" class="hidden error">Wrong code.</label>
         </div>
         <div id="networkingContainer" class="hidden">
             <br>
-            <p class="heading">Networking</p>
+            <h2>Networking</h2>
             <p>The AI has scrambled your network's connnections, and infected your computers with viruses!
                 You can either try to unscramble your network, disinfect some computers manually, 
                 or make a program to disinfect all the computers.</p>
@@ -88,18 +88,40 @@
                 <p id="manualTSPLength"></p> <span id="manualTSPStatus"></span>
             </div>
         </div>
-        <div id="flowFreeContainer" class="hidden">
-            <p>#######################</p>
-            <div style="display: flex; align-items: flex-start;">
-                <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                </p>
-                <div id="FlowFree"></div>
-                <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                </p>
+        <div id="manufacturingContainer" class="hidden">
+            <br>
+            <h2>Manufacturing</h2>
+            <p>The AI has set up a manufacturing plant to make robot minions.
+                You can either reroute some of his conveyer belts into disposal units to disrupt some production,
+                reroute more of his conveyer belts into disposal units to disrupt more production, 
+                or use EMP pulses to permananently disable his machines.
+            </p>
+            <br>
+            <button onclick="toggleButton(this); toggleShow('flowFreeContainer')">Reroute some conveyers (Easy)</button>
+            <button onclick="toggleButton(this);">Reroute MORE conveyers (Medium)</button>
+            <button onclick="toggleButton(this);">Disable the machines with EMP (Hard)</button>
+            <div id="flowFreeContainer" class="hidden">
+                <br>
+                <p>Route the production plants "◆" into their corresponding disposal units "◉".</p>
+                <p>#######################</p>
+                <div style="display: flex; align-items: flex-start;">
+                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                    </p>
+                    <div id="FlowFree"></div>
+                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                    </p>
+                </div>
+                <p>#######################</p>
             </div>
-            <p>#######################</p>
         </div>
-        <br><br><br><br>
+        <div id="terminalContainer" class="hidden">
+            <pre id="terminal"></pre>
+            <form action="javascript:;" onsubmit=" enter(this) ">
+                <label id="terminalLabel">[hacker@HLSS/]$ </label>
+                <input id="terminalBox" type="text">
+            </form>
+        </div>
+        <br><br><br><br> <!-- so content doesn't end at very bottom -->
     </div>
 </body>
 

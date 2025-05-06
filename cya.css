@@ -6,10 +6,10 @@ input.inputbox {
     background-color: var(--background-color-inputbox);
 }
 
-.heading {
+/* .heading {
     color: var(--heading-color);
     background-color: var(--heading-highlight-color);
-}
+} */
 
 .hidden {
     display: none !important;

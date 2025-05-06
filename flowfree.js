@@ -128,12 +128,11 @@ function setupFlowFree(width, height, starts, winFunc) {
 
             let emojiDiv = undefined
             for (const [i, startPair] of starts.entries()) {
-                if ((startPair[0][0] == cell[0] && startPair[0][1] == cell[1])
-                    || (startPair[1][0] == cell[0] && startPair[1][1] == cell[1])) {
+                if (v2Eq(startPair[0], cell) || v2Eq(startPair[1], cell)) {
                     emojiDiv = document.createElement("div");
                     emojiDiv.classList.add("emoji");
                     emojiDiv.classList.add(`c${i}`);
-                    emojiDiv.innerText = "⬤"
+                    emojiDiv.innerText = v2Eq(startPair[0], cell) ? "◆" : "◉"
                     td.appendChild(emojiDiv);
                     break;
                 }

@@ -14,7 +14,6 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, 
         }
         return minLen
     })();
-    console.log(minLength)
 
     let oldCell = undefined
     let held = false

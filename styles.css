@@ -21,6 +21,7 @@
     --font-size-default: 20px;
     --font-size-emoji: 7px;
     --font-family-default: monospace;
+    --font-weight-default: normal;
     --line-height-default: 1.1rem;
 
     font-size: var(--font-size-default);
@@ -31,6 +32,7 @@ body {
     color: var(--text-color-default);
     font-size: var(--font-size-default);
     font-family: var(--font-family-default);
+    font-weight: var(--font-weight-default);
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -46,6 +48,15 @@ p {
 pre {
     padding: 0;
     margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: var(--font-size-default);
+    font-weight: var(--font-weight-default);
+    padding: 0;
+    margin: 0;
+    color: var(--heading-color);
+    background-color: var(--heading-highlight-color);
 }
 
 input {
