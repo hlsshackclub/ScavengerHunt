@@ -12,6 +12,14 @@ function validateAndShow(inputBox, wantedCode, toShow, wrongToShow) {
     }
 }
 
-function toggleShow(toShow) {
-    document.getElementById(toShow).classList.toggle("hidden");
+function toggleShow(toToggle) {
+    document.getElementById(toToggle).classList.toggle("hidden");
+}
+
+function show(toShow) {
+    document.getElementById(toShow).classList.remove("hidden");
+}
+
+function hide(toHide) {
+    document.getElementById(toHide).classList.add("hidden");
 }

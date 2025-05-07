@@ -25,8 +25,7 @@
             </p>
             <label>Input Networking code:</label>
             <input id="input1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
-            <button
-                onclick="validateAndShow('input1', 11111, 'networkingContainer', 'wrong1')">submit</button>
+            <button onclick="validateAndShow('input1', 11111, 'networkingContainer', 'wrong1')">submit</button>
             <label id="wrong1" class="hidden error">Wrong code.</label>
         </div>
         <br>
@@ -35,8 +34,7 @@
             </p>
             <label>Input Manufacturing code:</label>
             <input id="input2" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
-            <button
-                onclick="validateAndShow('input2', 11111, 'manufacturingContainer', 'wrong2')">submit</button>
+            <button onclick="validateAndShow('input2', 11111, 'manufacturingContainer', 'wrong2')">submit</button>
             <label id="wrong2" class="hidden error">Wrong code.</label>
         </div>
         <br>
@@ -45,19 +43,19 @@
             </p>
             <label>Input Security code:</label>
             <input id="input3" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
-            <button
-                onclick="validateAndShow('input3', 11111, 'securityContainer', 'wrong3')">submit</button>
+            <button onclick="validateAndShow('input3', 11111, 'securityContainer', 'wrong3')">submit</button>
             <label id="wrong3" class="hidden error">Wrong code.</label>
         </div>
         <div id="networkingContainer" class="hidden">
             <br>
             <h2>Networking</h2>
             <p>The AI has scrambled your network's connnections, and infected your computers with viruses!
-                You can either try to unscramble your network, disinfect some computers manually, 
+                You can either try to unscramble your network, disinfect some computers manually,
                 or make a program to disinfect all the computers.</p>
             <br>
             <button onclick="toggleButton(this); toggleShow('netWalkContainer')">Unscramble the network (Easy)</button>
-            <button onclick="toggleButton(this); toggleShow('manualTSPContainer')">Disinfect some computers (Medium)</button>
+            <button onclick="toggleButton(this); toggleShow('manualTSPContainer')">Disinfect some computers
+                (Medium)</button>
             <button onclick="toggleButton(this);">Disinfect ALL the computers (Hard)</button>
             <div id="netWalkContainer" class="hidden">
                 <br>
@@ -103,16 +101,96 @@
             <h2>Manufacturing</h2>
             <p>The AI has set up a manufacturing plant to make robot minions.
                 You can either reroute some of his conveyer belts into disposal units to disrupt some production,
-                reroute more of his conveyer belts into disposal units to disrupt more production, 
+                reroute more of his conveyer belts into disposal units to disrupt more production,
                 or use EMP pulses to permananently disable his machines.
             </p>
             <br>
             <button onclick="toggleButton(this); toggleShow('flowFreeContainer')">Reroute some conveyers (Easy)</button>
-            <button onclick="toggleButton(this);">Reroute MORE conveyers (Medium)</button>
+            <!-- <button onclick="toggleButton(this);">Reroute MORE conveyers (Medium)</button> -->
             <button onclick="toggleButton(this);">Disable the machines with EMP (Hard)</button>
             <div id="flowFreeContainer" class="hidden">
                 <br>
                 <p>Route the production plants "◆" into their corresponding disposal units "◉".</p>
+                <div id="flowFree1Container">
+                    <div id="flowFree1">
+                        <br>
+                        <p>Manufacturing plant 1:</p>
+                    </div>
+                    <div id="flowFreeWin1" class="hidden">
+                        <p class="win">Plant 1 disrupted!</p>
+                        <button onclick="hide('flowFree1Container'); show('flowFree2Container')">
+                            Go to plant 2
+                        </button>
+                    </div>
+                </div>
+                <div id="flowFree2Container" class="hidden">
+                    <div id="flowFree2">
+                        <br>
+                        <p>Manufacturing plant 2:</p>
+                    </div>
+                    <div id="flowFreeWin2" class="hidden">
+                        <p class="win">Plant 2 disrupted!</p>
+                        <button onclick="hide('flowFree2Container'); show('flowFree3Container')">
+                            Go to plant 3
+                        </button>
+                    </div>
+                </div>
+                <div id="flowFree3Container" class="hidden">
+                    <div id="flowFree3">
+                        <br>
+                        <p>Manufacturing plant 3:</p>
+                    </div>
+                    <div id="flowFreeWin3" class="hidden">
+                        <p class="win">Plant 3 disrupted!</p>
+                        <p>You've done enough damage. If you don't want to waste time, 
+                            you can move on to the next station now. 
+                            You could also press on, or even go back and 
+                            destroy the manufacturing more permanently with EMP (Hard).</p>
+                        <button onclick="hide('flowFree3Container')">
+                            Head to the next station
+                        </button>
+                        <button onclick="hide('flowFree3Container'); show('flowFree4Container')">
+                            Reroute more conveyers (Medium)
+                        </button>
+                    </div>
+                </div>
+                <div id="flowFree4Container" class="hidden">
+                    <div id="flowFree4">
+                        <br>
+                        <p>Manufacturing plant 4:</p>
+                    </div>
+                    <div id="flowFreeWin4" class="hidden">
+                        <p class="win">Plant 4 disrupted!</p>
+                        <button onclick="hide('flowFree4Container'); show('flowFree5Container')">
+                            Go to plant 5
+                        </button>
+                    </div>
+                </div>
+                <div id="flowFree5Container" class="hidden">
+                    <div id="flowFree5">
+                        <br>
+                        <p>Manufacturing plant 5:</p>
+                    </div>
+                    <div id="flowFreeWin5" class="hidden">
+                        <p class="win">Plant 5 disrupted!</p>
+                        <button onclick="hide('flowFree5Container'); show('flowFree6Container')">
+                            Go to plant 6
+                        </button>
+                    </div>
+                </div>
+                <div id="flowFree6Container" class="hidden">
+                    <div id="flowFree6">
+                        <br>
+                        <p>Manufacturing plant 6:</p>
+                    </div>
+                    <div id="flowFreeWin6" class="hidden">
+                        <p class="win">All plants disrupted! You can move on, or 
+                            destroy the manufacturing more permanently with EMP (Hard).</p>
+                        <button onclick="hide('flowFree6Container')">
+                            Move on to the next station
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="securityContainer" class="hidden">
