@@ -1,0 +1,67 @@
+#editorArea {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #000000;
+    border-left: 1px solid #ffffff;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+#codeEditor {
+    flex-grow: 1;
+    height: 70%;
+    border: none;
+    padding: 10px;
+    font-family: monospace;
+    font-size: var(--font-size-default);
+    font-weight: var(--font-weight-default);
+    box-sizing: border-box;
+    resize: none;
+    background-color: #000000;
+    color: #fff;
+}
+
+#runButton {
+    position: absolute;
+    z-index: 10;
+    font-size: var(--font-size-default);
+    font-weight: var(--font-weight-default);
+    cursor: pointer;
+}
+
+#outputArea {
+    height: 30%;
+    background-color: #000000;
+    color: #fff;
+    padding: 10px;
+    font-family: monospace;
+    font-size: var(--font-size-default);
+    font-weight: var(--font-weight-default);
+    overflow-y: auto;
+    white-space: pre-wrap;
+    box-sizing: border-box;
+    border-top: 1px solid #ffffff;
+}
+
+.container {
+    display: flex;
+}
+
+.main-content {
+    width: 100%;
+    transition: width 0.3s ease;
+}
+
+.main-content.editor-mode {
+    width: 50%;
+}
+
+#terminalContainer.editor-mode {
+    width: 100%;
+}

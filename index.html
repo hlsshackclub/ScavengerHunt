@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="cya.css">
     <link rel="stylesheet" href="flowfree.css">
     <link rel="stylesheet" href="manualTSP.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+    <script src="editor.js"></script>
+    <link rel="stylesheet" href="editor.css">
     <script src="boxDrawings.js"></script>
     <!-- <script src="lineHeight.js"></script> -->
     <script src="netwalk.js"></script>
@@ -18,129 +21,136 @@
 </head>
 
 <body>
-    <div class="prevent-select" style="padding-left: 10ch; padding-right: 10ch; padding-top: 1ch; padding-bottom: 1ch">
-        <div>
-            <p>You think you should head to Networking first, to see what damage the AI has caused
-                and what you can fix.
-            </p>
-            <label>Input Networking code:</label>
-            <input id="input1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
-            <button
-                onclick="validateAndShow('input1', 11111, 'networkingContainer', 'wrong1')">submit</button>
-            <label id="wrong1" class="hidden error">Wrong code.</label>
-        </div>
-        <br>
-        <div>
-            <p>You think you should head to Manufacturing first, to see what the AI is up to.
-            </p>
-            <label>Input Manufacturing code:</label>
-            <input id="input2" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
-            <button
-                onclick="validateAndShow('input2', 11111, 'manufacturingContainer', 'wrong2')">submit</button>
-            <label id="wrong2" class="hidden error">Wrong code.</label>
-        </div>
-        <br>
-        <div>
-            <p>You think you should head to Security first, to security idk.
-            </p>
-            <label>Input Security code:</label>
-            <input id="input3" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
-            <button
-                onclick="validateAndShow('input3', 11111, 'securityContainer', 'wrong3')">submit</button>
-            <label id="wrong3" class="hidden error">Wrong code.</label>
-        </div>
-        <div id="networkingContainer" class="hidden">
+    <div class="container">
+        <div class="main-content prevent-select" style="padding-left: 10ch; padding-right: 10ch; padding-top: 1ch; padding-bottom: 1ch">
+            <div>
+                <p>You think you should head to Networking first, to see what damage the AI has caused
+                    and what you can fix.
+                </p>
+                <label>Input Networking code:</label>
+                <input id="input1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+                <button
+                    onclick="validateAndShow('input1', 11111, 'networkingContainer', 'wrong1')">submit</button>
+                <label id="wrong1" class="hidden error">Wrong code.</label>
+            </div>
             <br>
-            <h2>Networking</h2>
-            <p>The AI has scrambled your network's connnections, and infected your computers with viruses!
-                You can either try to unscramble your network, disinfect some computers manually, 
-                or make a program to disinfect all the computers.</p>
+            <div>
+                <p>You think you should head to Manufacturing first, to see what the AI is up to.
+                </p>
+                <label>Input Manufacturing code:</label>
+                <input id="input2" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+                <button
+                    onclick="validateAndShow('input2', 11111, 'manufacturingContainer', 'wrong2')">submit</button>
+                <label id="wrong2" class="hidden error">Wrong code.</label>
+            </div>
             <br>
-            <button onclick="toggleButton(this); toggleShow('netWalkContainer')">Unscramble the network (Easy)</button>
-            <button onclick="toggleButton(this); toggleShow('manualTSPContainer')">Disinfect some computers (Medium)</button>
-            <button onclick="toggleButton(this);">Disinfect ALL the computers (Hard)</button>
-            <div id="netWalkContainer" class="hidden">
+            <div>
+                <p>You think you should head to Security first, to security idk.
+                </p>
+                <label>Input Security code:</label>
+                <input id="input3" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+                <button
+                    onclick="validateAndShow('input3', 11111, 'securityContainer', 'wrong3')">submit</button>
+                <label id="wrong3" class="hidden error">Wrong code.</label>
+            </div>
+            <div id="networkingContainer" class="hidden">
                 <br>
-                <p>Rotate the cables to connect the server to all the computers, allowing your network to function
-                    again.</p>
-                <p>#################</p>
-                <div class="flex-table-holder-holder">
-                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                    </p>
-                    <div id="NetWalk" class="flex-table-holder"></div>
-                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                    </p>
-                </div>
-                <p>#################</p>
-                <p id="netWalkWin" class="win hidden">You unscrambled the network!</p>
-                <p></p>
-            </div>
-            <div id="manualTSPContainer" class="hidden">
+                <h2>Networking</h2>
+                <p>The AI has scrambled your network's connnections, and infected your computers with viruses!
+                    You can either try to unscramble your network, disinfect some computers manually, 
+                    or make a program to disinfect all the computers.</p>
                 <br>
-                <p>You go to disinfect some computers manually.
-                    However, the computers are far apart, so you want to do this efficiently.
-                    Find the shortest path from the server room to the computers and back.</p>
-                <p>#############################################################################</p>
-                <div class="flex-table-holder-holder">
-                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                        #<br>#<br>#<br>#<br>#<br>#<br>
-                    </p>
-                    <div id="ManualTSP" class="flex-table-holder"></div>
-                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                        #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                        #<br>#<br>#<br>#<br>#<br>#<br>
-                    </p>
+                <button onclick="toggleButton(this); toggleShow('netWalkContainer')">Unscramble the network (Easy)</button>
+                <button onclick="toggleButton(this); toggleShow('manualTSPContainer')">Disinfect some computers (Medium)</button>
+                <button onclick="toggleButton(this);">Disinfect ALL the computers (Hard)</button>
+                <div id="netWalkContainer" class="hidden">
+                    <br>
+                    <p>Rotate the cables to connect the server to all the computers, allowing your network to function
+                        again.</p>
+                    <p>#################</p>
+                    <div class="flex-table-holder-holder">
+                        <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        </p>
+                        <div id="NetWalk" class="flex-table-holder"></div>
+                        <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        </p>
+                    </div>
+                    <p>#################</p>
+                    <p id="netWalkWin" class="win hidden">You unscrambled the network!</p>
+                    <p></p>
                 </div>
-                <p>#############################################################################</p>
-                <p id="manualTSPLength"></p> <span id="manualTSPStatus"></span>
+                <div id="manualTSPContainer" class="hidden">
+                    <br>
+                    <p>You go to disinfect some computers manually.
+                        However, the computers are far apart, so you want to do this efficiently.
+                        Find the shortest path from the server room to the computers and back.</p>
+                    <p>#############################################################################</p>
+                    <div class="flex-table-holder-holder">
+                        <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                            #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                            #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                            #<br>#<br>#<br>#<br>#<br>#<br>
+                        </p>
+                        <div id="ManualTSP" class="flex-table-holder"></div>
+                        <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                            #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                            #<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                            #<br>#<br>#<br>#<br>#<br>#<br>
+                        </p>
+                    </div>
+                    <p>#############################################################################</p>
+                    <p id="manualTSPLength"></p> <span id="manualTSPStatus"></span>
+                </div>
             </div>
-        </div>
-        <div id="manufacturingContainer" class="hidden">
-            <br>
-            <h2>Manufacturing</h2>
-            <p>The AI has set up a manufacturing plant to make robot minions.
-                You can either reroute some of his conveyer belts into disposal units to disrupt some production,
-                reroute more of his conveyer belts into disposal units to disrupt more production, 
-                or use EMP pulses to permananently disable his machines.
-            </p>
-            <br>
-            <button onclick="toggleButton(this); toggleShow('flowFreeContainer')">Reroute some conveyers (Easy)</button>
-            <button onclick="toggleButton(this);">Reroute MORE conveyers (Medium)</button>
-            <button onclick="toggleButton(this);">Disable the machines with EMP (Hard)</button>
-            <div id="flowFreeContainer" class="hidden">
+            <div id="manufacturingContainer" class="hidden">
                 <br>
-                <p>Route the production plants "◆" into their corresponding disposal units "◉".</p>
-                <p>#######################</p>
-                <div class="flex-table-holder-holder">
-                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                    </p>
-                    <div id="FlowFree" class="flex-table-holder"></div>
-                    <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
-                    </p>
+                <h2>Manufacturing</h2>
+                <p>The AI has set up a manufacturing plant to make robot minions.
+                    You can either reroute some of his conveyer belts into disposal units to disrupt some production,
+                    reroute more of his conveyer belts into disposal units to disrupt more production, 
+                    or use EMP pulses to permananently disable his machines.
+                </p>
+                <br>
+                <button onclick="toggleButton(this); toggleShow('flowFreeContainer')">Reroute some conveyers (Easy)</button>
+                <button onclick="toggleButton(this);">Reroute MORE conveyers (Medium)</button>
+                <button onclick="toggleButton(this);">Disable the machines with EMP (Hard)</button>
+                <div id="flowFreeContainer" class="hidden">
+                    <br>
+                    <p>Route the production plants "◆" into their corresponding disposal units "◉".</p>
+                    <p>#######################</p>
+                    <div class="flex-table-holder-holder">
+                        <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        </p>
+                        <div id="FlowFree" class="flex-table-holder"></div>
+                        <p>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>#<br>
+                        </p>
+                    </div>
+                    <p>#######################</p>
                 </div>
-                <p>#######################</p>
             </div>
-        </div>
-        <div id="securityContainer" class="hidden">
-            <br>
-            <h2>Security</h2>
-            <p>You have hacked into the AI's file system. You need to find his password,
-                but you can also stick around and cause more damage. Navigate his file system using
-                the terminal below.
-            </p>
-            <br>
-            <div id="terminalContainer">
-                <pre id="terminal"></pre>
-                <form action="javascript:;" onsubmit=" enter(this) ">
-                    <label id="terminalLabel">[hacker@HLSS/]$ </label>
-                    <input id="terminalBox" type="text">
-                </form>
+            <div id="securityContainer" class="hidden">
+                <br>
+                <h2>Security</h2>
+                <p>You have hacked into the AI's file system. You need to find his password,
+                    but you can also stick around and cause more damage. Navigate his file system using
+                    the terminal below.
+                </p>
+                <br>
+                <div id="terminalContainer">
+                    <pre id="terminal"></pre>
+                    <form action="javascript:;" onsubmit=" enter(this) ">
+                        <label id="terminalLabel" for="terminalBox">[hacker@HLSS/]$ </label>
+                        <input id="terminalBox" type="text" autocomplete="off">
+                    </form>
+                </div>
             </div>
+            <br><br><br><br> <!-- so content doesn't end at very bottom -->
         </div>
-        <br><br><br><br> <!-- so content doesn't end at very bottom -->
+        <div id="editorArea" class="hidden">
+            <textarea id="codeEditor"></textarea>
+            <button id="runButton" type="button" class="inputbox" style="position:absolute; bottom:20px; right:30px;">run</button>
+            <pre id="outputArea" class="output"></pre>
+        </div>
     </div>
 </body>
 
