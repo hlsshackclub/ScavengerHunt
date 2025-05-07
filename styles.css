@@ -35,7 +35,7 @@ body {
     font-weight: var(--font-weight-default);
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: scroll;
     overflow-y: scroll;
     line-height: var(--line-height-default);
 }
@@ -108,4 +108,13 @@ input::placeholder {
     /* IE 10 and IE 11 */
     user-select: none;
     /* Standard syntax */
+}
+
+.flex-table-holder-holder {
+    display: flex; 
+    align-items: flex-start;
+}
+
+.flex-table-holder {
+    flex-shrink: 0;
 }
