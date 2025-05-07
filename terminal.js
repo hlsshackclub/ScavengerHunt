@@ -1,5 +1,9 @@
 const terminalMessages = [];
 const terminalPrompt = "@HLSS";
+let inCommand = false;
+let nextFunc = undefined;
+let nextArgs = undefined;
+let sudoAccess = false;
 
 class User {
     constructor(name, home, group) {
@@ -64,6 +68,7 @@ function initSystem() {
     touch(["home/root/SuperSecretFolder/password.txt"]);
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
     currentUser = user;
+    user.groups.push("root");
 }
 
 initSystem();
@@ -127,7 +132,41 @@ function cd(args) {
 }
 
 /*TODO: make perms work*/
-function sudo(args) { }
+function sudo(args) {
+    if (args.length === 0) {
+	return("sudo: missing operand");
+    }
+
+    if (sudoAccess) {
+	currentUser = admin;
+	executeCommand(args.join(" "));
+	currentUser = user;
+	return;
+    }
+
+    if (currentUser.groups.includes("root")) {
+	nextArgs = args.join(" ");
+        return ["Enter password: ", (args) => {
+	    if (args === "password") {
+		currentUser = admin;
+		executeCommand(nextArgs);
+		currentUser = user;
+		inCommand = false;
+		nextFunc = undefined;
+		nextArgs = undefined;
+		sudoAccess = true;
+	    } else {
+		console.log(args);
+		inCommand = false;
+		nextFunc = undefined;
+		nextArgs = undefined;
+		printToConsole("sudo: incorrect password");
+	    }
+	}];
+    } else {
+	return "sudo: permission denied";
+    }
+}
 
 function cat(args) {
     if (args.length === 0) {
@@ -241,9 +280,16 @@ function getByName(name, p, type) {
 function enter(x) {
     let val = x.children[1].value;
     x.children[1].value = "";
-    let tPrompt = "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ "
-    terminalMessages.push(tPrompt + val);
-    executeCommand(val);
+    let tPrompt = "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ ";
+    let output = undefined;
+    if (inCommand) {
+        output = nextFunc(val);
+	//tPrompt = output === undefined ? "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ " : output;
+    } else {
+    	terminalMessages.push(tPrompt + val);
+	output = executeCommand(val);
+    }
+    tPrompt = output === undefined ? "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ " : output;
     x.children[0].innerText = tPrompt;
     let messagesString = terminalMessages[0];
     terminalMessages.slice(1).forEach(message => {
@@ -287,7 +333,15 @@ function echo(args) {
 }
 
 function help(args) {
-    printToConsole("echo - display a line of text");
+    printToConsole("echo [string] - display a line of text");
+    printToConsole("cd [directory] - change the current directory");
+    printToConsole("ls [directory] - list directory contents");
+    printToConsole("rm [file] - remove files");
+    printToConsole("rmdir [directory] - remove empty directories");
+    printToConsole("sudo [command] [options] - execute a command as root");
+    printToConsole("mkdir [directory] - create a new directory");
+    printToConsole("touch [file] - create a new file");
+    printToConsole("cat [file] - display file contents");
     return("help - displays this message");
 }
 
@@ -323,7 +377,23 @@ function executeCommand(input) {
     const func = functions[funcName];
 
     if (typeof func === "function") {
-        printToConsole(func(funcArgs));
+	let secondary = undefined;
+	let output = func(funcArgs);
+	if (typeof output === "object") {
+	    secondary = output[1];
+	    output = output[0];
+	}
+	if (output !== undefined) {
+            if (secondary) {
+	        inCommand = true;
+	        nextFunc = secondary;
+	        return output;
+	    } else {
+	        if (output) {
+		    printToConsole(output);
+	        }
+	    }
+	}
     } else {
         printToConsole(`Command "${funcName}" not found. Did you mean help?`);
     }
