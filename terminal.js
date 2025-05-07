@@ -1,5 +1,7 @@
 const terminalMessages = [];
 const terminalPrompt = "@HLSS";
+let inCommand = false;
+let nextFunc = undefined;
 
 class User {
     constructor(name, home, group) {
@@ -241,10 +243,14 @@ function getByName(name, p, type) {
 function enter(x) {
     let val = x.children[1].value;
     x.children[1].value = "";
-    let tPrompt = "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ "
-    terminalMessages.push(tPrompt + val);
-    executeCommand(val);
-    x.children[0].innerText = tPrompt;
+    if (inCommand) {
+        nextFunc(val);
+    } else {
+	let tPrompt = "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ "
+    	terminalMessages.push(tPrompt + val);
+    	executeCommand(val, x.children[0]);
+    	x.children[0].innerText = tPrompt;
+    }
     let messagesString = terminalMessages[0];
     terminalMessages.slice(1).forEach(message => {
 	if (message === "") {
@@ -287,7 +293,15 @@ function echo(args) {
 }
 
 function help(args) {
-    printToConsole("echo - display a line of text");
+    printToConsole("echo [string] - display a line of text");
+    printToConsole("cd [directory] - change the current directory");
+    printToConsole("ls [directory] - list directory contents");
+    printToConsole("rm [file] - remove files");
+    printToConsole("rmdir [directory] - remove empty directories");
+    printToConsole("sudo [command] [options] - execute a command as root");
+    printToConsole("mkdir [directory] - create a new directory");
+    printToConsole("touch [file] - create a new file");
+    printToConsole("cat [file] - display file contents");
     return("help - displays this message");
 }
 
@@ -305,7 +319,7 @@ function parseArgs(input) {
     return args;
 }
 
-function executeCommand(input) {
+function executeCommand(input, tPrompt) {
     const args = parseArgs(input);
     const [funcName, ...funcArgs] = args;
     const functions = {
@@ -323,7 +337,21 @@ function executeCommand(input) {
     const func = functions[funcName];
 
     if (typeof func === "function") {
-        printToConsole(func(funcArgs));
+	let secondary = undefined;
+	let output = func(funcArgs);
+	if (typeof output === "array") {
+	    secondary = output[1];
+	    output = output[0];
+	}
+        if (secondary) {
+	    tPrompt.innerText = output;
+	    inCommand = true;
+	    nextFunc = secondary;
+	} else {
+	    if (output) {
+		printToConsole(output);
+	    }
+	}
     } else {
         printToConsole(`Command "${funcName}" not found. Did you mean help?`);
     }
