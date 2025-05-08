@@ -4,6 +4,8 @@ let inCommand = false;
 let nextFunc = undefined;
 let nextArgs = undefined;
 let sudoAccess = false;
+const password = "1357d";
+const fakePassword = "1357b";
 
 class User {
     constructor(name, home, group) {
@@ -66,7 +68,9 @@ function initSystem() {
     mkdir(["lib"]);
     mkdir(["home/root/SuperSecretFolder"]);
     touch(["home/root/SuperSecretFolder/password.txt"]);
+    echo([password, ">>", "home/root/SuperSecretFolder/password.txt"]);
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
+    echo([fakePassword, ">>", "home/root/SuperSecretFolder/fakePassword.txt"]);
     currentUser = user;
     user.groups.push("root");
 }
@@ -147,7 +151,7 @@ function sudo(args) {
     if (currentUser.groups.includes("root")) {
 	nextArgs = args.join(" ");
         return ["Enter password: ", (args) => {
-	    if (args === "password") {
+	    if (args === password) {
 		currentUser = admin;
 		executeCommand(nextArgs);
 		currentUser = user;
