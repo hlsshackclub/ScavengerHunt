@@ -64,7 +64,7 @@ function makeFlowFreeGame(width, height, starts) {
     function trimPaths(pos, exclude) {
         for (const [i, path] of paths.entries()) {
             if (i === exclude) {
-                return
+                continue
             }
             for (const [j, pPos] of path.entries()) {
                 if (v2Eq(pPos, pos)) {
@@ -132,8 +132,8 @@ function makeFlowFreeGame(width, height, starts) {
             }
 
             if (currentPathI !== undefined
-                && currentPathI !== cursorPathI
-                && paths[currentPathI].length > 0
+                && (currentPathI !== cursorPathI 
+                    || (cursorStartI !== undefined && !v2Eq(paths[cursorStartI][0], pos)))
                 && v2MDist(paths[currentPathI].slice(-1)[0], pos) !== 1) {
                 break inner
             }
