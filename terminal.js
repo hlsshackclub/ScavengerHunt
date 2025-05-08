@@ -66,7 +66,7 @@ function initSystem() {
     touch(["home/root/SuperSecretFolder/password.txt"]);
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
     currentUser = user;
-    pyodideReadyPromise = initPyodide();
+    // pyodideReadyPromise = initPyodide();
 }
 
 initSystem();
@@ -323,12 +323,11 @@ function executeCommand(input) {
         mkdir,
         cat,
         editor: async () => {
-            if (!pyodideReadyPromise) {
+            if (!window.pyodideReady) {
                 printToConsole("Pyodide is initializing. Please wait a moment and try again.");
                 return;
             }
             try {
-                await pyodideReadyPromise;
                 printToConsole(openEditor());
             } catch (error) {
                 printToConsole("Error initializing Pyodide or opening editor: " + error);
