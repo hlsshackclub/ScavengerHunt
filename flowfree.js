@@ -42,7 +42,7 @@ function makeFlowFreeGame(width, height, starts, onWin) {
 
     function trimPath(pos) {
         for (const [i, path] of paths.entries()) {
-            for (const [j, pPos] of path) {
+            for (const [j, pPos] of path.entries()) {
                 if (v2Eq(pPos, pos)) {
                     path.length = j
                     console.log(path.length)
@@ -79,6 +79,7 @@ function makeFlowFreeGame(width, height, starts, onWin) {
     function release() {
         held = false;
         oldPaths.length = 0
+        currentPathI = undefined
     }
 
     function hoverOver(pos) {
