@@ -1,25 +1,34 @@
-//TODO: make this not break with non-square boards because i mixed up row and col somewhere
-function setupFlowFree(width, height, starts, winFunc) {
-    let currentPath = undefined
-
-    let cells = []
-
-    const paths = []
-    for (let i = 0; i < starts.length; i++) {
-        paths.push([]);
+function makeFlowFreeGame(width, height, starts) {
+    let paths = []
+    for (const _ of starts) {
+        paths.push([])
     }
 
-    function getCurrentPath(cell) {
-        for (const [i, startPair] of starts.entries()) {
-            if ((startPair[0][0] == cell[0] && startPair[0][1] == cell[1])
-                || (startPair[1][0] == cell[0] && startPair[1][1] == cell[1])) {
-                return i
-            }
-        }
+    let held = false
+    let oldPaths = []
+    clearOldPaths()
+    let currentPathI = undefined
 
+    function clearOldPaths() {
+        oldPaths.length = 0
+        for (const _ of starts) {
+            oldPaths.push([])
+        }
+    }
+
+    function populatePaths(from, to, exclude) {
+        for (const [i, path] of from.entries()) {
+            if (exclude === i) {
+                continue
+            }
+            to[i] = path.slice()
+        }
+    }
+
+    function getPath(pos) {
         for (const [i, path] of paths.entries()) {
-            for (let pathCell of path) {
-                if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
+            for (const pPos of path) {
+                if (v2Eq(pPos, pos)) {
                     return i
                 }
             }
@@ -27,49 +36,168 @@ function setupFlowFree(width, height, starts, winFunc) {
         return undefined
     }
 
-    function trimPath(cell) {
-        //account for the fact you can break a path and start from the other side
-        let pathFound = undefined
-        let startUsed = undefined
-        outer: for (const [i, startPair] of starts.entries()) {
-            for (const [j, start] of startPair.entries()) {
-                if (v2Eq(start, cell)) {
-                    pathFound = i
-                    startUsed = j
-                    break outer
+    function getIInPath(pos, pathI) {
+        for (const [i, pPos] of paths[pathI].entries()) {
+            if (v2Eq(pPos, pos)) {
+                return i
+            }
+        }
+        return undefined
+    }
+
+    function getStart(pos) {
+        for (const [i, start] of starts.entries()) {
+            for (const sPos of start) {
+                if (v2Eq(sPos, pos)) {
+                    return i
                 }
             }
         }
-        if (pathFound !== undefined
-            && paths[pathFound].length != 0
-            && !v2Eq(paths[pathFound][0], starts[pathFound][startUsed])
-            && v2MDist(paths[pathFound].slice(-1)[0], cell) > 1) {
-            paths[pathFound].length = 0
-        } else {
-            //trim the path normally
-            for (const path of paths) {
-                for (const [j, pathCell] of path.entries()) {
-                    if (pathCell[0] == cell[0] && pathCell[1] == cell[1]) {
-                        path.length = j
-                    }
+        return undefined
+    }
+
+    function isCompletedPath(pathI) {
+        return pathI !== undefined && paths[pathI].length > 1
+            && getStart(paths[pathI].slice(-1)[0]) !== undefined
+    }
+
+    function trimPaths(pos, exclude) {
+        for (const [i, path] of paths.entries()) {
+            if (i === exclude) {
+                continue
+            }
+            for (const [j, pPos] of path.entries()) {
+                if (v2Eq(pPos, pos)) {
+                    path.length = j
                 }
             }
         }
     }
 
-    function render() {
-        for (let row = 0; row < height; row++) {
-            for (let col = 0; col < width; col++) {
-                for (let i = 0; i < starts.length; i++) {
-                    cells[col][row].notEmojiDiv.classList.remove(`c${i}`);
-                    cells[col][row].notEmojiDiv.innerText = ""
+    function checkWin() {
+        for(const start of starts) {
+            nextSPos: for(const sPos of start) {
+                for(const path of paths) {
+                    for(const pPos of path) {
+                        if(v2Eq(sPos, pPos)) {
+                            continue nextSPos
+                        }
+                    }
                 }
+                return false
+            }
+        }
+        return true
+    }
+
+    function click(pos) {
+        const start = getStart(pos)
+        const pathI = getPath(pos)
+        if (start === undefined && pathI === undefined) {
+            return;
+        }
+        if (start !== undefined && paths[start].length !== 0
+            && v2MDist(paths[start].slice(-1)[0], pos) !== 1) {
+            paths[start].length = 0
+        } else if (isCompletedPath(pathI)) {
+            const iInPath = getIInPath(pos, pathI);
+            if(paths[pathI].length - 1 - iInPath < iInPath) {
+                paths[pathI].reverse()
+            }
+        }
+        held = true;
+        populatePaths(paths, oldPaths)
+    }
+
+    function release() {
+        held = false;
+        clearOldPaths()
+        currentPathI = undefined
+    }
+
+    function hoverOver(pos) {
+        inner: {
+            if (!held) {
+                break inner
+            }
+            if (pos[0] < 0 || pos[1] < 0 || pos[0] >= width || pos[1] >= height) {
+                break inner
+            }
+
+            const cursorStartI = getStart(pos);
+            
+            let cursorPathI = cursorStartI
+            if (cursorPathI === undefined) {
+                cursorPathI = getPath(pos);
+            }
+
+            if (currentPathI !== undefined
+                && (currentPathI !== cursorPathI 
+                    || (cursorStartI !== undefined && !v2Eq(paths[cursorStartI][0], pos)))
+                && v2MDist(paths[currentPathI].slice(-1)[0], pos) !== 1) {
+                break inner
+            }
+
+            if(isCompletedPath(currentPathI) && currentPathI !== cursorPathI) {
+                break inner
+            }
+
+            if (currentPathI === undefined) {
+                currentPathI = cursorPathI
+            }
+
+            if (cursorStartI !== undefined && cursorStartI !== currentPathI) {
+                break inner
+            }
+
+            populatePaths(oldPaths, paths, currentPathI)
+            trimPaths(pos)
+            for (const pPos of paths[currentPathI]) {
+                trimPaths(pPos, currentPathI)
+            }
+            paths[currentPathI].push(pos)
+        }
+        return {paths: paths, win: checkWin()};
+    }
+
+    return {
+        click: click,
+        release: release,
+        hoverOver: hoverOver
+    }
+}
+
+function setupFlowFree(width, height, starts, nodeID, winFunc) {
+    const container = document.getElementById(nodeID);
+    container.innerHTML += `
+    <p>${"#".repeat(width * 3 + 2)}</p>
+    <div class="flex-table-holder-holder">
+        <p>${"#<br>".repeat(height * 3)}
+        </p>
+        <div class="flex-table-holder flowFree"></div>
+        <p>${"#<br>".repeat(height * 3)}
+        </p>
+    </div>
+    <p>${"#".repeat(width * 3 + 2)}</p>`
+    const ftss = container.querySelectorAll(".flex-table-holder");
+    const flowFree = ftss[ftss.length - 1]; //add to the last one found bcs that's the one you just created
+
+    let game = makeFlowFreeGame(width, height, starts)
+    let alreadyWon = false
+
+    let cells = []
+    function render(paths) {
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                cells[x][y].notEmojiDiv.setAttribute('class', '')
+                cells[x][y].notEmojiDiv.innerText = ""
             }
         }
 
         for (const [i, path] of paths.entries()) {
             for (const [j, pathCell] of path.entries()) {
-                cells[pathCell[1]][pathCell[0]].notEmojiDiv.classList.add(`c${i}`);
+                const cell = cells[pathCell[1]][pathCell[0]];
+                cell.notEmojiDiv.classList.add(`c${i}`);
                 let text = undefined
                 if (path.length == 1) {
                     text = '';
@@ -82,45 +210,20 @@ function setupFlowFree(width, height, starts, winFunc) {
                         text = connectionsBackwards[JSON.stringify([v2Sub(path[j - 1], pathCell)])];
                     }
                 }
-                cells[pathCell[1]][pathCell[0]].notEmojiDiv.innerText = text
+                cell.notEmojiDiv.innerText = text
             }
         }
     }
-
-    function isEnd(cell) {
-        const possibleStart1 = starts[currentPath][0];
-        const possibleStart2 = starts[currentPath][1];
-        const thisStart = paths[currentPath][0];
-        return !v2Eq(cell, thisStart) && (v2Eq(cell, possibleStart1) || v2Eq(cell, possibleStart2));
-    }
-
-    function won() {
-        for (const startPair of starts) {
-            checkStart: for (const start of startPair) {
-                for (const path of paths) {
-                    if (path.length == 0) {
-                        continue;
-                    }
-                    if (v2Eq(start, path[0]) || v2Eq(start, path.slice(-1)[0])) {
-                        continue checkStart;
-                    }
-                }
-                return false;
-            }
-        }
-        return true;
-    }
-    let wonAlready = false
 
     const table = document.createElement("table");
     const tbody = document.createElement("tbody");
-    for (let row = 0; row < height; row++) {
+    for (let y = 0; y < height; y++) {
         const tr = document.createElement("tr");
         cells.push([]);
-        for (let col = 0; col < width; col++) {
-            const cell = [col, row];
+        for (let x = 0; x < width; x++) {
+            const cell = [x, y];
             const td = document.createElement("td");
-            td.classList.add(`cb${(row + col) % 2}`);
+            td.classList.add(`cb${(x + y) % 2}`);
 
             const div = document.createElement("div");
             div.classList.add("not-emoji");
@@ -138,71 +241,101 @@ function setupFlowFree(width, height, starts, winFunc) {
                 }
             }
 
-            td.addEventListener("mouseover", event => {
-                if (currentPath === undefined) {
-                    return;
-                }
-                if (paths[currentPath].length >= 1 && isEnd(paths[currentPath].slice(-1)[0]) && getCurrentPath(cell) != currentPath) { //past the end
-                    return;
-                }
-                let isDiffStart = false;
-                for (const [i, startPair] of starts.entries()) {
-                    if (currentPath == i) {
-                        continue;
-                    }
-                    if ((startPair[0][0] == cell[0] && startPair[0][1] == cell[1])
-                        || (startPair[1][0] == cell[0] && startPair[1][1] == cell[1])) {
-                        isDiffStart = true
-                    }
-                }
-                const isRightPos = paths[currentPath].length == 0
-                    || Math.abs(paths[currentPath].slice(-1)[0][0] - cell[0]) + Math.abs(paths[currentPath].slice(-1)[0][1] - cell[1]) == 1
-                const isOnSamePath = getCurrentPath(cell) == currentPath
-                if (isDiffStart || (!isRightPos && !isOnSamePath)) {
-                    return
-                }
-                trimPath(cell)
-                paths[currentPath].push(cell);
-                render();
-                if (!wonAlready && won()) {
-                    wonAlready = true
-                    winFunc()
-                }
-            })
             td.addEventListener("mousedown", event => {
-                currentPath = getCurrentPath(cell);
-                if (currentPath === undefined) {
-                    return;
-                }
-                trimPath(cell)
-                paths[currentPath].push(cell);
-                render();
-                if (!wonAlready && won()) {
-                    wonAlready = true
+                game.click(cell)
+                const state = game.hoverOver(cell)
+                if(state.win && !alreadyWon) {
+                    alreadyWon = true
                     winFunc()
                 }
+                render(state.paths)
             })
             td.addEventListener("mouseup", event => {
-                currentPath = undefined;
+                game.release(cell)
+            })
+            td.addEventListener("mouseover", event => {
+                const state = game.hoverOver(cell)
+                if(state.win && !alreadyWon) {
+                    alreadyWon = true
+                    winFunc()
+                }
+                render(state.paths)
             })
 
             tr.appendChild(td);
-            cells[row].push({ td: td, emojiDiv: emojiDiv, notEmojiDiv: div });
+            cells[y].push({ td: td, emojiDiv: emojiDiv, notEmojiDiv: div });
         }
 
         tbody.appendChild(tr);
     }
 
     table.appendChild(tbody);
-    document.getElementById("FlowFree").appendChild(table);
+    flowFree.appendChild(table);
 }
 
-document.addEventListener("DOMContentLoaded", () => setupFlowFree(7, 7,
-    [[[0, 1], [4, 0]],
-    [[6, 1], [6, 6]],
-    [[0, 3], [4, 1]],
-    [[0, 5], [2, 2]],
-    [[4, 6], [5, 4]],
-    [[1, 5], [4, 2]],
-    [[0, 6], [6, 0]]],
-    () => console.log("win flow free")));
+function setupAllFlowFrees() {
+    setupFlowFree(7, 7,
+        [[[0, 1], [4, 0]],
+        [[6, 1], [6, 6]],
+        [[0, 3], [4, 1]],
+        [[0, 5], [2, 2]],
+        [[4, 6], [5, 4]],
+        [[1, 5], [4, 2]],
+        [[0, 6], [6, 0]]],
+        "flowFree1",
+        () => show("flowFreeWin1"))
+
+    setupFlowFree(7, 7,
+        [[[0, 0], [1, 5]],
+        [[3, 1], [2, 5]],
+        [[0, 2], [3, 4]],
+        [[5, 1], [3, 3]],
+        [[1, 0], [5, 5]],
+        [[5, 2], [6, 5]]],
+        "flowFree2",
+        () => show("flowFreeWin2"))
+
+    setupFlowFree(7, 7,
+        [[[3, 2], [3, 6]],
+        [[0, 3], [5, 5]],
+        [[1, 5], [6, 0]],
+        [[0, 0], [1, 3]],
+        [[1, 1], [5, 2]]],
+        "flowFree3",
+        () => show("flowFreeWin3"))
+
+    setupFlowFree(10, 10,
+        [[[2, 0], [9, 9]],
+        [[0, 6], [5, 6]],
+        [[2, 2], [2, 9]],
+        [[1, 0], [1, 9]],
+        [[1, 8], [8, 2]],
+        [[3, 2], [7, 2]]],
+        "flowFree4",
+        () => show("flowFreeWin4"))
+
+    setupFlowFree(10, 10,
+        [[[3, 2], [7, 1]],
+        [[5, 0], [1, 5]],
+        [[1, 8], [8, 8]],
+        [[8, 1], [0, 8]],
+        [[7, 3], [6, 6]],
+        [[0, 7], [7, 7]],
+        [[0, 0], [9, 6]],
+        [[4, 7], [5, 4]]],
+        "flowFree5",
+        () => show("flowFreeWin5"))
+
+    setupFlowFree(10, 10,
+        [[[0, 0], [9, 9]],
+        [[2, 1], [3, 6]],
+        [[0, 1], [7, 8]],
+        [[2, 6], [8, 1]],
+        [[4, 4], [8, 4]],
+        [[6, 8], [8, 9]],
+        [[2, 7], [5, 3]]],
+        "flowFree6",
+        () => show("flowFreeWin6"))
+}
+
+document.addEventListener("DOMContentLoaded", setupAllFlowFrees);
