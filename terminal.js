@@ -51,6 +51,8 @@ let user = {}
 let currentUser = {};
 let users = [];
 
+let pyodideReadyPromise = null;
+
 function initSystem() {
     admin = new User("root", {}, "root");
     users.push(admin);
@@ -377,10 +379,26 @@ function executeCommand(input) {
         touch,
         mkdir,
         cat,
+        editor: async () => {
+            if (!window.pyodideReady) {
+                printToConsole("Pyodide is initializing. Please wait a moment and try again.");
+                return;
+            }
+            try {
+                printToConsole(openEditor());
+            } catch (error) {
+                printToConsole("Error initializing Pyodide or opening editor: " + error);
+            }
+        },
     };
     const func = functions[funcName];
 
     if (typeof func === "function") {
+        if (func.constructor.name === 'AsyncFunction') {
+            func(funcArgs).catch(err => printToConsole('Error executing ' + funcName + ': ' + err));
+        } else {
+            printToConsole(func(funcArgs));
+        }
 	let secondary = undefined;
 	let output = func(funcArgs);
 	if (typeof output === "object") {
@@ -399,7 +417,7 @@ function executeCommand(input) {
 	    }
 	}
     } else {
-        printToConsole(`Command "${funcName}" not found. Did you mean help?`);
+        printToConsole('Command "' + funcName + '" not found. Did you mean help?');
     }
 }
 
