@@ -189,7 +189,9 @@ function setupFlowFree(width, height, starts, nodeID, winFunc) {
     function render(paths) {
         for (let x = 0; x < width; x++) {
             for (let y = 0; y < height; y++) {
-                cells[x][y].notEmojiDiv.setAttribute('class', '')
+                for(let i = 0; i < starts.length; i++) {
+                    cells[x][y].notEmojiDiv.classList.remove(`c${i}`)
+                }
                 cells[x][y].notEmojiDiv.innerText = ""
             }
         }

@@ -399,17 +399,17 @@ function parseArgs(input) {
     return args;
 }
 
-function editor(args) {
-    console.log("Opening editor");
-    if (!window.pyodideReady) {
-        return("Pyodide is initializing. Please wait a moment and try again.");
-    }
-    try {
-        return(openEditor());
-    } catch (error) {
-        return("Error initializing Pyodide or opening editor: " + error);
-    }
-}
+// function editor(args) {
+//     console.log("Opening editor");
+//     if (!window.pyodideReady) {
+//         return("Pyodide is initializing. Please wait a moment and try again.");
+//     }
+//     try {
+//         return(openEditor());
+//     } catch (error) {
+//         return("Error initializing Pyodide or opening editor: " + error);
+//     }
+// }
 
 function executeCommand(input) {
     const args = parseArgs(input);
@@ -425,7 +425,7 @@ function executeCommand(input) {
         touch,
         mkdir,
         cat,
-        editor,
+        //editor,
     };
     const func = functions[funcName];
 
