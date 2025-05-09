@@ -1,7 +1,7 @@
 :root {
     --background-color-default: black;
     --background-color-inputbox: rgb(55, 55, 55);
-    --background-color-checker: rgb(30, 30, 30);
+    --background-color-checker: rgb(40, 40, 40);
     --text-color-default: white;
     --text-color-highlighted: black;
     --text-color-placeholder: rgb(223, 223, 223);

@@ -114,6 +114,9 @@
             <div id="flowFreeContainer" class="hidden">
                 <br>
                 <p>Route the production plants "◆" into their corresponding disposal units "◉".</p>
+                <button onclick="hide('flowFree3Container')" id="flowFreeBailMedium" class="hidden">
+                    Head to the next station (if you are stuck on Medium)
+                </button>
                 <div id="flowFree1Container">
                     <div id="flowFree1">
                         <br>
@@ -151,7 +154,9 @@
                         <button onclick="hide('flowFree3Container')">
                             Head to the next station
                         </button>
-                        <button onclick="hide('flowFree3Container'); show('flowFree4Container')">
+                        <button onclick="hide('flowFree3Container'); 
+                        show('flowFree4Container');
+                        show('flowFreeBailMedium');">
                             Reroute more conveyers (Medium)
                         </button>
                     </div>
