@@ -33,11 +33,15 @@ function openEditor() {
     }
 }
 
-async function runPythonCode() {
+function runPythonCode() {
     const code = document.getElementById("codeEditor").value; 
 
     // Send the code to the worker rather than running in main thread
     pyodideWorker.postMessage({ type: "runPython", code });
+}
+
+function runPythonTestCase() {
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -47,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (codeEditor) {
         codeEditor.addEventListener("keydown", async function(e) {
             if (e.ctrlKey && e.key === "Enter") {
-                await runPythonCode();
+                runPythonCode();
             }
         });
     }
     if (runButton) {
         runButton.addEventListener("click", async function() {
-            await runPythonCode();
+            runPythonCode();
         });
     }
 });
