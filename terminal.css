@@ -10,6 +10,10 @@
     height: var(--line-height-default);
 }
 
+#terminal {
+    white-space: pre-wrap;
+}
+
 /* #terminalBox {
     background-color: var(--background-color-default);
     color: var(--text-color-default);

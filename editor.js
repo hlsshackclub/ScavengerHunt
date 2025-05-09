@@ -22,18 +22,15 @@ pyodideWorker.postMessage({ type: "init" });
 function openEditor() {
     const editorArea = document.getElementById("editorArea");
     const terminalContainer = document.getElementById("terminalContainer");
-    const mainContent = document.querySelector(".main-content");
 
     if (editorArea.classList.contains("hidden")) {
         editorArea.classList.remove("hidden");
         terminalContainer.classList.add("editor-mode");
-        mainContent.classList.add("editor-mode");
         document.getElementById("codeEditor").focus();
         return "Python editor opened.";
     } else {
         editorArea.classList.add("hidden");
         terminalContainer.classList.remove("editor-mode");
-        mainContent.classList.remove("editor-mode");
         return "Python editor closed.";
     }
 }

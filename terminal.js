@@ -297,19 +297,24 @@ function enter(x) {
     }
     tPrompt = output === undefined ? "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ " : output;
     x.children[0].innerText = tPrompt;
+    updateTerminal();
+}
+
+function updateTerminal() {
     let messagesString = terminalMessages[0];
     terminalMessages.slice(1).forEach(message => {
-        if (message === "") {
-            messagesString += "<br> ";
-        } else {
-            messagesString += ("<br>" + htmlEscape(message));
-        }
+	if (message === "") {
+	    messagesString += "<br> ";
+	} else {
+	    messagesString += ("<br>" + htmlEscape(message));
+	}
     });
     document.getElementById("terminal").innerHTML = messagesString;
 }
 
 function printToConsole(s) {
     terminalMessages.push(s);
+    updateTerminal();
 }
 
 function echo(args) {

@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    <div class="main-content prevent-select" style="padding-left: 10ch; padding-right: 10ch; padding-top: 1ch; padding-bottom: 1ch">
+	<div class="prevent-select" style="padding-left: 10ch; padding-right: 10ch; padding-top: 1ch;">
         <div>
             <p>You think you should head to Networking first, to see what damage the AI has caused
                 and what you can fix.
@@ -212,11 +212,14 @@
             </div>
         </div>
         <br><br><br><br> <!-- so content doesn't end at very bottom -->
-    </div>
-    <div id="editorArea" class="hidden">
-        <textarea id="codeEditor"></textarea>
-        <button id="runButton" type="button" class="inputbox" style="position:absolute; bottom:20px; right:30px;">run</button>
-        <pre id="outputArea" class="output"></pre>
+    
+        <div id="editorArea" class="hidden">
+            <h2>Code Editor</h2>
+            <textarea id="codeEditor"></textarea>
+            <button id="runButton" type="button" class="inputbox">#####run#####</button>
+            <p style="padding-top: 0.5ch;">&#62; Output</p>
+            <pre id="outputArea" class="output"></pre>
+        </div>
     </div>
 </div>
 </body>
