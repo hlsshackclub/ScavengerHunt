@@ -75,11 +75,11 @@ function makeFlowFreeGame(width, height, starts) {
     }
 
     function checkWin() {
-        for(const start of starts) {
-            nextSPos: for(const sPos of start) {
-                for(const path of paths) {
-                    for(const pPos of path) {
-                        if(v2Eq(sPos, pPos)) {
+        for (const start of starts) {
+            nextSPos: for (const sPos of start) {
+                for (const path of paths) {
+                    for (const pPos of path) {
+                        if (v2Eq(sPos, pPos)) {
                             continue nextSPos
                         }
                     }
@@ -101,7 +101,7 @@ function makeFlowFreeGame(width, height, starts) {
             paths[start].length = 0
         } else if (isCompletedPath(pathI)) {
             const iInPath = getIInPath(pos, pathI);
-            if(paths[pathI].length - 1 - iInPath < iInPath) {
+            if (paths[pathI].length - 1 - iInPath < iInPath) {
                 paths[pathI].reverse()
             }
         }
@@ -125,20 +125,20 @@ function makeFlowFreeGame(width, height, starts) {
             }
 
             const cursorStartI = getStart(pos);
-            
+
             let cursorPathI = cursorStartI
             if (cursorPathI === undefined) {
                 cursorPathI = getPath(pos);
             }
 
             if (currentPathI !== undefined
-                && (currentPathI !== cursorPathI 
+                && (currentPathI !== cursorPathI
                     || (cursorStartI !== undefined && !v2Eq(paths[cursorStartI][0], pos)))
                 && v2MDist(paths[currentPathI].slice(-1)[0], pos) !== 1) {
                 break inner
             }
 
-            if(isCompletedPath(currentPathI) && currentPathI !== cursorPathI) {
+            if (isCompletedPath(currentPathI) && currentPathI !== cursorPathI) {
                 break inner
             }
 
@@ -157,7 +157,7 @@ function makeFlowFreeGame(width, height, starts) {
             }
             paths[currentPathI].push(pos)
         }
-        return {paths: paths, win: checkWin()};
+        return { paths: paths, win: checkWin() };
     }
 
     return {
@@ -244,7 +244,7 @@ function setupFlowFree(width, height, starts, nodeID, winFunc) {
             td.addEventListener("mousedown", event => {
                 game.click(cell)
                 const state = game.hoverOver(cell)
-                if(state.win && !alreadyWon) {
+                if (state.win && !alreadyWon) {
                     alreadyWon = true
                     winFunc()
                 }
@@ -255,7 +255,7 @@ function setupFlowFree(width, height, starts, nodeID, winFunc) {
             })
             td.addEventListener("mouseover", event => {
                 const state = game.hoverOver(cell)
-                if(state.win && !alreadyWon) {
+                if (state.win && !alreadyWon) {
                     alreadyWon = true
                     winFunc()
                 }
@@ -295,12 +295,19 @@ function setupAllFlowFrees() {
         "flowFree2",
         () => show("flowFreeWin2"))
 
+    // setupFlowFree(7, 7,
+    //     [[[3, 2], [3, 6]],
+    //     [[0, 3], [5, 5]],
+    //     [[1, 5], [6, 0]],
+    //     [[0, 0], [1, 3]],
+    //     [[1, 1], [5, 2]]],
+    //     "flowFree3",
+    //     () => show("flowFreeWin3"))
     setupFlowFree(7, 7,
-        [[[3, 2], [3, 6]],
-        [[0, 3], [5, 5]],
-        [[1, 5], [6, 0]],
-        [[0, 0], [1, 3]],
-        [[1, 1], [5, 2]]],
+        [[[3, 2], [0, 5]],
+        [[0, 1], [5, 5]],
+        [[0, 0], [2, 4]],
+        [[0, 6], [6, 0]]],
         "flowFree3",
         () => show("flowFreeWin3"))
 
@@ -335,7 +342,10 @@ function setupAllFlowFrees() {
         [[6, 8], [8, 9]],
         [[2, 7], [5, 3]]],
         "flowFree6",
-        () => show("flowFreeWin6"))
+        () => {
+            show("flowFreeWin6");
+            hide('flowFreeBailMedium')
+        })
 }
 
 document.addEventListener("DOMContentLoaded", setupAllFlowFrees);
