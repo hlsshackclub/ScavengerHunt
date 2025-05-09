@@ -11,25 +11,33 @@ async function initPyodide() {
 
 let pyodideReadyPromise = initPyodide();
 
-onmessage = async function(event) {
+onmessage = async function (event) {
     const data = event.data;
     if (data.type === "init") {
         await pyodideReadyPromise;
         postMessage({ type: "pyodideReady" });
     } else if (data.type === "runPython") {
         let output = "";
+        const pyodide = await pyodideReadyPromise;
 
-	try {
-            const pyodide = await pyodideReadyPromise;
-            // Redirect Python print to JS by capturing output
-            pyodide.globals.set("print", (...args) => {
-                output = args.map(x => String(x)).join(' ') + "\n";
-            });
-            let result = await pyodide.runPythonAsync(data.code);
-            // If the code itself printed, result may be undefined
-            postMessage({ type: "output", message: result === undefined ? '' : result.toString(), output });
+        pyodide.setStdin({ error: true });
+        pyodide.setStdout({
+            raw: (charCode) => {
+                output += String.fromCharCode(charCode);
+            }
+        });
+        pyodide.setStderr({
+            raw: (charCode) => {
+                output += String.fromCharCode(charCode);
+            }
+        });
+
+        try {
+            let result = pyodide.runPython(data.code);
+            console.log(`result: ${result}`)
+            postMessage({ type: "output", output });
         } catch (err) {
-            postMessage({ type: "error", message: err.toString() });
+            postMessage({ type: "output", message: output + err.toString() });
         }
     }
 };

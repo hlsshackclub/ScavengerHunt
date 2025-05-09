@@ -1,18 +1,18 @@
 window.pyodideWorker = new Worker("pyodideWorker.js");
 window.pyodideReady = false;
 
+function printToOutput(message) {
+    outputArea.textContent = message;
+}
+
 pyodideWorker.onmessage = function(event) {
     const outputArea = document.getElementById("outputArea");
     if (event.data.type === "pyodideReady") {
         pyodideReady = true;
         console.log("Pyodide is ready in worker");
-        printToConsole("Pyodide is ready");
-    } else if (event.data.type === "error") {
-        printToConsole("Error: " + event.data.message);
+        printToOutput("Pyodide is ready");
     } else if (event.data.type === "output") {
-        // Append the Python run output or result
-    	outputArea.textContent = "";
-        outputArea.textContent += event.data.output;
+    	printToOutput(event.data.output)
     }
 };
 
@@ -25,12 +25,10 @@ function openEditor() {
 
     if (editorArea.classList.contains("hidden")) {
         editorArea.classList.remove("hidden");
-        terminalContainer.classList.add("editor-mode");
         document.getElementById("codeEditor").focus();
         return "Python editor opened.";
     } else {
         editorArea.classList.add("hidden");
-        terminalContainer.classList.remove("editor-mode");
         return "Python editor closed.";
     }
 }
