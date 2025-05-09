@@ -37,7 +37,6 @@ body {
     padding: 0;
     overflow-x: scroll;
     overflow-y: scroll;
-    overflow: hidden;
     line-height: var(--line-height-default);
     height: 100%;
 }
