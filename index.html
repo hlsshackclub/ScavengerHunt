@@ -211,9 +211,9 @@
             <br>
             <div id="terminalContainer">
                 <pre id="terminal"></pre>
-                <form action="javascript:;" onsubmit=" enter(this) ">
+		<form action="javascript:;" onsubmit=" enter(this) " autocomplete="off">
                     <label id="terminalLabel">[hacker@HLSS/]$ </label>
-                    <input id="terminalBox" type="text">
+		    <textarea id="terminalBox" type="text" autocomplete="off"></textarea>
                 </form>
             </div>
         </div>
@@ -229,5 +229,4 @@
     </div>
 </div>
 </body>
-
 </html>

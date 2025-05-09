@@ -6,6 +6,7 @@ let nextArgs = undefined;
 let sudoAccess = false;
 const password = "1357d";
 const fakePassword = "1357b";
+let sudoersFile = undefined;
 
 class User {
     constructor(name, home, group) {
@@ -54,7 +55,8 @@ let users = [];
 let pyodideReadyPromise = null;
 
 function initSystem() {
-    admin = new User("root", {}, "root");
+    admin = new User("root", {}, "users");
+    admin.groups.push("root");
     users.push(admin);
     currentUser = admin;
     root.owner = admin;
@@ -66,18 +68,32 @@ function initSystem() {
     users.push(user);
     getByName("/home/hacker", root, Directory).owner = user;
     mkdir(["etc"]);
-    mkdir(["bin"]);
-    mkdir(["lib"]);
     mkdir(["home/root/SuperSecretFolder"]);
     touch(["home/root/SuperSecretFolder/password.txt"]);
     echo([password, ">>", "home/root/SuperSecretFolder/password.txt"]);
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
     echo([fakePassword, ">>", "home/root/SuperSecretFolder/fakePassword.txt"]);
+    touch(["etc/sudoers"]); 
+    sudoersFile = getByName("/etc/sudoers", root, File);
+    sudoersFile.content = "root";
+    sudoersFile.perms = 777;
     currentUser = user;
-    user.groups.push("root");
+    user.groups.push("wheel");
 }
 
 initSystem();
+
+function parseSudoers() {
+    const lines = sudoersFile.content.split("\n");
+    const sudoers = [];
+    for (let line of lines) {
+	if (line.trim() === "") continue;
+	const parts = line.split(" ");
+	const group = parts[0];
+	sudoers.push(group);
+    }
+    return sudoers;
+}
 
 function parsePerms(perms) {
     return [
@@ -103,9 +119,13 @@ function checkPerms(file, user, action) {
     ) > 0;
 }
 
-
 function ls(args) {
     let path = currentPath;
+    let list = false;
+    if (args.includes("-l")) {
+	args.splice(args.indexOf("-l"), 1);
+	list = true;
+    }
     if (args.length !== 0) {
         const dir = getByName(args[0], currentPath, Directory);
         if (dir) path = dir;
@@ -118,6 +138,15 @@ function ls(args) {
         if (file instanceof Directory) return `[DIR] ${file.name}`;
         else return file.name;
     }).join(" ");
+    if (list) {
+	return path.files.map(file => {
+	    let perms = file.perms.toString().padStart(3, "0");
+	    let type = file instanceof Directory ? "d" : "-";
+	    let owner = file.owner.name;
+	    let group = file.owner.group;
+	    return `${type}${perms} ${owner} ${group} ${file.name}`;
+	}).join("\n");
+    }
     return (output);
 }
 
@@ -137,7 +166,6 @@ function cd(args) {
     }
 }
 
-/*TODO: make perms work*/
 function sudo(args) {
     if (args.length === 0) {
         return ("sudo: missing operand");
@@ -150,7 +178,7 @@ function sudo(args) {
         return;
     }
 
-    if (currentUser.groups.includes("root")) {
+    if (parseSudoers().some(s => currentUser.groups.includes(s))) {
         nextArgs = args.join(" ");
         return ["Enter password: ", (args) => {
             if (args === password) {
@@ -180,8 +208,8 @@ function cat(args) {
     }
 
     const path = getByName(args[0], currentPath, File);
-    if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
     if (path) {
+    	if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
         return (path.content);
     } else {
         return (`cat: '${args[0]}': No such file`);
@@ -290,7 +318,6 @@ function enter(x) {
     let output = undefined;
     if (inCommand) {
         output = nextFunc(val);
-        //tPrompt = output === undefined ? "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ " : output;
     } else {
         terminalMessages.push(tPrompt + val);
         output = executeCommand(val);
@@ -318,21 +345,23 @@ function printToConsole(s) {
 }
 
 function echo(args) {
-    if (args.includes(">>")) {
-        const index = args.indexOf(">>");
-        const fileName = args[index + 1];
-        const file = getByName(fileName, currentPath, File);
-        if (file) {
-            file.content += args.slice(0, index).join(" ");
-            return (`Wrote to ${fileName}`);
-        } else {
-            return (`echo: '${fileName}': No such file`);
+    if (args.includes(">") || args.includes(">>")) {
+    	if (args.includes(">>")) {
+            const index = args.indexOf(">>");
+            const fileName = args[index + 1];
+            const file = getByName(fileName, currentPath, File);
+	    if (!checkPerms(file, currentUser, "w")) return `echo: Permission denied`;
+            if (file) {
+                file.content += "\n" + args.slice(0, index).join(" ");
+                return (`Wrote to ${fileName}`);
+            } else {
+                return (`echo: '${fileName}': No such file`);
+            }
         }
-    }
-    if (args.includes(">")) {
         const index = args.indexOf(">");
         const fileName = args[index + 1];
         const file = getByName(fileName, currentPath, File);
+	if (!checkPerms(file, currentUser, "w")) return `echo: Permission denied`;
         if (file) {
             file.content = args.slice(0, index).join(" ");
             return (`Wrote to ${fileName}`);
@@ -433,7 +462,8 @@ function htmlEscape(text) {
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
+        .replaceAll("'", "&#39;")
+	.replaceAll("\n", "<br>");
 }
 
 function openTerminal() {
@@ -445,3 +475,22 @@ function openTerminal() {
         terminal.style.display = "none";
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.getElementById('terminalBox');
+    const form = document.getElementById('terminalContainer').querySelector('form');
+
+    // Auto-grow the textarea
+    textarea.addEventListener('input', () => {
+	textarea.style.height = 'auto'; // reset height
+	textarea.style.height = textarea.scrollHeight + 'px'; // set new height
+    });
+
+    // Submit on Enter
+    textarea.addEventListener('keydown', (e) => {
+	if (e.key === 'Enter') {
+            e.preventDefault(); // prevent newline
+            form.requestSubmit(); // submit the form
+        }
+    });
+});

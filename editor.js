@@ -6,7 +6,6 @@ pyodideWorker.onmessage = function(event) {
     if (event.data.type === "pyodideReady") {
         pyodideReady = true;
         console.log("Pyodide is ready in worker");
-        printToConsole("Pyodide is ready");
     } else if (event.data.type === "error") {
         printToConsole("Error: " + event.data.message);
     } else if (event.data.type === "output") {
