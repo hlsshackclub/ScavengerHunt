@@ -11,7 +11,6 @@ pyodideWorker.onmessage = function(event) {
         printToConsole("Error: " + event.data.message);
     } else if (event.data.type === "output") {
         // Append the Python run output or result
-	const outputArea = document.getElementById("outputArea");
     	outputArea.textContent = "";
         outputArea.textContent += event.data.output;
     }

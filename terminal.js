@@ -9,10 +9,10 @@ const fakePassword = "1357b";
 
 class User {
     constructor(name, home, group) {
-	this.name = name;
-	this.home = home;
-	this.group = group;
-	this.groups = [];
+        this.name = name;
+        this.home = home;
+        this.group = group;
+        this.groups = [];
     }
 }
 
@@ -21,12 +21,12 @@ class Directory {
         this.name = name;
         this.parent = parent;
         this.perms = perms;
-	this.owner = owner;
+        this.owner = owner;
         this.files = [];
     }
 
     typeToString() {
-	return "directory";
+        return "directory";
     }
 }
 
@@ -35,12 +35,12 @@ class File {
         this.name = name;
         this.parent = parent;
         this.perms = perms;
-	this.owner = owner;
+        this.owner = owner;
         this.content = "";
     }
 
     typeToString() {
-	return "file";
+        return "file";
     }
 }
 
@@ -109,16 +109,16 @@ function ls(args) {
     if (args.length !== 0) {
         const dir = getByName(args[0], currentPath, Directory);
         if (dir) path = dir;
-	else return `ls: ${args[0]}: Directory not found`
+        else return `ls: ${args[0]}: Directory not found`
     }
 
     if (!checkPerms(path, currentUser, "r")) return `ls: ${path.name}: Permission denied`;
-    
+
     const output = path.files.map(file => {
         if (file instanceof Directory) return `[DIR] ${file.name}`;
         else return file.name;
     }).join(" ");
-    return(output);
+    return (output);
 }
 
 function cd(args) {
@@ -129,62 +129,62 @@ function cd(args) {
 
     path = getByName(args[0], currentPath, Directory);
     if (path) {
-	if (!checkPerms(path, currentUser, "r")) return `cd: ${args[0]}: Permission denied`;
-	currentPath = path;
-    	return `Changed directory to ${args[0]}`;
+        if (!checkPerms(path, currentUser, "r")) return `cd: ${args[0]}: Permission denied`;
+        currentPath = path;
+        return `Changed directory to ${args[0]}`;
     } else {
-	return `cd: ${args[0]}: Directory not found`;
+        return `cd: ${args[0]}: Directory not found`;
     }
 }
 
 /*TODO: make perms work*/
 function sudo(args) {
     if (args.length === 0) {
-	return("sudo: missing operand");
+        return ("sudo: missing operand");
     }
 
     if (sudoAccess) {
-	currentUser = admin;
-	executeCommand(args.join(" "));
-	currentUser = user;
-	return;
+        currentUser = admin;
+        executeCommand(args.join(" "));
+        currentUser = user;
+        return;
     }
 
     if (currentUser.groups.includes("root")) {
-	nextArgs = args.join(" ");
+        nextArgs = args.join(" ");
         return ["Enter password: ", (args) => {
-	    if (args === password) {
-		currentUser = admin;
-		executeCommand(nextArgs);
-		currentUser = user;
-		inCommand = false;
-		nextFunc = undefined;
-		nextArgs = undefined;
-		sudoAccess = true;
-	    } else {
-		console.log(args);
-		inCommand = false;
-		nextFunc = undefined;
-		nextArgs = undefined;
-		printToConsole("sudo: incorrect password");
-	    }
-	}];
+            if (args === password) {
+                currentUser = admin;
+                executeCommand(nextArgs);
+                currentUser = user;
+                inCommand = false;
+                nextFunc = undefined;
+                nextArgs = undefined;
+                sudoAccess = true;
+            } else {
+                console.log(args);
+                inCommand = false;
+                nextFunc = undefined;
+                nextArgs = undefined;
+                printToConsole("sudo: incorrect password");
+            }
+        }];
     } else {
-	return "sudo: permission denied";
+        return "sudo: permission denied";
     }
 }
 
 function cat(args) {
     if (args.length === 0) {
-	return("cat: missing operand");
+        return ("cat: missing operand");
     }
 
     const path = getByName(args[0], currentPath, File);
     if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
     if (path) {
-	return(path.content);
+        return (path.content);
     } else {
-	return(`cat: '${args[0]}': No such file`);
+        return (`cat: '${args[0]}': No such file`);
     }
 }
 
@@ -198,12 +198,12 @@ function touch(args, owner = currentUser) {
 
 function create(args, type, command, owner) {
     if (args.length === 0) {
-        return(`${command}: missing operand`);
+        return (`${command}: missing operand`);
     }
 
     const path = getByName(args[0], currentPath, type);
     if (path) {
-        return(`${command}: '${args[0]}' exists`);
+        return (`${command}: '${args[0]}' exists`);
     }
 
     let dir = currentPath
@@ -212,7 +212,7 @@ function create(args, type, command, owner) {
     if (args[0].includes("/")) {
         /*remove file name (text after the last /) to get path*/
         let p = args[0].slice(0, args[0].lastIndexOf("/"));
-	name = args[0].slice(args[0].lastIndexOf("/") + 1);
+        name = args[0].slice(args[0].lastIndexOf("/") + 1);
         dir = getByName(p, currentPath, Directory);
     }
 
@@ -220,7 +220,7 @@ function create(args, type, command, owner) {
 
     const n = new type(name, dir, dir.perms, owner);
     dir.files.push(n);
-    return(`Created ${args[0]}`);
+    return (`Created ${args[0]}`);
 }
 
 function rmdir(args) {
@@ -233,20 +233,20 @@ function rm(args) {
 
 function r(args, type, command) {
     if (args.length === 0) {
-        return(`${command}: missing operand`);
+        return (`${command}: missing operand`);
     }
 
     const path = getByName(args[0], currentPath, type);
     if (path) {
         const index = currentPath.files.indexOf(path);
-	if (path instanceof Directory && path.files.length > 0) {
-	    return(`${command}: '${args[0]}': Directory not empty`);
-	}
-    	if (!checkPerms(path, currentUser, "w")) return `${command}: Permission denied`;
+        if (path instanceof Directory && path.files.length > 0) {
+            return (`${command}: '${args[0]}': Directory not empty`);
+        }
+        if (!checkPerms(path, currentUser, "w")) return `${command}: Permission denied`;
         path.parent.files.splice(index, 1);
-        return(`Removed ${path.name}`);
+        return (`Removed ${path.name}`);
     } else {
-        return(`${command}: cannot remove '${args[0]}': Does not exist or is not a ${type.prototype.typeToString()}`);
+        return (`${command}: cannot remove '${args[0]}': Does not exist or is not a ${type.prototype.typeToString()}`);
     }
 }
 
@@ -265,20 +265,20 @@ function getPathString(p) {
 function getByName(name, p, type) {
     let path = p;
     if (name[0] === "/") {
-	path = root;
-	name = name.slice(1);
+        path = root;
+        name = name.slice(1);
     }
     const parts = name.split("/");
     for (let part of parts) {
-	if (part === "..") {
-	    if (path.parent != root) path = path.parent;
-	} else {
-	    const next = path.files.find(file => file.name === part);
-	    if (next) path = next;
-	    else {
-		return null;
-	    }
-	}
+        if (part === "..") {
+            if (path.parent != root) path = path.parent;
+        } else {
+            const next = path.files.find(file => file.name === part);
+            if (next) path = next;
+            else {
+                return null;
+            }
+        }
     }
     return path instanceof type ? path : null;
 }
@@ -290,20 +290,20 @@ function enter(x) {
     let output = undefined;
     if (inCommand) {
         output = nextFunc(val);
-	//tPrompt = output === undefined ? "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ " : output;
+        //tPrompt = output === undefined ? "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ " : output;
     } else {
-    	terminalMessages.push(tPrompt + val);
-	output = executeCommand(val);
+        terminalMessages.push(tPrompt + val);
+        output = executeCommand(val);
     }
     tPrompt = output === undefined ? "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ " : output;
     x.children[0].innerText = tPrompt;
     let messagesString = terminalMessages[0];
     terminalMessages.slice(1).forEach(message => {
-	if (message === "") {
-	    messagesString += "<br> ";
-	} else {
+        if (message === "") {
+            messagesString += "<br> ";
+        } else {
             messagesString += ("<br>" + htmlEscape(message));
-	}
+        }
     });
     document.getElementById("terminal").innerHTML = messagesString;
 }
@@ -313,27 +313,27 @@ function printToConsole(s) {
 }
 
 function echo(args) {
-    if  (args.includes(">>")) {
-	const index = args.indexOf(">>");
-	const fileName = args[index + 1];
-	const file = getByName(fileName, currentPath, File);
-	if (file) {
-	    file.content += args.slice(0, index).join(" ");
-	    return(`Wrote to ${fileName}`);
-	} else {
-	    return(`echo: '${fileName}': No such file`);
-	}
+    if (args.includes(">>")) {
+        const index = args.indexOf(">>");
+        const fileName = args[index + 1];
+        const file = getByName(fileName, currentPath, File);
+        if (file) {
+            file.content += args.slice(0, index).join(" ");
+            return (`Wrote to ${fileName}`);
+        } else {
+            return (`echo: '${fileName}': No such file`);
+        }
     }
     if (args.includes(">")) {
-	const index = args.indexOf(">");
-	const fileName = args[index + 1];
-	const file = getByName(fileName, currentPath, File);
-	if (file) {
-	    file.content = args.slice(0, index).join(" ");
-	    return(`Wrote to ${fileName}`);
-	} else {
-	    return(`echo: '${fileName}': No such file`);
-	}
+        const index = args.indexOf(">");
+        const fileName = args[index + 1];
+        const file = getByName(fileName, currentPath, File);
+        if (file) {
+            file.content = args.slice(0, index).join(" ");
+            return (`Wrote to ${fileName}`);
+        } else {
+            return (`echo: '${fileName}': No such file`);
+        }
     }
     return args.join(" ");
 }
@@ -348,7 +348,7 @@ function help(args) {
     printToConsole("mkdir [directory] - create a new directory");
     printToConsole("touch [file] - create a new file");
     printToConsole("cat [file] - display file contents");
-    return("help - displays this message");
+    return ("help - displays this message");
 }
 
 function parseArgs(input) {
@@ -365,6 +365,18 @@ function parseArgs(input) {
     return args;
 }
 
+function editor(args) {
+    console.log("Opening editor");
+    if (!window.pyodideReady) {
+        return("Pyodide is initializing. Please wait a moment and try again.");
+    }
+    try {
+        return(openEditor());
+    } catch (error) {
+        return("Error initializing Pyodide or opening editor: " + error);
+    }
+}
+
 function executeCommand(input) {
     const args = parseArgs(input);
     const [funcName, ...funcArgs] = args;
@@ -379,17 +391,7 @@ function executeCommand(input) {
         touch,
         mkdir,
         cat,
-        editor: async () => {
-            if (!window.pyodideReady) {
-                printToConsole("Pyodide is initializing. Please wait a moment and try again.");
-                return;
-            }
-            try {
-                printToConsole(openEditor());
-            } catch (error) {
-                printToConsole("Error initializing Pyodide or opening editor: " + error);
-            }
-        },
+        editor,
     };
     const func = functions[funcName];
 
@@ -397,25 +399,24 @@ function executeCommand(input) {
         if (func.constructor.name === 'AsyncFunction') {
             func(funcArgs).catch(err => printToConsole('Error executing ' + funcName + ': ' + err));
         } else {
-            printToConsole(func(funcArgs));
+            let secondary = undefined;
+            let output = func(funcArgs);
+            if (typeof output === "object") {
+                secondary = output[1];
+                output = output[0];
+            }
+            if (output !== undefined) {
+                if (secondary) {
+                    inCommand = true;
+                    nextFunc = secondary;
+                    return output;
+                } else {
+                    if (output) {
+                        printToConsole(output);
+                    }
+                }
+            }
         }
-	let secondary = undefined;
-	let output = func(funcArgs);
-	if (typeof output === "object") {
-	    secondary = output[1];
-	    output = output[0];
-	}
-	if (output !== undefined) {
-            if (secondary) {
-	        inCommand = true;
-	        nextFunc = secondary;
-	        return output;
-	    } else {
-	        if (output) {
-		    printToConsole(output);
-	        }
-	    }
-	}
     } else {
         printToConsole('Command "' + funcName + '" not found. Did you mean help?');
     }
