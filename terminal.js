@@ -417,7 +417,7 @@ function executeCommand(input) {
         rmdir,
         touch,
         mkdir,
-        cat,selectionEnd
+        cat,
     };
     const func = functions[funcName];
 
@@ -491,7 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		    commandHistoryIndex++;
 		    textarea.value = commandHistory[commandHistory.length-commandHistoryIndex];
 		    textarea.focus();
-		    textarea.selectionEnd = textarea.value.length;
 		}
 	    } 
 	}
@@ -506,7 +505,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		        textarea.value = commandHistory[commandHistory.length-commandHistoryIndex];
 		    }
 		    textarea.focus();
-		    textarea.selectionEnd = textarea.value.length;
 		}
 	    } 
 	}
