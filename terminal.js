@@ -70,9 +70,9 @@ function initSystem() {
     mkdir(["etc"]);
     mkdir(["home/root/SuperSecretFolder"]);
     touch(["home/root/SuperSecretFolder/password.txt"]);
-    echo([password, ">>", "home/root/SuperSecretFolder/password.txt"]);
+    echo([password, ">", "home/root/SuperSecretFolder/password.txt"]);
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
-    echo([fakePassword, ">>", "home/root/SuperSecretFolder/fakePassword.txt"]);
+    echo([fakePassword, ">", "home/root/SuperSecretFolder/fakePassword.txt"]);
     touch(["etc/sudoers"]); 
     sudoersFile = getByName("/etc/sudoers", root, File);
     sudoersFile.content = "root";
@@ -311,8 +311,13 @@ function getByName(name, p, type) {
     return path instanceof type ? path : null;
 }
 
+let commandHistory = [];
+let commandHistoryIndex = 0;
+
 function enter(x) {
     let val = x.children[1].value;
+    if (val === "") return;
+    commandHistory.push(val);
     x.children[1].value = "";
     let tPrompt = "[" + currentUser.name + terminalPrompt + getPathString(currentPath) + "]$ ";
     let output = undefined;
@@ -399,18 +404,6 @@ function parseArgs(input) {
     return args;
 }
 
-// function editor(args) {
-//     console.log("Opening editor");
-//     if (!window.pyodideReady) {
-//         return("Pyodide is initializing. Please wait a moment and try again.");
-//     }
-//     try {
-//         return(openEditor());
-//     } catch (error) {
-//         return("Error initializing Pyodide or opening editor: " + error);
-//     }
-// }
-
 function executeCommand(input) {
     const args = parseArgs(input);
     const [funcName, ...funcArgs] = args;
@@ -424,8 +417,7 @@ function executeCommand(input) {
         rmdir,
         touch,
         mkdir,
-        cat,
-        //editor,
+        cat,selectionEnd
     };
     const func = functions[funcName];
 
@@ -492,5 +484,31 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); // prevent newline
             form.requestSubmit(); // submit the form
         }
+	if (e.key === 'ArrowUp') {
+	    e.preventDefault();
+	    if (commandHistory.length > 0) {
+		if (commandHistoryIndex + 1 <= commandHistory.length) {
+		    commandHistoryIndex++;
+		    textarea.value = commandHistory[commandHistory.length-commandHistoryIndex];
+		    textarea.focus();
+		    textarea.selectionEnd = textarea.value.length;
+		}
+	    } 
+	}
+	if (e.key === 'ArrowDown') {
+	    e.preventDefault();
+	    if (commandHistory.length > 0) {
+		if (commandHistoryIndex - 1 >= 0) {
+		    commandHistoryIndex--;
+		    if (commandHistoryIndex === 0) {
+			textarea.value = "";
+		    } else {
+		        textarea.value = commandHistory[commandHistory.length-commandHistoryIndex];
+		    }
+		    textarea.focus();
+		    textarea.selectionEnd = textarea.value.length;
+		}
+	    } 
+	}
     });
 });
