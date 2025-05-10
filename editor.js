@@ -9,8 +9,10 @@ pyodideWorker.onmessage = function(event) {
     const outputArea = document.getElementById("outputArea");
     if (event.data.type === "pyodideReady") {
         pyodideReady = true;
-        console.log("Pyodide is ready in worker");
-        printToOutput("Pyodide is ready");
+        console.log("pyodide!!")
+        const editor = document.getElementById("codeEditor")
+        editor.removeAttribute("disabled");
+        editor.innerText = ""
     } else if (event.data.type === "output") {
     	printToOutput(event.data.output)
     }
@@ -45,7 +47,6 @@ function runPythonTestCase() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM fully loaded and parsed");
     const codeEditor = document.getElementById("codeEditor");
     const runButton = document.getElementById("runButton");
     if (codeEditor) {
