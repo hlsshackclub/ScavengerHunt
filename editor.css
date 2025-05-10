@@ -3,16 +3,50 @@
     background-color: #000000;
     height: 100%;
 }
-
-#codeEditor {
+#codeEditorContainer {
+    position: relative;
+    overflow: visible;
+    width: 100%;
+    min-height: 100px;
+}
+#codeEditor, #highlighted {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     box-sizing: border-box;
+    margin: 0;
     border: none;
     padding: 10px;
     font-family: monospace;
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
-    color: #fff;
+    line-height: 1.5;
+    resize: none;
+    tab-size: 4;
+    background: transparent;
+    overflow: hidden;
+}
+#highlighted {
+    z-index: 0;
+    background-color: #000000;
+    border-radius: 0;
+    outline: none;
+    pointer-events: none;
+}
+#codeEditor {
+    z-index: 1;
+    color: transparent;
+    background-color: transparent;
+    caret-color: white;
+    overflow: hidden;
+}
+#highlighted * {
+    font-family: monospace;
+    font-size: var(--font-size-default);
+    font-weight: var(--font-weight-default);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 #runButton {
