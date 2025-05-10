@@ -25,6 +25,7 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-wrap: break-word;
+    background-color: var(--background-color-default);
 }
 
 /* #terminalBox {
