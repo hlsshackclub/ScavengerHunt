@@ -42,8 +42,10 @@ function runPythonCode() {
     pyodideWorker.postMessage({ type: "runPython", code });
 }
 
-function runPythonTestCase() {
-
+function runPythonTestCase(testCase) {
+    const code = document.getElementById("codeEditor").value; 
+    
+    pyodideWorker.postMessage({ type: "runTestCase", code, testCase});
 }
 
 function escapeHtml(text) {
@@ -98,9 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const runButton = document.getElementById("runButton");
     if (codeEditor) {
         codeEditor.addEventListener("keydown", async function(e) {
-            if (e.ctrlKey && e.key === "Enter") {
-                runPythonCode();
-            }
+            // if (e.ctrlKey && e.key === "Enter") {
+            //     runPythonCode();
+            // }
             autoResizeEditor();
         });
         codeEditor.addEventListener("input", function() {
@@ -115,7 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (runButton) {
         runButton.addEventListener("click", async function() {
-            runPythonCode();
+            //runPythonCode();
+            runPythonTestCase('add(2, 3) == 5')
         });
     }
 });
