@@ -218,6 +218,22 @@
                 <textarea id="terminalBox" type="text" autocomplete="off"></textarea>
             </form>
         </div>
+	<div id="terminalWinEasy" class="hidden">
+	    <p class="win">You have found the AI's password!</p>
+	    <p>Now you can either move on to the next station, or you can stick around and cause more damage.</p>
+	    <button onclick="hide('terminalWin')">Next Station</button>
+	    <button onclick="hide('terminalWin')">Stick around (Medium/Hard)</button>
+	</div>
+	<div id="terminalWinMedium" class="hidden">
+	    <p class="win">You have deleted some of the AI's CriticalFiles!</p>
+	    <p>Now you can either move on to the next station, or create virus to remove ALL of the AI's data.</p>
+	    <button onclick="hide('terminalWin')">Next Station</button>
+	    <button onclick="hide('terminalWin')">Create a Virus(Hard)</button>
+	</div>
+	<div id="terminalWinHard" class="hidden">
+	    <p class="win">You have deleted ALL of the AI's data!</p>
+	    <button onclick="hide('terminalWin')">Next Station</button>
+	</div>
     </div>
     <div id="editorArea">
         <h2>Code Editor</h2>
