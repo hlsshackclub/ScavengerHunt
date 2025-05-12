@@ -377,17 +377,42 @@ function echo(args) {
     return args.join(" ");
 }
 
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
+function getFirstLine(str) {
+    const index = str.indexOf("\n");
+    if (index === -1) {
+	return str;
+    } else {
+	return str.slice(0, index);
+    }
+}
+
 function help(args) {
-    printToConsole("echo [string] - display a line of text");
-    printToConsole("cd [directory] - change the current directory");
-    printToConsole("ls [directory] - list directory contents");
-    printToConsole("rm [file] - remove files");
-    printToConsole("rmdir [directory] - remove empty directories");
-    printToConsole("sudo [command] [options] - execute a command as root");
-    printToConsole("mkdir [directory] - create a new directory");
-    printToConsole("touch [file] - create a new file");
-    printToConsole("cat [file] - display file contents");
-    return ("help - displays this message");
+    if (args.length > 0) {
+	const func = aliases[args[0]] || args[0];
+	if (func in functions){
+	    const aliase = getKeyByValue(aliases, func);
+	    let name = func;
+	    if (aliase) {
+		name = func + " or " + aliase;
+	    }
+	    printToConsole(name + " " + funcHelp[func]);
+	} else {
+	    printToConsole("help: '" + args[0] + "' not found");
+	}
+    } else {
+	for (const [key, value] of Object.entries(functions)) {
+	    const aliase = getKeyByValue(aliases, key);
+	    let name = key;
+	    if (aliase) {
+		name = key + " or " + aliase;
+	    }
+	    printToConsole(name + " " + getFirstLine(funcHelp[key]));
+	}
+    }
 }
 
 function parseArgs(input) {
@@ -404,22 +429,47 @@ function parseArgs(input) {
     return args;
 }
 
+const aliases = {
+    "list": "ls",
+    "go": "cd",
+    "delete": "rm",
+    "removeDirectory": "rmdir",
+    "read": "cat",
+    "makeDirectory": "mkdir",
+    "makeFile": "touch",
+};
+
+const functions = {
+    help,
+    echo,
+    cd,
+    ls,
+    rm,
+    sudo,
+    rmdir,
+    touch,
+    mkdir,
+    cat,
+};
+
+const funcHelp = {
+    "echo": "[string] - display a line of text\n    use > to write to a file\n    use >> to append to a file",
+    "help": "[command] - detailed help for a command\n    use help without arguments to list all commands",
+    "cd": "[directory] - change the current directory\n    use .. to go up a directory\n    use / or run without arguments to go to the root directory",
+    "ls": "[directory] - list directory contents\n    use -l for detailed list",
+    "rm": "[file] - remove files",
+    "rmdir": "[directory] - remove empty directories",
+    "sudo": "[command] [options] - execute a command as root\n    you will be prompted for a password",
+    "mkdir": "[directory] - create a new directory",
+    "touch": "[file] - create a new file",
+    "cat": "[file] - display file contents",
+};
+
 function executeCommand(input) {
     const args = parseArgs(input);
     const [funcName, ...funcArgs] = args;
-    const functions = {
-        echo,
-        help,
-        cd,
-        ls,
-        rm,
-        sudo,
-        rmdir,
-        touch,
-        mkdir,
-        cat,
-    };
-    const func = functions[funcName];
+    const resolvedFuncName = aliases[funcName] || funcName;
+    const func = functions[resolvedFuncName];
 
     if (typeof func === "function") {
         if (func.constructor.name === 'AsyncFunction') {
