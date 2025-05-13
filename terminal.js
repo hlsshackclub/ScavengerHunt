@@ -52,6 +52,7 @@ let user = {}
 let currentUser = {};
 let users = [];
 let passwordFile = {};
+let importantDataFile = {};
 
 let pyodideReadyPromise = null;
 
@@ -71,6 +72,9 @@ function initSystem() {
     mkdir(["etc"]);
     mkdir(["home/root/SuperSecretFolder"]);
     touch(["home/root/SuperSecretFolder/password.txt"]);
+    touch(["home/root/SuperSecretFolder/importantData.txt"]);
+    importantDataFile = getByName("/home/root/SuperSecretFolder/importantData.txt", root, File);
+    echo(["This is a super secret folder", ">", "home/root/SuperSecretFolder/importantData.txt"]);
     echo([password, ">", "home/root/SuperSecretFolder/password.txt"]);
     passwordFile = getByName("/home/root/SuperSecretFolder/password.txt", root, File)
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
@@ -214,6 +218,7 @@ function cat(args) {
     	if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
 	if (path === passwordFile){
 	    //TODO: Easy Win
+	    document.getElementById("terminalWinEasy").classList.remove("hidden");
 	}
         return (path.content);
     } else {
@@ -270,12 +275,16 @@ function r(args, type, command) {
     }
 
     const path = getByName(args[0], currentPath, type);
-    if (path) {
+    if (path) {	
         const index = currentPath.files.indexOf(path);
         if (path instanceof Directory && path.files.length > 0) {
             return (`${command}: '${args[0]}': Directory not empty`);
         }
         if (!checkPerms(path, currentUser, "w")) return `${command}: Permission denied`;
+	if (path === importantDataFile){
+	    //TODO: Medium Win
+	    document.getElementById("terminalWinMedium").classList.remove("hidden");
+	}
         path.parent.files.splice(index, 1);
         return (`Removed ${path.name}`);
     } else {
