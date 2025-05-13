@@ -51,6 +51,7 @@ let admin = {};
 let user = {}
 let currentUser = {};
 let users = [];
+let passwordFile = {};
 
 let pyodideReadyPromise = null;
 
@@ -71,6 +72,7 @@ function initSystem() {
     mkdir(["home/root/SuperSecretFolder"]);
     touch(["home/root/SuperSecretFolder/password.txt"]);
     echo([password, ">", "home/root/SuperSecretFolder/password.txt"]);
+    passwordFile = getByName("/home/root/SuperSecretFolder/password.txt", root, File)
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
     echo([fakePassword, ">", "home/root/SuperSecretFolder/fakePassword.txt"]);
     touch(["etc/sudoers"]); 
@@ -210,6 +212,9 @@ function cat(args) {
     const path = getByName(args[0], currentPath, File);
     if (path) {
     	if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
+	if (path === passwordFile){
+	    //TODO: Easy Win
+	}
         return (path.content);
     } else {
         return (`cat: '${args[0]}': No such file`);
