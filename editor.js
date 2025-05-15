@@ -5,16 +5,18 @@ function printToOutput(message) {
     outputArea.textContent = message;
 }
 
-pyodideWorker.onmessage = function(event) {
+pyodideWorker.onmessage = function (event) {
     const outputArea = document.getElementById("outputArea");
     if (event.data.type === "pyodideReady") {
         pyodideReady = true;
         console.log("pyodide!!")
         const editor = document.getElementById("codeEditor")
+        editor.innerHTML = ""
+        editor.value = ""
         editor.removeAttribute("disabled");
-        editor.innerText = ""
+        document.getElementById("highlightedContent").innerText = ""
     } else if (event.data.type === "output") {
-    	printToOutput(event.data.output)
+        printToOutput(event.data.output)
     }
 };
 
@@ -36,7 +38,7 @@ function openEditor() {
 }
 
 function runPythonCode() {
-    const code = document.getElementById("codeEditor").value; 
+    const code = document.getElementById("codeEditor").value;
 
     // Send the code to the worker rather than running in main thread
     pyodideWorker.postMessage({ type: "runPython", code });
@@ -81,40 +83,40 @@ function autoResizeEditor() {
 }
 
 function checkTab(element, event) {
-  let code = element.value;
-  if(event.key == "Tab") {
-    event.preventDefault();
-    let beforeTab = code.slice(0, element.selectionStart);
-    let afterTab = code.slice(element.selectionEnd, element.value.length);
-    let cursorPos = element.selectionEnd + 1;
-    element.value = beforeTab + "\t" + afterTab;
-    element.selectionStart = cursorPos;
-    element.selectionEnd = cursorPos;
-    update(element.value);
-  }
+    let code = element.value;
+    if (event.key == "Tab") {
+        event.preventDefault();
+        let beforeTab = code.slice(0, element.selectionStart);
+        let afterTab = code.slice(element.selectionEnd, element.value.length);
+        let cursorPos = element.selectionEnd + 1;
+        element.value = beforeTab + "\t" + afterTab;
+        element.selectionStart = cursorPos;
+        element.selectionEnd = cursorPos;
+        update(element.value);
+    }
 }
 document.addEventListener('DOMContentLoaded', () => {
     const codeEditor = document.getElementById("codeEditor");
     const runButton = document.getElementById("runButton");
     if (codeEditor) {
-        codeEditor.addEventListener("keydown", async function(e) {
+        codeEditor.addEventListener("keydown", async function (e) {
             if (e.ctrlKey && e.key === "Enter") {
                 runPythonCode();
             }
             autoResizeEditor();
         });
-        codeEditor.addEventListener("input", function() {
+        codeEditor.addEventListener("input", function () {
             autoResizeEditor();
             updateHighlighting(codeEditor.value);
         });
         autoResizeEditor();
         updateHighlighting(codeEditor.value);
-        codeEditor.addEventListener("keydown", function(event) {
+        codeEditor.addEventListener("keydown", function (event) {
             checkTab(codeEditor, event);
         });
     }
     if (runButton) {
-        runButton.addEventListener("click", async function() {
+        runButton.addEventListener("click", async function () {
             runPythonCode();
         });
     }

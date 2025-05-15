@@ -29,7 +29,7 @@
 }
 #highlighted {
     z-index: 0;
-    background-color: #000000;
+    background-color: var(--background-color-inputbox);
     border-radius: 0;
     outline: none;
     pointer-events: none;
