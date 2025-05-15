@@ -56,25 +56,34 @@ onmessage = async function (event) {
         let scope = dict()
 
         if (data.type === "runPython") {
+            msg = {type: "run", codeOutput: undefined, codeResult: undefined, codeError: undefined}
             try {
-                console.log("run")
                 let result = pyodide.runPython(data.code, { globals: scope, locals: scope });
-                console.log(`result: ${result}`)
-                postMessage({ type: "output", output: codeOutput });
+                msg.codeOutput = codeOutput
+                msg.codeResult = result
+                postMessage(msg)
             } catch (err) {
                 const errMessage = reformatException()
-                console.log(errMessage)
-                postMessage({ type: "output", output: `${codeOutput}\n${errMessage}` });
+                msg.codeOutput = codeOutput
+                msg.codeError = errMessage
+                postMessage(msg)
             }
         } else { //TODO: MAKE THIS PROPER
-            const caseCode = runCases + "\n" + testCases[data.caseIndex]
-            console.log(caseCode)
+            msg = {type: "test", codeOutput: undefined, codeResult: undefined, codeError: undefined, testPassed: false, testOutput: undefined, testError: undefined}
             try {
-                console.log("run")
                 let codeResult = pyodide.runPython(data.code, { globals: scope, locals: scope });
-                console.log(`code result: ${codeResult}`)
+                msg.codeOutput = codeOutput
+                msg.codeResult = codeResult
+            } catch (err) {
+                const errMessage = reformatException()
+                msg.codeOutput = codeOutput
+                msg.codeError = errMessage
+                postMessage(msg)
+            }
 
-                let testOutput = "";
+            let testOutput = "";
+            try {
+                const caseCode = runCases + "\n" + testCases[data.caseIndex]
                 pyodide.setStdout({
                     raw: (charCode) => {
                         testOutput += String.fromCharCode(charCode);
@@ -86,14 +95,15 @@ onmessage = async function (event) {
                     }
                 });
 
-                let testResult = pyodide.runPython(caseCode, { globals, locals });
-                let testString = testResult ? "Passed" : "Failed"
-                console.log(`test result: ${testResult}`)
-                postMessage({ type: "output", output: `output: ${codeOutput}\n\ntests: ${testString}\n${testOutput}` });
-            } catch (err) {
+                let testResult = pyodide.runPython(caseCode, { globals: scope, locals: scope });
+                msg.testPassed = testResult // should be a bool
+                msg.testOutput = testOutput
+                postMessage(msg)
+            } catch(err) {
                 const errMessage = reformatException()
-                console.log(errMessage)
-                postMessage({ type: "output", output: `${codeOutput}\n${errMessage}\n\ntests: Failed` });
+                msg.testOutput = testOutput
+                msg.testError = errMessage
+                postMessage(msg)
             }
         }
     }

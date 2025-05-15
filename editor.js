@@ -15,8 +15,22 @@ pyodideWorker.onmessage = function (event) {
         editor.value = ""
         editor.removeAttribute("disabled");
         document.getElementById("highlightedContent").innerText = ""
-    } else if (event.data.type === "output") {
-        printToOutput(event.data.output)
+    } else if (event.data.type === "run") {
+        if(event.data.codeError !== undefined) {
+            printToOutput(event.data.codeOutput + "\n" + event.data.codeError)
+        } else {
+            printToOutput(event.data.codeOutput)
+        }
+    } else if (event.data.type === "test") {
+        if(event.data.codeError !== undefined) {
+            printToOutput(event.data.codeOutput + "\n" + event.data.codeError)
+        } else {
+            if(event.data.testError !== undefined) {
+                printToOutput(event.data.codeOutput + "\nTests Failed\n" + event.data.testOutput + "\n" + event.data.testError);
+            } else {
+                printToOutput(event.data.codeOutput + "\n" + event.data.testOutput);
+            }
+        }
     }
 };
 
