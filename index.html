@@ -218,36 +218,48 @@
                 <textarea id="terminalBox" type="text" autocomplete="off"></textarea>
             </form>
         </div>
-	    <div id="terminalWinEasy" class="hidden">
-	        <p class="win">You have found the AI's password!</p>
-	        <p>Now you can either move on to the next station, or you can stick around and cause more damage.</p>
-	        <button onclick="hide('terminalWinEasy'); hide('securityContainer')">Next Station</button>
-	        <button onclick="hide('terminalWinEasy')">Stick around (Medium/Hard)</button>
-	    </div>
-	    <div id="terminalWinMedium" class="hidden">
-	        <p class="win">You have deleted the AI's importantData!</p>
-	        <p>Now you can either move on to the next station, or create virus to remove ALL of the AI's data.</p>
-	        <button onclick="hide('terminalWinMedium'); hide('securityContainer')">Next Station</button>
-	        <button onclick="hide('terminalWinMedium'); show('securityEditor')">Create a Virus(Hard)</button>
-	    </div>
-	    <div id="terminalWinHard" class="hidden">
-	        <p class="win">You have deleted ALL of the AI's data!</p>
-	        <button onclick="hide('terminalWinHard')">Next Station</button>
-	    </div>
+        <div id="terminalWinEasy" class="hidden">
+            <p class="win">You have found the AI's password!</p>
+            <p>Now you can either move on to the next station, or you can stick around and cause more damage.</p>
+            <button onclick="hide('terminalWinEasy'); hide('securityContainer')">Next Station</button>
+            <button onclick="hide('terminalWinEasy')">Stick around (Medium/Hard)</button>
+        </div>
+        <div id="terminalWinMedium" class="hidden">
+            <p class="win">You have deleted the AI's importantData!</p>
+            <p>Now you can either move on to the next station, or create virus to remove ALL of the AI's data.</p>
+            <button onclick="hide('terminalWinMedium'); hide('securityContainer')">Next Station</button>
+            <button onclick="hide('terminalWinMedium'); show('securityEditor')">Create a Virus(Hard)</button>
+        </div>
+        <div id="terminalWinHard" class="hidden">
+            <p class="win">You have deleted ALL of the AI's data!</p>
+            <button onclick="hide('terminalWinHard')">Next Station</button>
+        </div>
         <div id="securityEditor" class="hidden">
             <h1 style="font-size: 2em; color: #ff69b4;">EDIORRRR</h1>
         </div>
     </div>
     <div id="editorArea">
+        <br>
         <h2>Code Editor</h2>
-        <div id="codeEditorContainer" style="min-height: 500px;">
-            <textarea id="codeEditor" spellcheck="false" style="min-height: 500px" autocapitalize="off" autocomplete="off" disabled>Loading...</textarea>
-            <pre id="highlighted" class="language-python" style="min-height: 500px" aria-hidden="true"><code class="language-python" id="highlightedContent"></code></pre>
+        <div id="codeEditorContainer" class="editorHeight">
+            <textarea id="codeEditor" class="editorHeight" spellcheck="false" autocapitalize="off"
+                autocomplete="off" disabled>Loading...</textarea>
+            <pre id="highlighted" class="language-python editorHeight"
+                aria-hidden="true"><code class="language-python" id="highlightedContent"></code></pre>
         </div>
         <button id="runButton" type="button" class="inputbox">Run Code</button>
         <button id="testButton" type="button" class="inputbox">Run Test Case</button>
-        <p style="padding-top: 0.5ch;">&#62; Output</p>
-        <pre id="outputArea" class="output"></pre>
+        <div>
+            <br> <!-- for some reason i have to put this in a div -->
+        </div>
+        <h2>Output</h2>
+        <div>
+            <pre id="outputArea" class="output"></pre>
+        </div>
+        <h2>Test Cases</h2>
+        <div>
+            <pre id="testOutputArea" class="output"></pre>
+        </div>
     </div>
     <br><br><br><br> <!-- so content doesn't end at very bottom -->
 </body>

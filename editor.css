@@ -1,13 +1,11 @@
 #editorArea {
     display: block;
     background-color: #000000;
-    height: 100%;
 }
 #codeEditorContainer {
     position: relative;
     overflow: visible;
     width: 100%;
-    min-height: 100px;
 }
 #codeEditor, #highlighted {
     position: absolute;
@@ -17,15 +15,22 @@
     box-sizing: border-box;
     margin: 0;
     border: none;
-    padding: 10px;
     font-family: monospace;
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
-    line-height: 1.5;
+    line-height: var(--line-height-default);
     resize: none;
     tab-size: 4;
     background: transparent;
     overflow: hidden;
+    padding-left: 1ch;
+    padding-right: 1ch;
+    padding-top: var(--line-height-default);
+    padding-bottom: var(--line-height-default);
+    min-height: calc(5 * var(--line-height-default))
+}
+code[class*="language-"], pre[class*="language-"] { /*overrides the style */
+    line-height: var(--line-height-default) !important;
 }
 #highlighted {
     z-index: 0;
@@ -41,22 +46,15 @@
     caret-color: white;
     overflow: hidden;
 }
-#highlighted * {
+/* #highlighted * {
     font-family: monospace;
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
     white-space: pre-wrap;
     overflow-wrap: break-word;
-}
+} */
 
-#runButton {
-    z-index: 10;
-    font-size: var(--font-size-default);
-    font-weight: var(--font-weight-default);
-    cursor: pointer;
-}
-
-#outputArea {
+.output {
     height: 100%;
     color: #fff;
     padding: 10px;
@@ -64,11 +62,13 @@
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
     overflow-y: auto;
+    overflow-wrap: break-word;
     white-space: pre-wrap;
     box-sizing: border-box;
     background-color: var(--background-color-inputbox);
-}
-
-.container {
-    display: flex;
+    min-height: var(--line-height-default);
+    padding-left: 1ch;
+    padding-right: 1ch;
+    padding-top: var(--line-height-default);
+    padding-bottom: var(--line-height-default);
 }

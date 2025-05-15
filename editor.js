@@ -5,8 +5,11 @@ function printToOutput(message) {
     outputArea.textContent = message;
 }
 
+function printToTestOutput(message) {
+    testOutputArea.textContent = message;
+}
+
 pyodideWorker.onmessage = function (event) {
-    const outputArea = document.getElementById("outputArea");
     if (event.data.type === "pyodideReady") {
         pyodideReady = true;
         console.log("pyodide!!")
@@ -18,17 +21,22 @@ pyodideWorker.onmessage = function (event) {
     } else if (event.data.type === "run") {
         if(event.data.codeError !== undefined) {
             printToOutput(event.data.codeOutput + "\n" + event.data.codeError)
+            printToTestOutput('')
         } else {
             printToOutput(event.data.codeOutput)
+            printToTestOutput('')
         }
     } else if (event.data.type === "test") {
         if(event.data.codeError !== undefined) {
             printToOutput(event.data.codeOutput + "\n" + event.data.codeError)
+            printToTestOutput('')
         } else {
             if(event.data.testError !== undefined) {
-                printToOutput(event.data.codeOutput + "\nTests Failed\n" + event.data.testOutput + "\n" + event.data.testError);
+                printToOutput(event.data.codeOutput)
+                printToTestOutput("Tests Failed\n" + event.data.testOutput + "\n" + event.data.testError);
             } else {
-                printToOutput(event.data.codeOutput + "\n" + event.data.testOutput);
+                printToOutput(event.data.codeOutput)
+                printToTestOutput(event.data.testOutput);
             }
         }
     }
@@ -78,14 +86,6 @@ function updateHighlighting(text) {
     const resultElement = document.getElementById("highlightedContent");
     resultElement.innerHTML = escapeHtml(text);
     Prism.highlightElement(resultElement);
-
-    const codeEditor = document.getElementById("codeEditor");
-    const highlighted = document.getElementById("highlighted");
-    const container = document.getElementById("codeEditorContainer");
-    const height = codeEditor.scrollHeight;
-    codeEditor.style.height = `${height}px`;
-    highlighted.style.height = `${height}px`;
-    container.style.height = `${height}px`;
 }
 
 function autoResizeEditor() {
@@ -94,6 +94,7 @@ function autoResizeEditor() {
     const container = document.getElementById("codeEditorContainer");
     codeEditor.style.height = "auto";
     const height = codeEditor.scrollHeight;
+    console.log(height)
     codeEditor.style.height = `${height}px`;
     highlighted.style.height = `${height}px`;
     container.style.height = `${height}px`;
