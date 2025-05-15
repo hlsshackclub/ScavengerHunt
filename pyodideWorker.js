@@ -53,13 +53,12 @@ onmessage = async function (event) {
         });
 
         const dict = pyodide.globals.get('dict');
-        let globals = dict()
-        let locals = dict()
+        let scope = dict()
 
         if (data.type === "runPython") {
             try {
                 console.log("run")
-                let result = pyodide.runPython(data.code, { globals, locals });
+                let result = pyodide.runPython(data.code, { globals: scope, locals: scope });
                 console.log(`result: ${result}`)
                 postMessage({ type: "output", output: codeOutput });
             } catch (err) {
@@ -72,7 +71,7 @@ onmessage = async function (event) {
             console.log(caseCode)
             try {
                 console.log("run")
-                let codeResult = pyodide.runPython(data.code, { globals, locals });
+                let codeResult = pyodide.runPython(data.code, { globals: scope, locals: scope });
                 console.log(`code result: ${codeResult}`)
 
                 let testOutput = "";
@@ -100,41 +99,70 @@ onmessage = async function (event) {
     }
 };
 
-const runCases = String.raw`
-def runCases(data):
-    outputs = []
-    passed = True
-    for (i, case) in enumerate(data):
-        output = case[0]
-        good = case[1](output)
-        
-        if good:
-            outputs.append(f"Test case {i+1} passed. Output:\n{output}")
-        else:
-            outputs.append(f"Test case {i+1} failed. Output:\n{output}")
-            passed = False
-            break
-    return (outputs, passed)
-`
+const spacesPerTab = 4
+function convertLeadingSpacesToTabs(input) {
+  return input
+    .split('\n')
+    .map(line => {
+      const leadingSpaces = line.match(/^ +/);
+      if (leadingSpaces) {
+        const numSpaces = leadingSpaces[0].length;
+        const numTabs = Math.floor(numSpaces / spacesPerTab);
+        const remainderSpaces = numSpaces % spacesPerTab;
+        const newIndent = '\t'.repeat(numTabs) + ' '.repeat(remainderSpaces);
+        return newIndent + line.slice(numSpaces);
+      }
+      return line;
+    })
+    .join('\n');
+}
 
-//all test cases return None, or the number of the test case which was failed
+const runCases = convertLeadingSpacesToTabs(String.raw`
+class TestCase:
+    def __init__(self, input, passFunc):
+        self.input = input
+        self.passFunc = passFunc
+
+class CaseOutput:
+    def __init__(self, input, output, passed):
+        self.input = input
+        self.output = output
+        self.passed = passed
+
+class CasesOutput:
+    def __init__(self):
+        self.caseOutputs = []
+        self.passed = True
+        self.failIndex = None
+    
+    def toString(self):
+        result = f"Test Cases {'Passed' if self.passed else 'Failed'}."
+        for (i, self) in enumerate(self.caseOutputs):
+            result += f"\nCase {i+1} {'Passed' if self.passed else 'Failed'}.\n\tInput: {self.input}\n\tOutput: {self.output}"
+        return result
+
+def runCases(cases, testFunc):
+    result = CasesOutput()
+    for (i, case) in enumerate(cases):
+        output = testFunc(*case.input)
+        passedCase = case.passFunc(output)
+        if not passedCase and result.passed:
+            result.passed = False
+            result.failIndex = i
+        result.caseOutputs.append(CaseOutput(case.input, output, passedCase))
+    return result
+`)
+
 const testCases = [
-String.raw`
-def arrEq(a, b):
-    return len(a) == len(b) and all(x == y for x, y in zip(a, b))
+convertLeadingSpacesToTabs(String.raw`
+casesOutput = runCases([
+    TestCase((1, 2), lambda ans: ans == 3),
+    TestCase((0, 2), lambda ans: ans == 2),
+    TestCase((3, 5), lambda ans: ans == 8),],
+    add
+)
 
-caseOutputs, passed = runCases(
-[
-    [[1, 2, 3], lambda x, arrEq=arrEq: arrEq(x, [1, 2, 3])],
-    [[2, 3, 4, 5], lambda x, arrEq=arrEq: arrEq(x, [2, 3, 4, 5])],
-    [[1, 2, 3], lambda x, arrEq=arrEq: arrEq(x, [1, 2, 2])],
-])
-
-for output in caseOutputs:
-    print(output)
-passed
-`,
-String.raw`
-
-`
+print(casesOutput.toString())
+casesOutput.passed
+`),
 ]
