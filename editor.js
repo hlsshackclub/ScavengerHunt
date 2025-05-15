@@ -44,8 +44,11 @@ function runPythonCode() {
     pyodideWorker.postMessage({ type: "runPython", code });
 }
 
-function runPythonTestCase() {
+function runPythonTestCase(caseIndex) {
+    const code = document.getElementById("codeEditor").value;
 
+    // Send the code to the worker rather than running in main thread
+    pyodideWorker.postMessage({ type: "testPython", code, caseIndex });
 }
 
 function escapeHtml(text) {
@@ -82,42 +85,44 @@ function autoResizeEditor() {
     container.style.height = `${height}px`;
 }
 
-function checkTab(element, event) {
+function checkTabAndAdd(element, event) {
     let code = element.value;
     if (event.key == "Tab") {
         event.preventDefault();
         let beforeTab = code.slice(0, element.selectionStart);
         let afterTab = code.slice(element.selectionEnd, element.value.length);
-        let cursorPos = element.selectionEnd + 1;
+        let cursorPos = element.selectionStart + 1;
         element.value = beforeTab + "\t" + afterTab;
         element.selectionStart = cursorPos;
         element.selectionEnd = cursorPos;
-        update(element.value);
     }
+    return event.key == "Tab"
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     const codeEditor = document.getElementById("codeEditor");
     const runButton = document.getElementById("runButton");
-    if (codeEditor) {
-        codeEditor.addEventListener("keydown", async function (e) {
-            if (e.ctrlKey && e.key === "Enter") {
-                runPythonCode();
-            }
-            autoResizeEditor();
-        });
-        codeEditor.addEventListener("input", function () {
-            autoResizeEditor();
-            updateHighlighting(codeEditor.value);
-        });
+    const testButton = document.getElementById("testButton");
+
+    codeEditor.addEventListener("input", function () {
         autoResizeEditor();
         updateHighlighting(codeEditor.value);
-        codeEditor.addEventListener("keydown", function (event) {
-            checkTab(codeEditor, event);
-        });
-    }
-    if (runButton) {
-        runButton.addEventListener("click", async function () {
-            runPythonCode();
-        });
-    }
+    });
+    autoResizeEditor();
+    updateHighlighting(codeEditor.value);
+    codeEditor.addEventListener("keydown", function (event) {
+        const wasTab = checkTabAndAdd(codeEditor, event);
+        if (wasTab) {
+            autoResizeEditor();
+            updateHighlighting(codeEditor.value);
+        }
+    });
+
+    runButton.addEventListener("click", function () {
+        runPythonCode();
+    });
+
+    testButton.addEventListener("click", function () {
+        runPythonTestCase(0);
+    });
 });
