@@ -107,7 +107,6 @@ onmessage = async function (event) {
                 let testResult = pyodide.runPython(caseCode, { globals: scope, locals: scope });
                 msg.testPassed = testResult // should be a bool
                 msg.testOutput = testOutput
-                console.log(testOutput)
                 postMessage(msg)
             } catch(err) {
                 const errMessage = reformatException()
@@ -137,7 +136,7 @@ function convertLeadingSpacesToTabs(input) {
     .join('\n');
 }
 
-const runCases = convertLeadingSpacesToTabs(String.raw`
+const runCases = String.raw`
 def escapeHtml(text):
     return (text.replace("&", "&amp;")
                 .replace("<", "&lt;")
@@ -150,46 +149,35 @@ class TestCase:
         self.input = input
         self.passFunc = passFunc
 
-class CaseOutput:
-    def __init__(self, input, output, passed):
-        self.input = input
-        self.output = output
-        self.passed = passed
-
-class CasesOutput:
-    def __init__(self):
-        self.caseOutputs = []
-        self.passed = True
-        self.failIndex = None
-    
-    def toString(self):
-        result = f"<span class='{'win' if self.passed else 'error'}'>Test Cases {'Passed' if self.passed else 'Failed'}.</span>"
-        for (i, case) in enumerate(self.caseOutputs):
-            result += f"\n<span class='{'win' if case.passed else 'error'}'>Case {i+1} {'Passed' if case.passed else 'Failed'}.\n\tInput: {escapeHtml(str(case.input))}\n\tOutput: {escapeHtml(str(case.output))}</span>"
-        return result
-
-def runCases(cases, testFunc):
-    result = CasesOutput()
-    for (i, case) in enumerate(cases):
-        output = testFunc(*case.input)
-        passedCase = case.passFunc(output)
-        if not passedCase and result.passed:
-            result.passed = False
-            result.failIndex = i
-        result.caseOutputs.append(CaseOutput(case.input, output, passedCase))
-    return result
-`)
+def runCase(input, passFunc):
+    global caseI, passed, failIndex, testFunc
+    print(f"Case {caseI + 1}:")
+    print(f"\tInput: {escapeHtml(str(input))}")
+    output = testFunc(*input)
+    print(f"\tOutput: {escapeHtml(str(output))}")
+    passedCase = passFunc(output)
+    if not passedCase and passed:
+        passed = False
+        failIndex = caseI
+    if passedCase:
+        print("\t<span class='win'>Passed!</span>")
+    else:
+        print("\t<span class='error'>Failed.</span>")
+    caseI += 1
+`
 
 const testCases = [
 convertLeadingSpacesToTabs(String.raw`
-casesOutput = runCases([
-    TestCase((1, 2), lambda ans: ans == 3),
-    TestCase((0, 2), lambda ans: ans == 2),
-    TestCase((3, 5), lambda ans: ans == 8),],
-    add
-)
+caseI = 0
+passed = True
+failIndex = None
+testFunc = add
 
-print(casesOutput.toString())
-casesOutput.passed
+runCase((1, 2), lambda ans: ans == 3)
+runCase((0, 2), lambda ans: ans == 2)
+runCase((3, 5), lambda ans: ans == 8)
+
+print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+passed
 `),
 ]

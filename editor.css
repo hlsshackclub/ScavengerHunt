@@ -20,7 +20,7 @@
     font-weight: var(--font-weight-default);
     line-height: var(--line-height-default);
     resize: none;
-    tab-size: 4;
+    tab-size: var(--tab-size-default);
     background: transparent;
     overflow: hidden;
     padding-left: 1ch;
@@ -66,4 +66,5 @@ code[class*="language-"], pre[class*="language-"] { /*overrides the style */
     padding-right: 1ch;
     padding-top: var(--line-height-default);
     padding-bottom: var(--line-height-default);
+    tab-size: var(--tab-size-default);
 }

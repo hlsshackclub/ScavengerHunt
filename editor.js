@@ -20,7 +20,8 @@ pyodideWorker.onmessage = function (event) {
         document.getElementById("highlightedContent").innerText = ""
     } else if (event.data.type === "run") {
         if(event.data.codeError !== undefined) {
-            printToOutput(event.data.codeOutput + "\n<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
+            console.log(event.data.codeOutput.slice(-1))
+            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + "<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
             printToTestOutput('')
         } else {
             printToOutput(event.data.codeOutput)
@@ -28,12 +29,12 @@ pyodideWorker.onmessage = function (event) {
         }
     } else if (event.data.type === "test") {
         if(event.data.codeError !== undefined) {
-            printToOutput(event.data.codeOutput + "\n<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
+            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + "<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
             printToTestOutput("<span class='error'>Tests Failed")
         } else {
             if(event.data.testError !== undefined) {
                 printToOutput(event.data.codeOutput)
-                printToTestOutput("<span class='error'>Tests Failed\n" + escapeHtml(event.data.testOutput) + "\n" + escapeHtml(event.data.testError) + "</span>");
+                printToTestOutput(event.data.testOutput + "<span class='error'>" + escapeHtml(event.data.testError) + "</span>");
             } else {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput);
