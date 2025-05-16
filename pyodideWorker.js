@@ -1,5 +1,14 @@
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js");
 
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 let pyodide = null;
 let reformatException = undefined;
 async function initPyodide() {
@@ -98,6 +107,7 @@ onmessage = async function (event) {
                 let testResult = pyodide.runPython(caseCode, { globals: scope, locals: scope });
                 msg.testPassed = testResult // should be a bool
                 msg.testOutput = testOutput
+                console.log(testOutput)
                 postMessage(msg)
             } catch(err) {
                 const errMessage = reformatException()
@@ -128,6 +138,13 @@ function convertLeadingSpacesToTabs(input) {
 }
 
 const runCases = convertLeadingSpacesToTabs(String.raw`
+def escapeHtml(text):
+    return (text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace('"', "&quot;")
+                .replace("'", "&#39;"))
+
 class TestCase:
     def __init__(self, input, passFunc):
         self.input = input
@@ -146,9 +163,9 @@ class CasesOutput:
         self.failIndex = None
     
     def toString(self):
-        result = f"Test Cases {'Passed' if self.passed else 'Failed'}."
-        for (i, self) in enumerate(self.caseOutputs):
-            result += f"\nCase {i+1} {'Passed' if self.passed else 'Failed'}.\n\tInput: {self.input}\n\tOutput: {self.output}"
+        result = f"<span class='{'win' if self.passed else 'error'}'>Test Cases {'Passed' if self.passed else 'Failed'}.</span>"
+        for (i, case) in enumerate(self.caseOutputs):
+            result += f"\n<span class='{'win' if case.passed else 'error'}'>Case {i+1} {'Passed' if case.passed else 'Failed'}.\n\tInput: {escapeHtml(str(case.input))}\n\tOutput: {escapeHtml(str(case.output))}</span>"
         return result
 
 def runCases(cases, testFunc):

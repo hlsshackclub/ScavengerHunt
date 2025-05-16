@@ -2,11 +2,11 @@ window.pyodideWorker = new Worker("pyodideWorker.js");
 window.pyodideReady = false;
 
 function printToOutput(message) {
-    outputArea.textContent = message;
+    outputArea.innerHTML = message;
 }
 
 function printToTestOutput(message) {
-    testOutputArea.textContent = message;
+    testOutputArea.innerHTML = message;
 }
 
 pyodideWorker.onmessage = function (event) {
@@ -20,7 +20,7 @@ pyodideWorker.onmessage = function (event) {
         document.getElementById("highlightedContent").innerText = ""
     } else if (event.data.type === "run") {
         if(event.data.codeError !== undefined) {
-            printToOutput(event.data.codeOutput + "\n" + event.data.codeError)
+            printToOutput(event.data.codeOutput + "\n<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
             printToTestOutput('')
         } else {
             printToOutput(event.data.codeOutput)
@@ -28,12 +28,12 @@ pyodideWorker.onmessage = function (event) {
         }
     } else if (event.data.type === "test") {
         if(event.data.codeError !== undefined) {
-            printToOutput(event.data.codeOutput + "\n" + event.data.codeError)
-            printToTestOutput('')
+            printToOutput(event.data.codeOutput + "\n<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
+            printToTestOutput("<span class='error'>Tests Failed")
         } else {
             if(event.data.testError !== undefined) {
                 printToOutput(event.data.codeOutput)
-                printToTestOutput("Tests Failed\n" + event.data.testOutput + "\n" + event.data.testError);
+                printToTestOutput("<span class='error'>Tests Failed\n" + escapeHtml(event.data.testOutput) + "\n" + escapeHtml(event.data.testError) + "</span>");
             } else {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput);
@@ -94,7 +94,6 @@ function autoResizeEditor() {
     const container = document.getElementById("codeEditorContainer");
     codeEditor.style.height = "auto";
     const height = codeEditor.scrollHeight;
-    console.log(height)
     codeEditor.style.height = `${height}px`;
     highlighted.style.height = `${height}px`;
     container.style.height = `${height}px`;
