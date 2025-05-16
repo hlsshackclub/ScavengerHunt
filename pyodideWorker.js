@@ -17,7 +17,7 @@ async function initPyodide() {
         await pyodide.loadPackage("micropip");
     }
 
-    pyodide.runPython(`
+    pyodide.runPython(String.raw`
 def reformatException():
     import sys
     import traceback
