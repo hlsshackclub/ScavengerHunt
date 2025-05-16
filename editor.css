@@ -27,10 +27,12 @@
     padding-right: 1ch;
     padding-top: var(--line-height-default);
     padding-bottom: var(--line-height-default);
-    min-height: calc(5 * var(--line-height-default))
+    min-height: calc(5 * var(--line-height-default));
 }
 code[class*="language-"], pre[class*="language-"] { /*overrides the style */
     line-height: var(--line-height-default) !important;
+    overflow-wrap: anywhere !important;
+    white-space: pre-wrap !important;
 }
 #highlighted {
     z-index: 0;
@@ -46,13 +48,6 @@ code[class*="language-"], pre[class*="language-"] { /*overrides the style */
     caret-color: white;
     overflow: hidden;
 }
-/* #highlighted * {
-    font-family: monospace;
-    font-size: var(--font-size-default);
-    font-weight: var(--font-weight-default);
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-} */
 
 .output {
     height: 100%;
