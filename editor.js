@@ -1,22 +1,62 @@
 window.pyodideWorker = new Worker("pyodideWorker.js");
 window.pyodideReady = false;
 
+function setEditorText(text) {
+    document.getElementById("codeEditor").value = text
+    document.getElementById("highlightedContent").innerText = text
+}
+
 function printToOutput(message) {
-    outputArea.textContent = message;
+    outputArea.innerHTML = message;
+}
+
+function printToTestOutput(message) {
+    testOutputArea.innerHTML = message;
+}
+
+const stationDefaultTexts = [
+String.raw
+`NETWORKING DEFAULT TEXT`,
+String.raw
+`MANUFACTURING DEFAULT TEXT`,
+String.raw
+`RECON DEFAULT TEXT`,
+]
+
+function resetEditor(station) {
+    setEditorText(stationDefaultTexts[station])
+    printToOutput('')
+    printToTestOutput('')
 }
 
 pyodideWorker.onmessage = function (event) {
-    const outputArea = document.getElementById("outputArea");
     if (event.data.type === "pyodideReady") {
         pyodideReady = true;
         console.log("pyodide!!")
-        const editor = document.getElementById("codeEditor")
-        editor.innerHTML = ""
-        editor.value = ""
-        editor.removeAttribute("disabled");
-        document.getElementById("highlightedContent").innerText = ""
-    } else if (event.data.type === "output") {
-        printToOutput(event.data.output)
+        setEditorText("")
+        document.getElementById("codeEditor").removeAttribute("disabled");
+    } else if (event.data.type === "run") {
+        if(event.data.codeError !== undefined) {
+            console.log(event.data.codeOutput.slice(-1))
+            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + "<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
+            printToTestOutput('')
+        } else {
+            printToOutput(event.data.codeOutput)
+            printToTestOutput('')
+        }
+    } else if (event.data.type === "test") {
+        if(event.data.codeError !== undefined) {
+            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + "<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
+            printToTestOutput("<span class='error'>Tests Failed (errored before tests were run)")
+        } else {
+            if(event.data.testError !== undefined) {
+                printToOutput(event.data.codeOutput)
+                printToTestOutput(event.data.testOutput + "<span class='error'>" + escapeHtml(event.data.testError) + "</span>");
+            } else {
+                printToOutput(event.data.codeOutput)
+                printToTestOutput(event.data.testOutput);
+            }
+        }
     }
 };
 
@@ -64,14 +104,6 @@ function updateHighlighting(text) {
     const resultElement = document.getElementById("highlightedContent");
     resultElement.innerHTML = escapeHtml(text);
     Prism.highlightElement(resultElement);
-
-    const codeEditor = document.getElementById("codeEditor");
-    const highlighted = document.getElementById("highlighted");
-    const container = document.getElementById("codeEditorContainer");
-    const height = codeEditor.scrollHeight;
-    codeEditor.style.height = `${height}px`;
-    highlighted.style.height = `${height}px`;
-    container.style.height = `${height}px`;
 }
 
 function autoResizeEditor() {
@@ -100,6 +132,8 @@ function checkTabAndAdd(element, event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    setEditorText("Loading...")
+    
     const codeEditor = document.getElementById("codeEditor");
     const runButton = document.getElementById("runButton");
     const testButton = document.getElementById("testButton");

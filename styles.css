@@ -23,7 +23,7 @@
     --font-family-default: monospace;
     --font-weight-default: normal;
     --line-height-default: 1.1rem;
-
+    --tab-size-default: 4;
     font-size: var(--font-size-default);
 }
 
