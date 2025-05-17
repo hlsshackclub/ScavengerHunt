@@ -1,0 +1,60 @@
+ ccccc
+ ccccc   ooo
+ ccccc xxooo  oo
+ ccccc xx  xxxoo
+  oo   xx  xxx xx
+  oo oooo oo   xxoo
+  oo oooo ooxx xxoo
+  ooxxx     xx   xx
+    xxx  oo xx   xxoo
+   oo    oo  ooo xxoo
+   ooxxxxoo  ooouu  xxx
+     xxxxoo  xx uu  xxx
+      oo     xx       oo
+  xxxxooxxssooo ccccc oo
+  xxxxooxxssooo cccccxx
+ oo     xx      cccccxx
+ oo     xx  xx  cccccxx
+  xx     oooxx        oo
+  xx   xxoooxxoo   xxxoo
+  xxoooxx     oouuuxxx
+    oooxx     oouuu
+  xxx  xx     oo
+ooxxx   ooooxxx
+oo      ooooxxxoo
+ooccccc        oo
+  ccccc   ooo  oo
+  cccccxxxoooxxx
+  cccccxxx   xxx
+       xxx
+
+#
+ xxxxx
+ xxxxx   xxx
+ xxxxx xxxxx  xx
+ xxxxx xx  xxxxx
+  xx   xx  xxx xx
+  xx xxxx xx   xxxx
+  xx xxxx xxxx xxxx
+  xxxxx     xx   xx
+    xxx  xx xx   xxxx
+   xx    xx  xxx xxxx
+   xxxxxxxx  xxxxx  xxx
+     xxxxxx  xx xx  xxx
+      xx     xx       xx
+  xxxxxxxxxxxxx xxxxx xx
+  xxxxxxxxxxxxx xxxxxxx
+ xx     xx      xxxxxxx
+ xx     xx  xx  xxxxxxx
+  xx     xxxxx        xx
+  xx   xxxxxxxxx   xxxxx
+  xxxxxxx     xxxxxxxx
+    xxxxx     xxxxx
+  xxx  xx     xx
+xxxxx   xxxxxxx
+xx      xxxxxxxxx
+xxxxxxx        xx
+  xxxxx   xxx  xx
+  xxxxxxxxxxxxxx
+  xxxxxxxx   xxx
+       xxx
