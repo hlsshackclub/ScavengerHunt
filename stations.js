@@ -1,1 +1,1 @@
-let currentStation = 1 //manufacturing. temp.
+let currentStation = 3 //manufacturing. temp.

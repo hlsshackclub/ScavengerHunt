@@ -18,10 +18,10 @@ function printToTestOutput(message) {
 }
 
 const stationDefaultTexts = [
-String.raw
-`#NETWORKING DEFAULT TEXT`,
-String.raw
-`#targets is a 2d array of 1s and 0s. 1 means there's a target there, 0 means there's no target there
+    String.raw
+        `#NETWORKING DEFAULT TEXT`,
+    String.raw
+        `#targets is a 2d array of 1s and 0s. 1 means there's a target there, 0 means there's no target there
 #targets is indexed with y coordinate first, x coordinate second
 #EMPsize is the side length of the square that your EMP destroys
 #EMPSize will always be odd
@@ -29,22 +29,39 @@ String.raw
 #Return the position [x, y] which destroys the most targets
 def findBestEMPSpot(targets, EMPSize):
     #Write your code here!`,
-String.raw
-`#RECON DEFAULT TEXT`,
-String.raw
-`#SECURITY DEFAULT TEXT`
+    String.raw
+        `#RECON DEFAULT TEXT`,
+    String.raw
+        `#files is a dictionary of {file name : file contents} pairs
+#File contents with the string "trap" inside them are trapped
+#You must delete all the non-trapped files (return a dictionary with all of the non-trapped files gone, and all of the trapped files remaining)
+def deleteFiles(files):
+    #Write your code here!`
 ].map(convertLeadingSpacesToTabs)
 
 const stationWinFuncs = [
-    () => {},
+    () => { },
     (() => {
         wonAlready = false
         function inner() {
-            if(wonAlready) {
+            if (wonAlready) {
                 return
             }
             wonAlready = true
-            console.log("MANUFCTURING ASHDAOD WINDO!!!!")
+            console.log("MANUFACTURING HARD WIN!!!!!!")
+        }
+        return inner
+    })(),
+    () => { },
+    (() => {
+        wonAlready = false
+        function inner() {
+            if (wonAlready) {
+                return
+            }
+            wonAlready = true
+            show("terminalWinHard")
+            console.log("SECURITY HARD WIN!!!!!!")
         }
         return inner
     })(),
@@ -76,7 +93,7 @@ pyodideWorker.onmessage = function (event) {
         pyodideReadyResolve()
         setEditorText('')
     } else if (event.data.type === "run") {
-        if(event.data.codeError !== undefined) {
+        if (event.data.codeError !== undefined) {
             console.log(event.data.codeOutput.slice(-1))
             printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + event.data.codeError)
             printToTestOutput('')
@@ -85,17 +102,17 @@ pyodideWorker.onmessage = function (event) {
             printToTestOutput('')
         }
     } else if (event.data.type === "test") {
-        if(event.data.codeError !== undefined) {
+        if (event.data.codeError !== undefined) {
             printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + event.data.codeError)
             printToTestOutput("<span class='error'>Tests Failed (errored before tests were run)")
         } else {
-            if(event.data.testError !== undefined) {
+            if (event.data.testError !== undefined) {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput + event.data.testError);
             } else {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput);
-                if(event.data.testPassed === true) {
+                if (event.data.testPassed === true) {
                     stationWinFuncs[currentStation]();
                 }
             }
@@ -167,7 +184,7 @@ function checkTabAndAdd(element, event) {
 
 document.addEventListener('DOMContentLoaded', () => {
     setEditorText("Loading...")
-    
+
     const codeEditor = document.getElementById("codeEditor");
     const runButton = document.getElementById("runButton");
     const testButton = document.getElementById("testButton");
@@ -193,4 +210,10 @@ document.addEventListener('DOMContentLoaded', () => {
     testButton.addEventListener("click", function () {
         runPythonTestCase(currentStation);
     });
+});
+
+window.addEventListener("resize", () => {
+    if (!document.getElementById("codeEditor").classList.contains("hidden")) {
+        autoResizeEditor();
+    }
 });

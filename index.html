@@ -234,14 +234,12 @@
             <p class="win">You have deleted the AI's importantData!</p>
             <p>Now you can either move on to the next station, or create virus to remove ALL of the AI's data.</p>
             <button onclick="hide('terminalWinMedium'); hide('securityContainer')">Next Station</button>
-            <button onclick="hide('terminalWinMedium'); show('securityEditor')">Create a Virus(Hard)</button>
+            <button onclick="hide('terminalWinMedium'); show('securityEditorContainer'); moveEditorToStation(3, 'securityEditorContainer');">Create a Virus (Hard)</button>
         </div>
+        <div id="securityEditorContainer" class="hidden"></div>
         <div id="terminalWinHard" class="hidden">
             <p class="win">You have deleted ALL of the AI's data!</p>
             <button onclick="hide('terminalWinHard')">Next Station</button>
-        </div>
-        <div id="securityEditor" class="hidden">
-            <h1 style="font-size: 2em; color: #ff69b4;">EDIORRRR</h1>
         </div>
     </div>
     <div class="hidden">
