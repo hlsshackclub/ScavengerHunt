@@ -157,14 +157,14 @@ function ls(args) {
 function cd(args) {
     if (args.length === 0) {
         currentPath = root;
-        return "Changed directory to /";
+        return `Changed directory to ${getPathString(currentPath)}`;
     }
 
     path = getByName(args[0], currentPath, Directory);
     if (path) {
         if (!checkPerms(path, currentUser, "r")) return `cd: ${args[0]}: Permission denied`;
         currentPath = path;
-        return `Changed directory to ${args[0]}`;
+        return `Changed directory to ${getPathString(currentPath)}`;
     } else {
         return `cd: ${args[0]}: Directory not found`;
     }
