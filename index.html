@@ -67,7 +67,7 @@
             depressButton('networkingEasyButton'); depressButton('networkingHardButton');">Disinfect
             some computers (Medium)</button>
         <button id="networkingHardButton" onclick="toggleButton(this); toggleShow('networkingEditorContainer'); hide('netWalkContainer'); hide('manualTSPContainer');
-            depressButton('networkingEasyButton'); depressButton('networkingMediumButton');">Disinfect ALL the
+            depressButton('networkingEasyButton'); depressButton('networkingMediumButton'); moveEditorToStation(0, 'networkingEditorContainer');">Disinfect ALL the
             computers (Hard)</button>
         <div id="netWalkContainer" class="hidden">
             <br>
@@ -108,7 +108,6 @@
             <p id="manualTSPLength"></p> <span id="manualTSPStatus"></span>
         </div>
         <div id="networkingEditorContainer" class="hidden">
-            AAAAAAA TEMP AAAAAAAAAAAAAAAAAAAAAAAAAAA
         </div>
     </div>
     <div id="manufacturingContainer" class="hidden">
@@ -253,7 +252,7 @@
             <button onclick="hide('terminalWinHard')">Next Station</button>
         </div>
     </div>
-    <div class="hidden">
+    <div class="hidden"> <!-- editor starts out over here before getting moved around to various places -->
         <div id="editorArea">
             <br>
             <h2>Code Editor (Python 3.12.7)</h2>
