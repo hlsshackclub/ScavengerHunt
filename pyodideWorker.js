@@ -68,50 +68,46 @@ onmessage = async function (event) {
             msg = {type: "run", codeOutput: undefined, codeResult: undefined, codeError: undefined}
             try {
                 let result = pyodide.runPython(data.code, { globals: scope, locals: scope });
-                msg.codeOutput = codeOutput
+                msg.codeOutput = escapeHtml(codeOutput)
                 msg.codeResult = result
                 postMessage(msg)
             } catch (err) {
                 const errMessage = reformatException()
-                msg.codeOutput = codeOutput
-                msg.codeError = errMessage
+                msg.codeOutput = escapeHtml(codeOutput)
+                msg.codeError = "<span class='error'>" + escapeHtml(errMessage) + "</span>"
                 postMessage(msg)
             }
         } else {
             msg = {type: "test", codeOutput: undefined, codeResult: undefined, codeError: undefined, testPassed: false, testOutput: undefined, testError: undefined}
             try {
                 let codeResult = pyodide.runPython(data.code, { globals: scope, locals: scope });
-                msg.codeOutput = codeOutput
+                msg.codeOutput = escapeHtml(codeOutput)
                 msg.codeResult = codeResult
             } catch (err) {
                 const errMessage = reformatException()
-                msg.codeOutput = codeOutput
-                msg.codeError = errMessage
+                msg.codeOutput = escapeHtml(codeOutput)
+                msg.codeError = "<span class='error'>" + escapeHtml(errMessage) + "</span>"
                 postMessage(msg)
             }
 
             let testOutput = "";
+            function logToTestOutput(msg) {
+                testOutput += msg + "\n"
+            }
+            const logToTestOutputPy = pyodide.toPy(logToTestOutput)
+            scope.set("logToTestOutput", logToTestOutputPy)
             try {
                 const caseCode = testCases[data.caseIndex]
-                pyodide.setStdout({
-                    raw: (charCode) => {
-                        testOutput += String.fromCharCode(charCode);
-                    }
-                });
-                pyodide.setStderr({
-                    raw: (charCode) => {
-                        testOutput += String.fromCharCode(charCode);
-                    }
-                });
-
                 let testResult = pyodide.runPython(caseCode, { globals: scope, locals: scope });
+                msg.codeOutput = escapeHtml(codeOutput)
                 msg.testPassed = testResult // should be a bool
                 msg.testOutput = testOutput
                 postMessage(msg)
             } catch(err) {
                 const errMessage = reformatException()
+                msg.codeOutput = escapeHtml(codeOutput)
                 msg.testOutput = testOutput
-                msg.testError = errMessage
+                msg.testError = "<span class='error'>" + escapeHtml(errMessage) + "</span>"
                 postMessage(msg)
             }
         }
@@ -151,18 +147,18 @@ class TestCase:
 
 def runCase(input, passFunc):
     global caseI, passed, failIndex, testFunc
-    print(f"Case {caseI + 1}:")
-    print(f"\tInput: {escapeHtml(str(input))}")
+    logToTestOutput(f"Case {caseI + 1}:")
+    logToTestOutput(f"\tInput: {escapeHtml(str(input))}")
     output = testFunc(*input)
-    print(f"\tOutput: {escapeHtml(str(output))}")
+    logToTestOutput(f"\tOutput: {escapeHtml(str(output))}")
     passedCase = passFunc(output)
     if not passedCase and passed:
         passed = False
         failIndex = caseI
     if passedCase:
-        print("\t<span class='win'>Passed!</span>")
+        logToTestOutput("\t<span class='win'>Passed!</span>")
     else:
-        print("\t<span class='error'>Failed.</span>")
+        logToTestOutput("\t<span class='error'>Failed.</span>")
     caseI += 1
 `
 
@@ -178,7 +174,7 @@ runCase((1, 2), lambda ans: ans == 3)
 runCase((0, 2), lambda ans: ans == 2)
 runCase((3, 5), lambda ans: ans == 8)
 
-print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
 passed
 `,
 // Recon Hard

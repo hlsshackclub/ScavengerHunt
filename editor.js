@@ -38,7 +38,7 @@ pyodideWorker.onmessage = function (event) {
     } else if (event.data.type === "run") {
         if(event.data.codeError !== undefined) {
             console.log(event.data.codeOutput.slice(-1))
-            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + "<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
+            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + event.data.codeError)
             printToTestOutput('')
         } else {
             printToOutput(event.data.codeOutput)
@@ -46,12 +46,12 @@ pyodideWorker.onmessage = function (event) {
         }
     } else if (event.data.type === "test") {
         if(event.data.codeError !== undefined) {
-            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + "<span class='error'>" + escapeHtml(event.data.codeError) + "</span>")
+            printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + event.data.codeError)
             printToTestOutput("<span class='error'>Tests Failed (errored before tests were run)")
         } else {
             if(event.data.testError !== undefined) {
                 printToOutput(event.data.codeOutput)
-                printToTestOutput(event.data.testOutput + "<span class='error'>" + escapeHtml(event.data.testError) + "</span>");
+                printToTestOutput(event.data.testOutput + event.data.testError);
             } else {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput);
@@ -157,6 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     testButton.addEventListener("click", function () {
-        runPythonTestCase(2);
+        runPythonTestCase(0);
     });
 });

@@ -1,7 +1,11 @@
-def destroy(msg):
-	if 'trap' in msg:
-		return msg
-	return ''
+def destroy(files):
+    newFiles = {}
+    for (name, contents) in files.items():
+        if name == 'file2.txt':
+            continue
+        if 'trap' in contents:
+            newFiles[name] = contents
+    return newFiles
 
 
 
