@@ -46,6 +46,15 @@
     </div>
     <br>
     <div>
+        <p>You think you should head to Recon first, to uhh who knows idk.
+        </p>
+        <label>Input Recon code:</label>
+        <input id="input4" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+        <button onclick="validateAndShow('input4', 11111, 'reconContainer', 'wrong4')">submit</button>
+        <label id="wrong4" class="hidden error">Wrong code.</label>
+    </div>
+    <br>
+    <div>
         <p>You think you should head to Security first, to security idk.
         </p>
         <label>Input Security code:</label>
@@ -216,6 +225,12 @@
             </div>
         </div>
         <div id="manufacturingEditorContainer" class="hidden"></div>
+    </div>
+    <div id="reconContainer" class="hidden">
+        <br>
+        <h2>Recon</h2>
+        <p>RECONONOOOOOOOOONNONONONONONONOONONONONOONONONONONONON
+        </p>
     </div>
     <div id="securityContainer" class="hidden">
         <br>
