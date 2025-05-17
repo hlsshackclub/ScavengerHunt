@@ -1,15 +1,8 @@
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js");
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js", "utils.js");
+console.log(v2Add([1, 2], [3, 4]))
+
 
 //TODO: Fix memory leaks
-
-function escapeHtml(text) {
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-}
 
 let pyodide = null;
 let reformatException = undefined;
@@ -118,25 +111,7 @@ onmessage = async function (event) {
     }
 };
 
-// const spacesPerTab = 4
-// function convertLeadingSpacesToTabs(input) {
-//   return input
-//     .split('\n')
-//     .map(line => {
-//       const leadingSpaces = line.match(/^ +/);
-//       if (leadingSpaces) {
-//         const numSpaces = leadingSpaces[0].length;
-//         const numTabs = Math.floor(numSpaces / spacesPerTab);
-//         const remainderSpaces = numSpaces % spacesPerTab;
-//         const newIndent = '\t'.repeat(numTabs) + ' '.repeat(remainderSpaces);
-//         return newIndent + line.slice(numSpaces);
-//       }
-//       return line;
-//     })
-//     .join('\n');
-// }
-
-const runCases = String.raw`
+const runCases = convertLeadingSpacesToTabs(String.raw`
 def escapeHtml(text):
     return (text.replace("&", "&amp;")
                 .replace("<", "&lt;")
@@ -164,7 +139,7 @@ def runCase(input, passFunc):
     else:
         logToTestOutput("\t<span class='error'>Failed.</span>")
     caseI += 1
-`
+`)
 
 const testCases = [
 // Networking Hard TODO:
@@ -270,13 +245,63 @@ arr4 = [
     [0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1]
 ]
 
+#all GPTd, but seems to work accurately
+def buildPrefixSum(targets):
+    rows = len(targets)
+    cols = len(targets[0])
+    prefix = [[0] * (cols + 1) for _ in range(rows + 1)]
+    for y in range(rows):
+        for x in range(cols):
+            prefix[y + 1][x + 1] = (
+                targets[y][x]
+                + prefix[y][x + 1]
+                + prefix[y + 1][x]
+                - prefix[y][x]
+            )
+    return prefix
 
-runCase((arr1, 3), lambda ans: ans == [1, 1])
-runCase((arr2, 7), lambda ans: ans == [5, 8])
-runCase((arr3, 5), lambda ans: ans == [19,0])
-runCase((arr4, 9), lambda ans: ans == [4,12])
+def getAreaSum(prefix, x1, y1, x2, y2):
+    x1 = max(0, x1)
+    y1 = max(0, y1)
+    x2 = min(len(prefix[0]) - 2, x2)
+    y2 = min(len(prefix) - 2, y2)
+    return (
+        prefix[y2 + 1][x2 + 1]
+        - prefix[y1][x2 + 1]
+        - prefix[y2 + 1][x1]
+        + prefix[y1][x1]
+    )
 
-print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+def findBestEMPSpotAnswer(targets, EMPSize):
+    rows = len(targets)
+    cols = len(targets[0])
+    prefix = buildPrefixSum(targets)
+    radius = EMPSize // 2
+
+    bestPos = [0, 0]
+    bestCount = 0
+
+    for y in range(rows):
+        for x in range(cols):
+            count = getAreaSum(prefix, x - radius, y - radius, x + radius, y + radius)
+            if count > bestCount:
+                bestCount = count
+                bestPos = [x, y]
+
+    return bestPos
+
+def countTargetsAt(targets, EMPSize, position):
+    prefix = buildPrefixSum(targets)
+    radius = EMPSize // 2
+    x, y = position
+    return getAreaSum(prefix, x - radius, y - radius, x + radius, y + radius)
+
+runCase((arr1, 3), lambda ans: countTargetsAt(arr1, 3, ans) == countTargetsAt(arr1, 3, findBestEMPSpotAnswer(arr1, 3)))
+runCase((arr2, 7), lambda ans: countTargetsAt(arr2, 7, ans) == countTargetsAt(arr2, 7, findBestEMPSpotAnswer(arr2, 7)))
+runCase((arr3, 5), lambda ans: countTargetsAt(arr3, 5, ans) == countTargetsAt(arr3, 5, findBestEMPSpotAnswer(arr3, 5)))
+runCase((arr4, 9), lambda ans: countTargetsAt(arr4, 9, ans) == countTargetsAt(arr4, 9, findBestEMPSpotAnswer(arr4, 9)))
+
+logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
 passed
 `,
 // Recon Hard
@@ -292,7 +317,7 @@ runCase(("aopz pz hu lujvklk zljyla tlzzhnl", -7), lambda ans: ans == "this is a
 runCase(("Qeb nrfzh yoltk clu grjmp lsbo qeb ixwv ald.", 3), lambda ans: ans == "The quick brown fox jumps over the lazy dog.")
 runCase(("Sqdqtyqd vqhcuhi hufehjut whemydw cehu mxuqj, eqji, ieoruqdi, tho fuqi qdt budjybi, rkj buii sqdebq, sehd veh whqyd qdt rqhbuo yd 2024. Yd wuduhqb, oyubti muhu xywxuh jxyi ouqh secfqhut myjx 2023. Xemuluh, jxuhu muhu iecu qhuqi, fqhjyskbqhbo yd Muijuhd Sqdqtq, mxuhu vqhcuhi sedjydkut je vqsu yiikui hubqjut je tho sedtyjyedi.", 10), lambda ans: ans == "Canadian farmers reported growing more wheat, oats, soybeans, dry peas and lentils, but less canola, corn for grain and barley in 2024. In general, yields were higher this year compared with 2023. However, there were some areas, particularly in Western Canada, where farmers continued to face issues related to dry conditions.")
 
-print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
 passed
 `,
 // Security Hard
@@ -314,11 +339,11 @@ failIndex = None
 for (i, (k, v)) in enumerate(files.items()):
     if "trap" in v:
         if k in destroyedFiles:
-            print(f"<span class='win'>{k} correctly left alone.</span>")
+            logToTestOutput(f"<span class='win'>{k} correctly left alone.</span>")
             continue
     else:
         if k not in destroyedFiles:
-            print(f"<span class='win'>{k} correctly destroyed.</span>")
+            logToTestOutput(f"<span class='win'>{k} correctly destroyed.</span>")
             continue
     passed = False
     failCase = (k, v)
@@ -326,9 +351,9 @@ for (i, (k, v)) in enumerate(files.items()):
     break
             
 if not passed:
-    print(f"<span class='error'>{failCase[0]} handled incorrectly!</span>")
+    logToTestOutput(f"<span class='error'>{failCase[0]} handled incorrectly!</span>")
 else:
-    print("<span class='win'>All files handled correctly!</span>")
+    logToTestOutput("<span class='win'>All files handled correctly!</span>")
 passed
 `,
 //Testing
@@ -345,7 +370,7 @@ runCase((3, 5), lambda ans: ans == 8)
 logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
 passed
 `,
-]
+].map(convertLeadingSpacesToTabs)
 
 // // Recon Hard
 // // decrypt( String of text, shift (int))

@@ -8,10 +8,12 @@ function setEditorText(text) {
 }
 
 function printToOutput(message) {
+    const outputArea = document.getElementById("outputArea")
     outputArea.innerHTML = message;
 }
 
 function printToTestOutput(message) {
+    const testOutputArea = document.getElementById("testOutputArea")
     testOutputArea.innerHTML = message;
 }
 
@@ -19,12 +21,19 @@ const stationDefaultTexts = [
 String.raw
 `#NETWORKING DEFAULT TEXT`,
 String.raw
-`#MANUFACTURING DEFAULT TEXT`,
+`#targets is a 2d array of 1s and 0s. 1 means there's a target there, 0 means there's no target there
+#targets is indexed with y coordinate first, x coordinate second
+#EMPsize is the side length of the square that your EMP destroys
+#EMPSize will always be odd
+#For example, if your EMP has a size of 5, and you place it at [2, 2], it would destroy a square from [0, 0] to [4, 4]
+#Return the position [x, y] which destroys the most targets
+def findBestEMPSpot(targets, EMPSize):
+    #Write your code here!`,
 String.raw
 `#RECON DEFAULT TEXT`,
 String.raw
 `#SECURITY DEFAULT TEXT`
-]
+].map(convertLeadingSpacesToTabs)
 
 async function resetEditor(station) {
     await pyodideReadyPromise
@@ -37,7 +46,7 @@ async function moveEditorToStation(station, parent) {
     document.getElementById(parent).appendChild(document.getElementById("editorArea"))
     resetEditor(station)
     autoResizeEditor() //I want to fix sizing before pyodide is necessarily loaded. it means these are called twice but oh well
-    updateHighlighting(text)
+    updateHighlighting(document.getElementById("codeEditor").value)
 }
 
 let pyodideReadyResolve;
@@ -107,15 +116,6 @@ function runPythonTestCase(caseIndex) {
     pyodideWorker.postMessage({ type: "testPython", code, caseIndex });
 }
 
-function escapeHtml(text) {
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-}
-
 function updateHighlighting(text) {
     const resultElement = document.getElementById("highlightedContent");
     resultElement.innerHTML = escapeHtml(text);
@@ -173,6 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     testButton.addEventListener("click", function () {
-        runPythonTestCase(0);
+        runPythonTestCase(1);
     });
 });

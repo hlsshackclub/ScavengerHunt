@@ -36,3 +36,30 @@ function* permute(permutation) {
         }
     }
 }
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function convertLeadingSpacesToTabs(input) {
+    const spacesPerTab = 4
+    return input
+        .split('\n')
+        .map(line => {
+            const leadingSpaces = line.match(/^ +/);
+            if (leadingSpaces) {
+                const numSpaces = leadingSpaces[0].length;
+                const numTabs = Math.floor(numSpaces / spacesPerTab);
+                const remainderSpaces = numSpaces % spacesPerTab;
+                const newIndent = '\t'.repeat(numTabs) + ' '.repeat(remainderSpaces);
+                return newIndent + line.slice(numSpaces);
+            }
+            return line;
+        })
+        .join('\n');
+}
