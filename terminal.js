@@ -311,7 +311,7 @@ function getByName(name, p, type) {
     const parts = name.split("/");
     for (let part of parts) {
         if (part === "..") {
-            if (path.parent != root) path = path.parent;
+            if (path != root) path = path.parent;
         } else {
             const next = path.files.find(file => file.name === part);
             if (next) path = next;
