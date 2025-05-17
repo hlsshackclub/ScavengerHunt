@@ -92,7 +92,7 @@ onmessage = async function (event) {
 
             let testOutput = "";
             try {
-                const caseCode = runCases + "\n" + testCases[data.caseIndex]
+                const caseCode = testCases[data.caseIndex]
                 pyodide.setStdout({
                     raw: (charCode) => {
                         testOutput += String.fromCharCode(charCode);
@@ -168,7 +168,7 @@ def runCase(input, passFunc):
 
 const testCases = [
 //Testing
-String.raw`
+runCases + String.raw`
 caseI = 0
 passed = True
 failIndex = None
@@ -183,7 +183,7 @@ passed
 `,
 // Recon Hard
 // decrypt( String of text, shift (int))
-String.raw`
+runCases + String.raw`
 caseI = 0
 passed = True
 failIndex = None
@@ -200,23 +200,42 @@ passed
 // Security Hard
 // destroy(String of text) - If a file contains "trap" at any point, it's trapped and should not be deleted. return "" if it's deleted, else return the string
 String.raw`
-caseI = 0
+files = {
+    "file1.txt" : "abcdefghijklmnopqrstuvwxyz",
+    "file2.txt" : "llllllltraplllllll",
+    "file3.txt" : "fbaoiuyfgiouyesovfuydbfhjzvhkxuyauewibiuygxhivuyiyweoifvobsuzdvnoiusofbaubouhskvuliurybauyefliuyeiwyflruyblzduvliryeiusyliuyabdlusyfbjkvhfldxcyiuyireyl",
+    "file4.txt" : "tratpttaptrattprttatpartaaatrppaptatrtaptprptrapaapttparptptptpaparpapaptrrpt",
+    "file5.txt" : "uaoiudvboiauusefbuodyvbozuybfovaieuyrbgoivuyraebpoivbuyaoiueygbiuyfnsodiuvyboiruybealifuysblidufyliausevyfbilduysdiluflasifyivsabyducybasliybdelisuyfvliseudyvlfvyskaefyvlisduayvfbliubsyelifuyblidsauybfliusayefvibytsdyuvjvtiserdyfvtrapuiefvyasiuftvsdkuybgckyaesvlufivyadkyxvgbyasvfiuydvtkyasevuifdysvatfuyaseyifsuydiftaise",
+}
+filesCopy = files.copy()
+
+destroyedFiles = destroy(filesCopy) #to make sure the case doesn't break if destroy modifies files
 passed = True
+failCase = None
 failIndex = None
-testFunc = destroy
-
-runCase(("abcdefghijklmnopqrstuvwxyz",), lambda ans: ans == "")
-runCase(("llllllltraplllllll",), lambda ans: ans == "llllllltraplllllll")
-runCase(("fbaoiuyfgiouyesovfuydbfhjzvhkxuyauewibiuygxhivuyiyweoifvobsuzdvnoiusofbaubouhskvuliurybauyefliuyeiwyflruyblzduvliryeiusyliuyabdlusyfbjkvhfldxcyiuyireyl",), lambda ans: ans == "")
-runCase(("tratpttaptrattprttatpartaaatrppaptatrtaptprptrapaapttparptptptpaparpapaptrrpt",), lambda ans: ans == "tratpttaptrattprttatpartaaatrppaptatrtaptprptrapaapttparptptptpaparpapaptrrpt")
-runCase(("uaoiudvboiauusefbuodyvbozuybfovaieuyrbgoivuyraebpoivbuyaoiueygbiuyfnsodiuvyboiruybealifuysblidufyliausevyfbilduysdiluflasifyivsabyducybasliybdelisuyfvliseudyvlfvyskaefyvlisduayvfbliubsyelifuyblidsauybfliusayefvibytsdyuvjvtiserdyfvtrapuiefvyasiuftvsdkuybgckyaesvlufivyadkyxvgbyasvfiuydvtkyasevuifdysvatfuyaseyifsuydiftaise",), lambda ans: ans == "uaoiudvboiauusefbuodyvbozuybfovaieuyrbgoivuyraebpoivbuyaoiueygbiuyfnsodiuvyboiruybealifuysblidufyliausevyfbilduysdiluflasifyivsabyducybasliybdelisuyfvliseudyvlfvyskaefyvlisduayvfbliubsyelifuyblidsauybfliusayefvibytsdyuvjvtiserdyfvtrapuiefvyasiuftvsdkuybgckyaesvlufivyadkyxvgbyasvfiuydvtkyasevuifdysvatfuyaseyifsuydiftaise")
-
-print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+for (i, (k, v)) in enumerate(files.items()):
+    if "trap" in v:
+        if k in destroyedFiles:
+            print(f"<span class='win'>{k} correctly left alone.</span>")
+            continue
+    else:
+        if k not in destroyedFiles:
+            print(f"<span class='win'>{k} correctly destroyed.</span>")
+            continue
+    passed = False
+    failCase = (k, v)
+    failIndex = i
+    break
+            
+if not passed:
+    print(f"<span class='error'>{failCase[0]} handled incorrectly!</span>")
+else:
+    print("<span class='win'>All files handled correctly!</span>")
 passed
 `,
 // Manufacturing Hard
 // findMax( Array of targets [int, 0 = nothing, 1 = a target] , EMP size (int))
-String.raw`
+runCases + String.raw`
 caseI = 0
 passed = True
 failIndex = None
