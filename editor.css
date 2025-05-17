@@ -50,7 +50,6 @@ code[class*="language-"], pre[class*="language-"] { /*overrides the style */
 }
 
 .output {
-    height: 100%;
     color: #fff;
     padding: 10px;
     font-family: monospace;

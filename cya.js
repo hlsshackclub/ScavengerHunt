@@ -13,11 +13,18 @@ function validateAndShow(inputBox, wantedCode, toShow, wrongToShow) {
 }
 
 function toggleShow(toToggle) {
-    document.getElementById(toToggle).classList.toggle("hidden");
+    const elem = document.getElementById(toToggle)
+    elem.classList.toggle("hidden");
+    if(!elem.classList.contains("hidden")) {
+        void elem.offsetHeight
+    }
 }
 
 function show(toShow) {
-    document.getElementById(toShow).classList.remove("hidden");
+    const elem = document.getElementById(toShow)
+    elem.classList.remove("hidden");
+    console.log("HI")
+    console.log(elem.offsetHeight)
 }
 
 function hide(toHide) {

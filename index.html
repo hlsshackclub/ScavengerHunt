@@ -21,6 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js"></script>
     <script src="editor.js"></script>
+    <script src="stations.js"></script>
     <meta charset="utf-8">
 </head>
 
@@ -113,7 +114,10 @@
         <br>
         <button onclick="toggleButton(this); toggleShow('flowFreeContainer')">Reroute some conveyers (Easy)</button>
         <!-- <button onclick="toggleButton(this);">Reroute MORE conveyers (Medium)</button> -->
-        <button onclick="toggleButton(this);">Disable the machines with EMP (Hard)</button>
+        <button
+            onclick="toggleButton(this); toggleShow('manufacturingEditorContainer'); moveEditorToStation(1, 'manufacturingEditorContainer');">
+            Disable the machines with EMP (Hard)
+        </button>
         <div id="flowFreeContainer" class="hidden">
             <br>
             <p>Route the production plants "◆" into their corresponding disposal units "◉".</p>
@@ -203,6 +207,7 @@
                 </div>
             </div>
         </div>
+        <div id="manufacturingEditorContainer" class="hidden"></div>
     </div>
     <div id="securityContainer" class="hidden">
         <br>
@@ -239,27 +244,29 @@
             <h1 style="font-size: 2em; color: #ff69b4;">EDIORRRR</h1>
         </div>
     </div>
-    <div id="editorArea">
-        <br>
-        <h2>Code Editor (Python 3.12.7)</h2>
-        <div id="codeEditorContainer">
-            <textarea id="codeEditor" class="editorHeight" spellcheck="false" autocapitalize="off"
-                autocomplete="off" disabled></textarea>
-            <pre id="highlighted" class="language-python editorHeight"
-                aria-hidden="true"><code class="language-python" id="highlightedContent"></code></pre>
-        </div>
-        <button id="runButton" type="button" class="inputbox">Run Code</button>
-        <button id="testButton" type="button" class="inputbox">Run Test Case</button>
-        <div>
-            <br> <!-- for some reason i have to put this in a div -->
-        </div>
-        <h2>Output</h2>
-        <div>
-            <pre id="outputArea" class="output"></pre>
-        </div>
-        <h2>Test Cases</h2>
-        <div>
-            <pre id="testOutputArea" class="output"></pre>
+    <div class="hidden">
+        <div id="editorArea">
+            <br>
+            <h2>Code Editor (Python 3.12.7)</h2>
+            <div id="codeEditorContainer">
+                <textarea id="codeEditor" class="editorHeight" spellcheck="false" autocapitalize="off" autocomplete="off"
+                    disabled></textarea>
+                <pre id="highlighted" class="language-python editorHeight"
+                    aria-hidden="true"><code class="language-python" id="highlightedContent"></code></pre>
+            </div>
+            <button id="runButton" type="button" class="inputbox">Run Code</button>
+            <button id="testButton" type="button" class="inputbox">Run Test Case</button>
+            <div>
+                <br> <!-- for some reason i have to put this in a div -->
+            </div>
+            <h2>Output</h2>
+            <div>
+                <pre id="outputArea" class="output"></pre>
+            </div>
+            <h2>Test Cases</h2>
+            <div>
+                <pre id="testOutputArea" class="output"></pre>
+            </div>
         </div>
     </div>
     <pre id="maze">

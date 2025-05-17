@@ -54,8 +54,6 @@ let users = [];
 let passwordFile = {};
 let importantDataFile = {};
 
-let pyodideReadyPromise = null;
-
 function initSystem() {
     admin = new User("root", {}, "users");
     admin.groups.push("root");

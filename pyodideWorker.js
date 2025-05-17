@@ -1,5 +1,7 @@
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js");
 
+//TODO: Fix memory leaks
+
 function escapeHtml(text) {
     return text
         .replace(/&/g, "&amp;")
@@ -12,10 +14,12 @@ function escapeHtml(text) {
 let pyodide = null;
 let reformatException = undefined;
 async function initPyodide() {
-    if (!pyodide) {
-        pyodide = await loadPyodide();
-        await pyodide.loadPackage("micropip");
+    if(pyodide) {
+        return pyopdide
     }
+    
+    pyodide = await loadPyodide();
+    await pyodide.loadPackage("micropip");
 
     pyodide.runPython(String.raw`
 def reformatException():
@@ -163,79 +167,18 @@ def runCase(input, passFunc):
 `
 
 const testCases = [
-//Testing
-runCases + String.raw`
-caseI = 0
-passed = True
-failIndex = None
-testFunc = add
-
-runCase((1, 2), lambda ans: ans == 3)
-runCase((0, 2), lambda ans: ans == 2)
-runCase((3, 5), lambda ans: ans == 8)
-
-logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
-passed
-`,
-// Recon Hard
-// decrypt( String of text, shift (int))
-runCases + String.raw`
-caseI = 0
-passed = True
-failIndex = None
-testFunc = decrypt
-
-runCase(("a", 1), lambda ans: ans == "b")
-runCase(("aopz pz hu lujvklk zljyla tlzzhnl", -7), lambda ans: ans == "this is an encoded secret message")
-runCase(("Qeb nrfzh yoltk clu grjmp lsbo qeb ixwv ald.", 3), lambda ans: ans == "The quick brown fox jumps over the lazy dog.")
-runCase(("Sqdqtyqd vqhcuhi hufehjut whemydw cehu mxuqj, eqji, ieoruqdi, tho fuqi qdt budjybi, rkj buii sqdebq, sehd veh whqyd qdt rqhbuo yd 2024. Yd wuduhqb, oyubti muhu xywxuh jxyi ouqh secfqhut myjx 2023. Xemuluh, jxuhu muhu iecu qhuqi, fqhjyskbqhbo yd Muijuhd Sqdqtq, mxuhu vqhcuhi sedjydkut je vqsu yiikui hubqjut je tho sedtyjyedi.", 10), lambda ans: ans == "Canadian farmers reported growing more wheat, oats, soybeans, dry peas and lentils, but less canola, corn for grain and barley in 2024. In general, yields were higher this year compared with 2023. However, there were some areas, particularly in Western Canada, where farmers continued to face issues related to dry conditions.")
-
-print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
-passed
-`,
-// Security Hard
-// destroy(String of text) - If a file contains "trap" at any point, it's trapped and should not be deleted. return "" if it's deleted, else return the string
+// Networking Hard TODO:
+//TODO: make
 String.raw`
-files = {
-    "file1.txt" : "abcdefghijklmnopqrstuvwxyz",
-    "file2.txt" : "llllllltraplllllll",
-    "file3.txt" : "fbaoiuyfgiouyesovfuydbfhjzvhkxuyauewibiuygxhivuyiyweoifvobsuzdvnoiusofbaubouhskvuliurybauyefliuyeiwyflruyblzduvliryeiusyliuyabdlusyfbjkvhfldxcyiuyireyl",
-    "file4.txt" : "tratpttaptrattprttatpartaaatrppaptatrtaptprptrapaapttparptptptpaparpapaptrrpt",
-    "file5.txt" : "uaoiudvboiauusefbuodyvbozuybfovaieuyrbgoivuyraebpoivbuyaoiueygbiuyfnsodiuvyboiruybealifuysblidufyliausevyfbilduysdiluflasifyivsabyducybasliybdelisuyfvliseudyvlfvyskaefyvlisduayvfbliubsyelifuyblidsauybfliusayefvibytsdyuvjvtiserdyfvtrapuiefvyasiuftvsdkuybgckyaesvlufivyadkyxvgbyasvfiuydvtkyasevuifdysvatfuyaseyifsuydiftaise",
-}
-filesCopy = files.copy()
-
-destroyedFiles = destroy(filesCopy) #to make sure the case doesn't break if destroy modifies files
-passed = True
-failCase = None
-failIndex = None
-for (i, (k, v)) in enumerate(files.items()):
-    if "trap" in v:
-        if k in destroyedFiles:
-            print(f"<span class='win'>{k} correctly left alone.</span>")
-            continue
-    else:
-        if k not in destroyedFiles:
-            print(f"<span class='win'>{k} correctly destroyed.</span>")
-            continue
-    passed = False
-    failCase = (k, v)
-    failIndex = i
-    break
-            
-if not passed:
-    print(f"<span class='error'>{failCase[0]} handled incorrectly!</span>")
-else:
-    print("<span class='win'>All files handled correctly!</span>")
-passed
+True
 `,
 // Manufacturing Hard
-// findMax( Array of targets [int, 0 = nothing, 1 = a target] , EMP size (int))
+// findBestEMPSpot( Array of targets [int, 0 = nothing, 1 = a target] , EMP size (int))
 runCases + String.raw`
 caseI = 0
 passed = True
 failIndex = None
-testFunc = findTarget
+testFunc = findBestEMPSpot
 
 arr1 = [
     [0, 0, 0, 0, 0],
@@ -335,7 +278,73 @@ runCase((arr4, 9), lambda ans: ans == [4,12])
 
 print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
 passed
-`
+`,
+// Recon Hard
+// decrypt( String of text, shift (int))
+runCases + String.raw`
+caseI = 0
+passed = True
+failIndex = None
+testFunc = decrypt
+
+runCase(("a", 1), lambda ans: ans == "b")
+runCase(("aopz pz hu lujvklk zljyla tlzzhnl", -7), lambda ans: ans == "this is an encoded secret message")
+runCase(("Qeb nrfzh yoltk clu grjmp lsbo qeb ixwv ald.", 3), lambda ans: ans == "The quick brown fox jumps over the lazy dog.")
+runCase(("Sqdqtyqd vqhcuhi hufehjut whemydw cehu mxuqj, eqji, ieoruqdi, tho fuqi qdt budjybi, rkj buii sqdebq, sehd veh whqyd qdt rqhbuo yd 2024. Yd wuduhqb, oyubti muhu xywxuh jxyi ouqh secfqhut myjx 2023. Xemuluh, jxuhu muhu iecu qhuqi, fqhjyskbqhbo yd Muijuhd Sqdqtq, mxuhu vqhcuhi sedjydkut je vqsu yiikui hubqjut je tho sedtyjyedi.", 10), lambda ans: ans == "Canadian farmers reported growing more wheat, oats, soybeans, dry peas and lentils, but less canola, corn for grain and barley in 2024. In general, yields were higher this year compared with 2023. However, there were some areas, particularly in Western Canada, where farmers continued to face issues related to dry conditions.")
+
+print(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+passed
+`,
+// Security Hard
+// destroy(String of text) - If a file contains "trap" at any point, it's trapped and should not be deleted. return "" if it's deleted, else return the string
+String.raw`
+files = {
+    "file1.txt" : "abcdefghijklmnopqrstuvwxyz",
+    "file2.txt" : "llllllltraplllllll",
+    "file3.txt" : "fbaoiuyfgiouyesovfuydbfhjzvhkxuyauewibiuygxhivuyiyweoifvobsuzdvnoiusofbaubouhskvuliurybauyefliuyeiwyflruyblzduvliryeiusyliuyabdlusyfbjkvhfldxcyiuyireyl",
+    "file4.txt" : "tratpttaptrattprttatpartaaatrppaptatrtaptprptrapaapttparptptptpaparpapaptrrpt",
+    "file5.txt" : "uaoiudvboiauusefbuodyvbozuybfovaieuyrbgoivuyraebpoivbuyaoiueygbiuyfnsodiuvyboiruybealifuysblidufyliausevyfbilduysdiluflasifyivsabyducybasliybdelisuyfvliseudyvlfvyskaefyvlisduayvfbliubsyelifuyblidsauybfliusayefvibytsdyuvjvtiserdyfvtrapuiefvyasiuftvsdkuybgckyaesvlufivyadkyxvgbyasvfiuydvtkyasevuifdysvatfuyaseyifsuydiftaise",
+}
+filesCopy = files.copy()
+
+destroyedFiles = destroy(filesCopy) #to make sure the case doesn't break if destroy modifies files
+passed = True
+failCase = None
+failIndex = None
+for (i, (k, v)) in enumerate(files.items()):
+    if "trap" in v:
+        if k in destroyedFiles:
+            print(f"<span class='win'>{k} correctly left alone.</span>")
+            continue
+    else:
+        if k not in destroyedFiles:
+            print(f"<span class='win'>{k} correctly destroyed.</span>")
+            continue
+    passed = False
+    failCase = (k, v)
+    failIndex = i
+    break
+            
+if not passed:
+    print(f"<span class='error'>{failCase[0]} handled incorrectly!</span>")
+else:
+    print("<span class='win'>All files handled correctly!</span>")
+passed
+`,
+//Testing
+runCases + String.raw`
+caseI = 0
+passed = True
+failIndex = None
+testFunc = add
+
+runCase((1, 2), lambda ans: ans == 3)
+runCase((0, 2), lambda ans: ans == 2)
+runCase((3, 5), lambda ans: ans == 8)
+
+logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+passed
+`,
 ]
 
 // // Recon Hard

@@ -1,9 +1,10 @@
 window.pyodideWorker = new Worker("pyodideWorker.js");
-window.pyodideReady = false;
 
 function setEditorText(text) {
-    document.getElementById("codeEditor").value = text
-    document.getElementById("highlightedContent").innerText = text
+    const codeEditor = document.getElementById("codeEditor")
+    codeEditor.value = text
+    autoResizeEditor()
+    updateHighlighting(text)
 }
 
 function printToOutput(message) {
@@ -16,25 +17,40 @@ function printToTestOutput(message) {
 
 const stationDefaultTexts = [
 String.raw
-`NETWORKING DEFAULT TEXT`,
+`#NETWORKING DEFAULT TEXT`,
 String.raw
-`MANUFACTURING DEFAULT TEXT`,
+`#MANUFACTURING DEFAULT TEXT`,
 String.raw
-`RECON DEFAULT TEXT`,
+`#RECON DEFAULT TEXT`,
+String.raw
+`#SECURITY DEFAULT TEXT`
 ]
 
-function resetEditor(station) {
-    setEditorText(stationDefaultTexts[station])
+async function resetEditor(station) {
+    await pyodideReadyPromise
     printToOutput('')
     printToTestOutput('')
+    setEditorText(stationDefaultTexts[station])
 }
+
+async function moveEditorToStation(station, parent) {
+    document.getElementById(parent).appendChild(document.getElementById("editorArea"))
+    resetEditor(station)
+    autoResizeEditor() //I want to fix sizing before pyodide is necessarily loaded. it means these are called twice but oh well
+    updateHighlighting(text)
+}
+
+let pyodideReadyResolve;
+const pyodideReadyPromise = new Promise((resolve) => {
+    pyodideReadyResolve = resolve;
+});
 
 pyodideWorker.onmessage = function (event) {
     if (event.data.type === "pyodideReady") {
-        pyodideReady = true;
         console.log("pyodide!!")
-        setEditorText("")
         document.getElementById("codeEditor").removeAttribute("disabled");
+        pyodideReadyResolve()
+        setEditorText('')
     } else if (event.data.type === "run") {
         if(event.data.codeError !== undefined) {
             console.log(event.data.codeOutput.slice(-1))
