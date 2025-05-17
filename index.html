@@ -60,10 +60,17 @@
             You can either try to unscramble your network, disinfect some computers manually,
             or make a program to disinfect all the computers.</p>
         <br>
-        <button onclick="toggleButton(this); toggleShow('netWalkContainer')">Unscramble the network (Easy)</button>
-        <button onclick="toggleButton(this); toggleShow('manualTSPContainer')">Disinfect some computers
-            (Medium)</button>
-        <button onclick="toggleButton(this);">Disinfect ALL the computers (Hard)</button>
+        <button id="networkingEasyButton"
+            onclick="toggleButton(this); toggleShow('netWalkContainer'); hide('manualTSPContainer'); hide('networkingEditorContainer'); 
+            depressButton('networkingMediumButton'); depressButton('networkingHardButton');">Unscramble
+            the network (Easy)</button>
+        <button id="networkingMediumButton"
+            onclick="toggleButton(this); toggleShow('manualTSPContainer'); hide('netWalkContainer'); hide('networkingEditorContainer'); 
+            depressButton('networkingEasyButton'); depressButton('networkingHardButton');">Disinfect
+            some computers (Medium)</button>
+        <button id="networkingHardButton" 
+            onclick="toggleButton(this); toggleShow('networkingEditorContainer'); hide('netWalkContainer'); hide('manualTSPContainer');
+            depressButton('networkingEasyButton'); depressButton('networkingMediumButton');">Disinfect ALL the computers (Hard)</button>
         <div id="netWalkContainer" class="hidden">
             <br>
             <p>Rotate the cables to connect the server to all the computers, allowing your network to function
@@ -101,6 +108,9 @@
             </div>
             <p>#############################################################################</p>
             <p id="manualTSPLength"></p> <span id="manualTSPStatus"></span>
+        </div>
+        <div id="networkingEditorContainer" class="hidden">
+            AAAAAAA TEMP AAAAAAAAAAAAAAAAAAAAAAAAAAA
         </div>
     </div>
     <div id="manufacturingContainer" class="hidden">
@@ -234,7 +244,9 @@
             <p class="win">You have deleted the AI's importantData!</p>
             <p>Now you can either move on to the next station, or create virus to remove ALL of the AI's data.</p>
             <button onclick="hide('terminalWinMedium'); hide('securityContainer')">Next Station</button>
-            <button onclick="hide('terminalWinMedium'); show('securityEditorContainer'); moveEditorToStation(3, 'securityEditorContainer');">Create a Virus (Hard)</button>
+            <button
+                onclick="hide('terminalWinMedium'); show('securityEditorContainer'); moveEditorToStation(3, 'securityEditorContainer');">Create
+                a Virus (Hard)</button>
         </div>
         <div id="securityEditorContainer" class="hidden"></div>
         <div id="terminalWinHard" class="hidden">
@@ -247,8 +259,8 @@
             <br>
             <h2>Code Editor (Python 3.12.7)</h2>
             <div id="codeEditorContainer">
-                <textarea id="codeEditor" class="editorHeight" spellcheck="false" autocapitalize="off" autocomplete="off"
-                    disabled></textarea>
+                <textarea id="codeEditor" class="editorHeight" spellcheck="false" autocapitalize="off"
+                    autocomplete="off" disabled></textarea>
                 <pre id="highlighted" class="language-python editorHeight"
                     aria-hidden="true"><code class="language-python" id="highlightedContent"></code></pre>
             </div>

@@ -2,6 +2,10 @@ function toggleButton(button) {
     button.classList.toggle("toggled");
 }
 
+function depressButton(button) {
+    document.getElementById(button).classList.remove("toggled")
+}
+
 function validateAndShow(inputBox, wantedCode, toShow, wrongToShow) {
     if(document.getElementById(inputBox).value == wantedCode) {
         document.getElementById(toShow).classList.remove("hidden");
