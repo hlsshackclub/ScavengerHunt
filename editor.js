@@ -35,6 +35,21 @@ String.raw
 `#SECURITY DEFAULT TEXT`
 ].map(convertLeadingSpacesToTabs)
 
+const stationWinFuncs = [
+    () => {},
+    (() => {
+        wonAlready = false
+        function inner() {
+            if(wonAlready) {
+                return
+            }
+            wonAlready = true
+            console.log("MANUFCTURING ASHDAOD WINDO!!!!")
+        }
+        return inner
+    })(),
+]
+
 async function resetEditor(station) {
     await pyodideReadyPromise
     printToOutput('')
@@ -80,6 +95,9 @@ pyodideWorker.onmessage = function (event) {
             } else {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput);
+                if(event.data.testPassed === true) {
+                    stationWinFuncs[currentStation]();
+                }
             }
         }
     }
@@ -173,6 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     testButton.addEventListener("click", function () {
-        runPythonTestCase(1);
+        runPythonTestCase(currentStation);
     });
 });
