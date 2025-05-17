@@ -157,6 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     testButton.addEventListener("click", function () {
-        runPythonTestCase(0);
+        runPythonTestCase(2);
     });
 });
