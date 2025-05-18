@@ -1,4 +1,4 @@
-function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, showStatusFunc) {
+function setupManualTSP(width, height, computerPositions, serverIndex, showStatusFunc) {
     let cells = []
     const minLength = (() => {
         let minLen = Infinity; //upper bound
@@ -76,7 +76,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, 
     }
 
     let wonAlready = false
-    function showStatusAndCheckWin() {
+    function showStatus() {
         let allComputersHit = true;
         outer: for (let cPos of computerPositions) {
             for (let pathCell of path) {
@@ -107,7 +107,6 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, 
             if (!wonAlready) {
                 showStatusFunc(length, status, good, wonAlready);
                 wonAlready = true;
-                winFunc(); //idk if this is the most intuitive place to call this but whatever
                 return; //jank flow :(
             }
         }
@@ -163,7 +162,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, 
                 trimPath(cell)
                 path.push(cell);
                 render();
-                showStatusAndCheckWin();
+                showStatus();
                 oldCell = cell
             })
             td.addEventListener("mousedown", event => {
@@ -182,7 +181,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, 
             td.addEventListener("dblclick", event => {
                 path.length = 0;
                 render();
-                showStatusAndCheckWin();
+                showStatus();
             })
             td.addEventListener("mouseup", event => {
                 held = false;
@@ -196,7 +195,7 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, 
         tbody.appendChild(tr);
     }
     render()
-    showStatusAndCheckWin();
+    showStatus();
 
     table.appendChild(tbody);
     document.getElementById("ManualTSP").appendChild(table);
@@ -204,7 +203,6 @@ function setupManualTSP(width, height, computerPositions, serverIndex, winFunc, 
 
 document.addEventListener("DOMContentLoaded", () => setupManualTSP(25, 12,
     [[12, 11], [12, 0], [20, 2], [4, 3], [7, 5], [15, 5], [17, 9], [2, 10], [20, 10]], 0,
-    () => console.log("win tsp"),
     (length, status, good, wonAlready) => {
         const TSPLen = document.getElementById("manualTSPLength");
         TSPLen.innerText = `Length: ${length}`;
@@ -212,10 +210,13 @@ document.addEventListener("DOMContentLoaded", () => setupManualTSP(25, 12,
             return
         }
         const TSPStatus = document.getElementById("manualTSPStatus");
+        const TSPWin = document.getElementById("manualTSPWin");
         TSPStatus.innerText = status;
         if (good) {
             TSPStatus.classList.remove("error");
             TSPStatus.classList.add("win");
+            setNetworkingScore(2)
+            TSPWin.classList.remove("hidden")
         } else {
             TSPStatus.classList.add("error");
             TSPStatus.classList.remove("win");

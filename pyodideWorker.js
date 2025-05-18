@@ -1,5 +1,4 @@
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js", "utils.js");
-console.log(v2Add([1, 2], [3, 4]))
 
 
 //TODO: Fix memory leaks

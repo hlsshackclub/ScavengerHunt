@@ -142,4 +142,7 @@ document.addEventListener("DOMContentLoaded", () => setupNetWalk(
     ["└", "🗄️┤", "├", "🖥️╷", "─"],
     ["🖥️╶", "┐", "│", "─", "┬"],
     ["┌", "─", "─", "─", "└"]],
-    () => document.getElementById("netWalkWin").classList.remove("hidden")));
+    () => {
+        setNetworkingScore(1)
+        show("netWalkWin")
+    }));

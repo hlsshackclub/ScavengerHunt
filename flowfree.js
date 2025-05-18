@@ -311,7 +311,10 @@ function setupAllFlowFrees() {
         [[0, 0], [2, 4]],
         [[0, 6], [6, 0]]],
         "flowFree3",
-        () => show("flowFreeWin3"))
+        () => {
+            setManufacturingScore(1)
+            show("flowFreeWin3")
+        })
 
     setupFlowFree(10, 10,
         [[[2, 0], [9, 9]],
@@ -345,6 +348,7 @@ function setupAllFlowFrees() {
         [[2, 7], [5, 3]]],
         "flowFree6",
         () => {
+            setManufacturingScore(2)
             show("flowFreeWin6");
             hide('flowFreeBailMedium')
         })

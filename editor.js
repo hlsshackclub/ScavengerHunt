@@ -40,7 +40,19 @@ def deleteFiles(files):
 ].map(convertLeadingSpacesToTabs)
 
 const stationWinFuncs = [
-    () => { },
+    (() => {
+        wonAlready = false
+        function inner() {
+            if (wonAlready) {
+                return
+            }
+            wonAlready = true
+            console.log("NETWORKING HARD WIN!!!!!!")
+            setNetworkingScore(3)
+            show("networkingHardWin")
+        }
+        return inner
+    })(),
     (() => {
         wonAlready = false
         function inner() {
@@ -49,6 +61,8 @@ const stationWinFuncs = [
             }
             wonAlready = true
             console.log("MANUFACTURING HARD WIN!!!!!!")
+            setManufacturingScore(3)
+            show("manufacturingHardWin")
         }
         return inner
     })(),
