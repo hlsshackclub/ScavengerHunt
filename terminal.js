@@ -215,8 +215,9 @@ function cat(args) {
     if (path) {
     	if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
 	if (path === passwordFile){
-	    //TODO: Easy Win
-	    document.getElementById("terminalWinEasy").classList.remove("hidden");
+	    //Easy Win
+        setSecurityScore(1)
+	    show("terminalWinEasy")
 	}
         return (path.content);
     } else {
@@ -280,8 +281,9 @@ function r(args, type, command) {
         }
         if (!checkPerms(path, currentUser, "w")) return `${command}: Permission denied`;
 	if (path === importantDataFile){
-	    //TODO: Medium Win
-	    document.getElementById("terminalWinMedium").classList.remove("hidden");
+	    //Medium Win
+        setSecurityScore(2)
+	    show("terminalWinMedium")
 	}
         path.parent.files.splice(index, 1);
         return (`Removed ${path.name}`);

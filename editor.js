@@ -74,8 +74,9 @@ const stationWinFuncs = [
                 return
             }
             wonAlready = true
-            show("terminalWinHard")
             console.log("SECURITY HARD WIN!!!!!!")
+            setSecurityScore(3)
+            show("terminalWinHard")
         }
         return inner
     })(),
