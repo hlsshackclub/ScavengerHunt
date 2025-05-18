@@ -191,5 +191,5 @@ function testingGoToOutro() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    testingGoToThirdStation()
+    //testingGoToThirdStation()
 });
