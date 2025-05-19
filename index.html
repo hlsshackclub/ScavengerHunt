@@ -307,9 +307,12 @@
         <br>
         <h2>Recon</h2>
         <br>
-        <p>Select the messages which are from your allies</p>
+        <p>Around the room are 10 encrypted communication messages. Some of these messages are from your allies, but we have
+            recieved intel that some are from the robot. Supposedly, the robot's messages are fairly easy to spot.
+            <span>Please select the messages sent by the robot.</span>
+        </p>
         <br>
-        <div id="reconSelectButtons">
+        <div id="reconEasySelectButtons">
             <button onclick="toggleButton(this)">&nbsp1&nbsp</button>
             <button onclick="toggleButton(this)">&nbsp2&nbsp</button>
             <button onclick="toggleButton(this)">&nbsp3&nbsp</button>
@@ -322,12 +325,44 @@
             <button onclick="toggleButton(this)">&nbsp10&nbsp</button>
         </div>
         <br>
-        <button onclick="console.log(checkReconSelection(['robot'], []), checkReconSelection(['doubleAgent'], []))">Check</button>
+        <button onclick="checkRobotSelection()">Check</button>
+        <label id="reconRobotIdentifyWin" class="hidden win">You correctly identified the robot's messages!</label>
+        <label id="reconRobotIdentifyError" class="hidden error">You incorrectly identified some messages. Try again...</label>
+        <div id="reconRobotNextStep" class="hidden">
+            <br>
+            <p>We have also recieved intel that some other messages were sent by "double agents": robots pretending to be humans.
+                You can identify these as well (Medium), or move on to the next station. 
+                These ones are harder to spot, but they should be distinct from your allies' messages in some way.
+            </p>
+            <div id="reconEasyFinishedChoices">
+                <br>
+                <button onclick="goToStationFromRecon();">Move On</button>
+                <button onclick="hide('reconEasyFinishedChoices'); show('reconMedium')">Identify the Double Agent Messages</button>
+            </div>
+        </div>
+        <div id="reconMedium" class="hidden">
+            <br>
+            <button onclick="goToStationFromRecon();">Move On</button>
+            <br>
+            <br>
+            <p>Select the messages sent by double agents.</p>
+            <br>
+            <div id="reconMediumSelectButtons">
+                <!-- populated by js -->
+            </div>
+            <br>
+            <button onclick="checkDoubleAgentSelection()">Check</button>
+            <label id="reconDoubleAgentIdentifyWin" class="hidden win">You correctly identified the double agents' messages!</label>
+            <label id="reconDoubleAgentIdentifyError" class="hidden error">You incorrectly identified some messages. Try again...</label>
+        </div>
+        <div id="reconDoubleAgentNextStep" class="hidden">
+            <br>
+            LALAALLAALAALA
+        </div>
         <br>
-        <br>
-        <button onclick="setReconScore(1); goToStationFromRecon();">Temp Finish Easy Button</button>
+        <!-- <button onclick="setReconScore(1); goToStationFromRecon();">Temp Finish Easy Button</button>
         <button onclick="setReconScore(2); goToStationFromRecon();">Temp Finish Medium Button</button>
-        <button onclick="setReconScore(3); goToStationFromRecon();">Temp Finish Hard Button</button>
+        <button onclick="setReconScore(3); goToStationFromRecon();">Temp Finish Hard Button</button> -->
     </div>
     <div id="reconComplete" class="hidden">
         <br>
