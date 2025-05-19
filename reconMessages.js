@@ -12,6 +12,13 @@ const messageBaseTexts = [ //1-4 are robot, 5-6 are double agent, 7-10 are real
 `shwoods therefore up distrusts explainedmade last it seen went no just when of by occasional entreaties comparison me difficulty so themselves at brother inquiry of offices without do my service as particular to companions at sentiments weather however luckily enquire so certain do aware did stood was day under ask dearest affixed enquire on explain opinion `
 ]
 
+const numRobotMessages = 4
+const numDoubleAgentMessages = 2
+const numHumanMessages = 10 - numRobotMessages - numDoubleAgentMessages
+
+const messageIdentities = shuffleArray(Array(numRobotMessages).fill("robot").concat(Array(numDoubleAgentMessages).fill("doubleAgent"), Array(numHumanMessages).fill("human")), "order")
+//console.log(messageIdentities)
+
 const robotTemplate = `
 OOOOOOOOOOOOOOOO
 OOOOOOO  OOOOOOO
@@ -66,7 +73,7 @@ function makeRobotMessage(baseText) {
     return substituteIntoRobotTemplate(baseText.replaceAll(' ', ''))
 }
 
-const robotMessages = messageBaseTexts.slice(0, 4).map(makeRobotMessage)
+const robotMessages = messageBaseTexts.slice(0, numRobotMessages).map(makeRobotMessage)
 
 function makeDoubleAgentMessage(baseText) {
     const trimmed = baseText.replaceAll("\n", '').replaceAll(" ", "")
@@ -87,9 +94,9 @@ function makeDoubleAgentMessage(baseText) {
     return result.trim();
 }
 
-const doubleAgentMessages = messageBaseTexts.slice(4, 6).map(msg => squarifyMessage(makeDoubleAgentMessage(msg)))
+const doubleAgentMessages = messageBaseTexts.slice(numRobotMessages, numRobotMessages + numDoubleAgentMessages).map(msg => squarifyMessage(makeDoubleAgentMessage(msg)))
 //const humanMessages = messageBaseTexts.slice(7, 10).map(msg => wrapText(msg, width).slice(0, width * width))
-const humanMessages = messageBaseTexts.slice(7, 10).map(msg => squarifyMessage(msg))
+const humanMessages = messageBaseTexts.slice(numRobotMessages + numDoubleAgentMessages, numRobotMessages + numDoubleAgentMessages + numHumanMessages).map(msg => squarifyMessage(msg))
 
 function cipher(msg, shift) {
     let shifted = []
@@ -131,8 +138,3 @@ const robotMessagesCiphered = cipherMessages(robotMessages, robotShifts)
 const doubleAgentMessagesCiphered = cipherMessages(doubleAgentMessages, doubleAgentShifts)
 const humanMessagesCiphered = cipherMessages(humanMessages, humanShifts)
 
-for(let i = 0; i < robotMessages.length; i++) {
-    console.log(robotShifts[i])
-    console.log(robotMessages[i])
-    console.log(robotMessagesCiphered[i])
-}

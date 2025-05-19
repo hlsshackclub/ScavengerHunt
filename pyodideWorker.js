@@ -1,5 +1,4 @@
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js", "utils.js");
-
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js", "utils.js", "reconMessages.js");
 
 //TODO: Fix memory leaks
 

@@ -24,6 +24,7 @@
     <script src="editor.js"></script>
     <script src="stations.js"></script>
     <script src="reconMessages.js"></script>
+    <script src="recon.js"></script>
     <meta charset="utf-8">
 </head>
 
@@ -46,8 +47,8 @@
         <div id="introDiv3" class="hidden">
             <br>
             <button onclick="goToFirstStation()">Start</button>
-            </div>
         </div>
+    </div>
     </div>
     <h2 id="introComplete" class="hidden">Intro Complete</h2>
     <div id="station1CodeCheck"></div>
@@ -76,7 +77,8 @@
         <input id="inputN1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongN1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputN1', networkingCode, () => {hide('networkingCodeCheck'); show('networkingContainer')}, 'wrongN1')">
+        <button
+            onclick="validateAndCall('inputN1', networkingCode, () => {hide('networkingCodeCheck'); show('networkingContainer')}, 'wrongN1')">
             Go to Networking</button>
     </div>
     <div id="networkingContainer" class="hidden">
@@ -166,7 +168,8 @@
         <input id="inputM1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongM1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputM1', manufacturingCode, () => {hide('manufacturingCodeCheck'); show('manufacturingContainer')}, 'wrongM1')">
+        <button
+            onclick="validateAndCall('inputM1', manufacturingCode, () => {hide('manufacturingCodeCheck'); show('manufacturingContainer')}, 'wrongM1')">
             Go to Manufacturing</button>
     </div>
     <div id="manufacturingContainer" class="hidden">
@@ -296,13 +299,32 @@
         <input id="inputR1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongR1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputR1', reconCode, () => {hide('reconCodeCheck'); show('reconContainer')}, 'wrongR1')">
+        <button
+            onclick="validateAndCall('inputR1', reconCode, () => {hide('reconCodeCheck'); show('reconContainer')}, 'wrongR1')">
             Go to Recon</button>
     </div>
     <div id="reconContainer" class="hidden">
         <br>
         <h2>Recon</h2>
-        <p>RECONONOOOOOOOOONNONONONONONONOONONONONOONONONONONONON</p>
+        <br>
+        <p>Select the messages which are from your allies</p>
+        <br>
+        <div id="reconSelectButtons">
+            <button onclick="toggleButton(this)">&nbsp1&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp2&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp3&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp4&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp5&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp6&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp7&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp8&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp9&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp10&nbsp</button>
+        </div>
+        <br>
+        <button onclick="console.log(checkReconSelection(['robot'], []), checkReconSelection(['doubleAgent'], []))">Check</button>
+        <br>
+        <br>
         <button onclick="setReconScore(1); goToStationFromRecon();">Temp Finish Easy Button</button>
         <button onclick="setReconScore(2); goToStationFromRecon();">Temp Finish Medium Button</button>
         <button onclick="setReconScore(3); goToStationFromRecon();">Temp Finish Hard Button</button>
@@ -320,7 +342,8 @@
         <input id="inputS1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongS1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputS1', securityCode, () => {hide('securityCodeCheck'); show('securityContainer')}, 'wrongS1')">
+        <button
+            onclick="validateAndCall('inputS1', securityCode, () => {hide('securityCodeCheck'); show('securityContainer')}, 'wrongS1')">
             Go to Security</button>
     </div>
     <div id="securityContainer" class="hidden">
@@ -348,8 +371,7 @@
             <p class="win">You have deleted the AI's importantData!</p>
             <p>Now you can either move on to the next station, or create virus to remove ALL of the AI's data.</p>
             <button onclick="hide('terminalWinMedium'); hide('securityContainer')">Next Station</button>
-            <button
-                onclick="moveEditorToStation(3, 'securityEditorContainer'); goToStationFromSecurity();">Create
+            <button onclick="moveEditorToStation(3, 'securityEditorContainer'); goToStationFromSecurity();">Create
                 a Virus (Hard)</button>
         </div>
         <div id="securityEditorContainer" class="hidden"></div>

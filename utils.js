@@ -76,6 +76,13 @@ function splitmix32(a) {
         return ((t = t ^ t >>> 15) >>> 0) /*/ 4294967296;*/ //dont want floats, want ints
     }
 }
+function splitmix32f(a) { // ok but here i want floats
+    const rand = splitmix32(a)
+    return function() {
+        return rand() / 4294967296
+    }
+}
+
 function cyrb128(str) {
     let h1 = 1779033703, h2 = 3144134277,
         h3 = 1013904242, h4 = 2773480762;
@@ -99,4 +106,18 @@ function wrapText(str, width) {
     return str.replace(
         new RegExp(`(?![^\\n]{1,${width}}$)([^\\n]{1,${width}})\\s`, 'g'), '$1\n'
     )
+}
+
+//https://stackoverflow.com/a/12646864
+function shuffleArray(array, seed) {
+    const rand = splitmix32f(cyrb128(seed))
+
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(rand() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    return array
 }
