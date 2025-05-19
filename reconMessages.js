@@ -90,3 +90,49 @@ function makeDoubleAgentMessage(baseText) {
 const doubleAgentMessages = messageBaseTexts.slice(4, 6).map(msg => squarifyMessage(makeDoubleAgentMessage(msg)))
 //const humanMessages = messageBaseTexts.slice(7, 10).map(msg => wrapText(msg, width).slice(0, width * width))
 const humanMessages = messageBaseTexts.slice(7, 10).map(msg => squarifyMessage(msg))
+
+function cipher(msg, shift) {
+    let shifted = []
+    const aCode = 'a'.charCodeAt(0)
+    const zCode = 'z'.charCodeAt(0)
+    for(char of msg) {
+        const code = char.charCodeAt(0)
+        if(code < aCode || code > zCode) {
+            shifted.push(char)
+        } else {
+            shifted.push(String.fromCharCode((code - aCode + shift + 26) % 26 + aCode))
+        }
+    }
+    return shifted.join("")
+}
+
+function makeShifts(seed, len) {
+    const rand = splitmix32(cyrb128(seed))
+    let rs = []
+    for(let i = 0; i < len; i++) {
+        rs.push(rand() % 24 + 1) //1 to 25
+    }
+    return rs
+}
+
+const robotShifts = makeShifts("robotShifts", robotMessages.length)
+const doubleAgentShifts = makeShifts("doubleAgentShifts", doubleAgentMessages.length)
+const humanShifts = makeShifts("humanShifts", humanMessages.length)
+
+function cipherMessages(messages, shifts) {
+    let rs = []
+    for(let i = 0; i < messages.length; i++) {
+        rs.push(cipher(messages[i], shifts[i]))
+    }
+    return rs
+}
+
+const robotMessagesCiphered = cipherMessages(robotMessages, robotShifts)
+const doubleAgentMessagesCiphered = cipherMessages(doubleAgentMessages, doubleAgentShifts)
+const humanMessagesCiphered = cipherMessages(humanMessages, humanShifts)
+
+for(let i = 0; i < robotMessages.length; i++) {
+    console.log(robotShifts[i])
+    console.log(robotMessages[i])
+    console.log(robotMessagesCiphered[i])
+}
