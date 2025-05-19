@@ -58,3 +58,63 @@ xxxxxxx        xx
   xxxxxxxxxxxxxx
   xxxxxxxx   xxx
        xxx
+
+  ###########
+  #ccccccccc#
+  #ccccccccc#     #######
+  #ccccccccc#     #ooooo#
+  #ccccccccc# #####ooooo#   #####
+  #ccccccccc# #xxx#ooooo#   #ooo#
+  #ccccccccc# #xxx###########ooo#
+  #ccccccccc# #xxx#   #xxxxx#ooo#
+  ########### #xxx#   #xxxxx#######
+    #ooo#     #xxx#   #xxxxx# #xxx#
+    #ooo# ######### ######### #xxx#####
+    #ooo# #ooooooo# #ooo#     #xxx#ooo#
+    #ooo# #ooooooo# #ooo##### #xxx#ooo#
+    #ooo# #ooooooo# #ooo#xxx# #xxx#ooo#
+    #ooo########### #####xxx# #########
+    #ooo#xxxxx#         #xxx#     #xxx#
+     # #           # #                 # #
+        #x x x#   #o o# #x x#     #x x#o o#
+       # # # #           # # # #
+      #o o#       #o o#   #o o o# #x x#o o#
+           # # # #               # # # # # # #
+      #o o#x x x x#o o#   #o o o#u u#   #x x x#
+       # #                 # # #
+          #x x x x#o o#   #x x# #u u#   #x x x#
+           # # # # # #           # #     # # # #
+            #o o#         #x x#             #o o#
+     # # # #     # # # # # # #   # # # # #
+    #x x x x#o o#x x#s s#o o o# #c c c c c# #o o#
+                                           # # #
+    #x x x x#o o#x x#s s#o o o# #c c c c c#x x#
+   # # # # # # #     # # # # #
+  #o o#         #x x#           #c c c c c#x x#
+                         # #
+  #o o#         #x x#   #x x#   #c c c c c#x x#
+   # # #         # # # #         # # # # # # # #
+    #x x#         #o o o#x x#               #o o#
+               # #           # #       # # #
+    #x x#     #x x#o o o#x x#o o#     #x x x#o o#
+         # # #     # # # # #     # # #       # #
+    #x x#o o o#x x#         #o o#u u u#x x x#
+     # #                               # # #
+        #o o o#x x#         #o o#u u u#
+     # # # # #                   # # #
+    #x x x#   #x x#         #o o#
+ # #           # # # # # # # # #
+#o o#x x x#     #o o o o#x x x#
+     # # #                     # #
+#o o#           #o o o o#x x x#o o#
+     # # # # #   # # # # # # #
+#o o#c c c c c#               #o o#
+ # #                 # # #
+    #c c c c c#     #o o o#   #o o#
+               # # #       # # # #
+    #c c c c c#x x x#o o o#x x x#
+                     # # #
+    #c c c c c#x x x#     #x x x#
+     # # # # #             # # #
+              #x x x#
+               # # #

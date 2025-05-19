@@ -39,7 +39,7 @@ function connectRooms(r1, r2, direction){
 
 let currentRoom = undefined;
 
-let startRoom = new Room([2,2], [10,13]);
+let startRoom = new Room([6,3], [42,27]);
 let rooms = [startRoom];
 
 function testMaze(){
@@ -61,35 +61,25 @@ function testMaze(){
     return (rows.join("") === answer);
 }
 
-function drawMaze() {
-    maze = Array.from({ length: 29 }, () => Array(24).fill(' '));
-    for (const room of rooms) {
-        maze[room.offset[1]][room.offset[0]] = "┌";
-        maze[room.offset[1]][room.offset[0]+room.size[0]-1] = '┐';
-        maze[room.offset[1]+room.size[1]-1][room.offset[0]] = '└';
-        maze[room.offset[1]+room.size[1]-1][room.offset[0]+room.size[0]-1] = '┘';
-
-        for (let i = 1; i < room.size[0]-1; i++) {
-            maze[room.offset[1]][room.offset[0] + i] = '─';
-            maze[room.offset[1]+room.size[1]-1][room.offset[0] + i] = '─';
-        }
-
-        for (let i = 1; i < room.size[1]-1; i++) {
-            maze[room.offset[1] + i][room.offset[0]] = '│';
-            maze[room.offset[1] + i][room.offset[0]+room.size[0]-1] = '│';
+function drawMaze(r) {
+    maze = Array.from({ length: 60 }, () => Array(100).fill('█'));
+    for (const room of r) {
+        for (let i = room.offset[1]; i < room.offset[1] + room.size[1]; i++){
+            for (let j = room.offset[0]; j < room.offset[0] + room.size[0]; j++){
+                maze[i][j] = " ";
+            }
         }
     }
     return maze
 }
 
 let roomSizes = [
-    [2,4], [2,3], [4,2], [2,2], [2,3], [3,2], [3,2], [2,3], [5,4], [3,3], [3,2], [3,2], [2,3], [3,2], [2,4], [3,2], [3,2], [2,2], [2,3], [5,4], [2,2], [3,2], [2,2], [2,3], [2,2], [2,3], [2,2], [3,2], [3,2], [2,3], [4,2], [3,2], [2,4], [5,4], [2,2], [4,2], [2,4], [2,2], [2,3], [3,2], [2,2], [2,2], [3,2], [2,3], [3,2], [2,4], [4,2]
+    [18, 7], [10, 3], [6, 5], [6, 3], [10, 3], [6, 7], [6, 5], [14, 3], [6, 3], [6, 3], [6, 5], [10, 3], [6, 5], [6, 7], [6, 3], [6, 3], [10, 3], [14, 3], [6, 3], [10, 3], [6, 3], [6, 5], [6, 3], [14, 3], [6, 7], [10, 3], [18, 7], [6, 5], [6, 3], [6, 5], [6, 5], [10, 3], [6, 3], [6, 7], [6, 7], [10, 3], [10, 3], [10, 3], [10, 3], [6, 5], [14, 3], [10, 3], [6, 5], [18, 7], [10, 3], [10, 5], [10, 3]
 ];
 
 //[x,y]
-//computers in [9], [20], and [34] (-1 for the room offsets/sizes bc no start room)
 let roomOffsets = [
-    [8,13], [6,12], [2,13], [1,15], [2,17], [4,19], [2,21], [0,22], [2,24], [7,26], [10,25], [13,26], [15,23], [12,22], [14,18], [16,19], [19,18], [22,17], [21, 14], [16,13], [22, 12], [20,10], [19,8], [17,7], [17,5], [15,4], [14,2], [11,3], [9,1], [7,2], [5,5], [4,7], [2,4], [1,0], [3,9], [5,10], [9,8], [10,5], [12,6], [13,9], [16,10], [13,11], [12,13], [12,16], [9,17], [7,18], [8,22]
+    [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [10, 43], [2, 45], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53]
 ];
 
 
@@ -196,10 +186,9 @@ function initMaze(){
 }
 
 initMaze();
-console.log(testMaze());
 
 addEventListener("DOMContentLoaded", () => {
-    m = drawMaze();
+    m = drawMaze(rooms);
     rows = []
     for (row of m) {
         rows.push(row.join(""));
