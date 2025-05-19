@@ -31,13 +31,12 @@ def findBestEMPSpot(targets, EMPSize):
     #Write your code here!`,
     String.raw
         `#msgs is an array of all 10 messages (not formatted into squares though).
-#Each message has been "ciphered" by a different amount: the letters have been shifted forwards in the alphabet by some number of letters.
-#For example, ciphering the string "xylophone" with a shift of 3 would create "aborskrqh". Notice how the x and y have wrapped around to a and b.
-#Spaces are left alone when a message is ciphered.
+#Each message has been "ciphered" by the same amount: the letters have been shifted forwards in the alphabet by some number of letters.
+#For example, ciphering the string "xylo phone" with a shift of 3 would create "abor skrqh". Notice how the x and y have wrapped around to a and b.
+#Note that spaces are left alone when a message is ciphered.
 #You must populate the array decipheredMsgs with all of the messages deciphered (in the same order that they were in msgs).
-#Hint: split your code into multiple functions!
 
-msgs = ${JSON.stringify(messagesCipheredFlat)}
+msgs = ${JSON.stringify(messagesCipheredFlat).replaceAll(",", "\n,")}
 
 decipheredMsgs = []`,
     String.raw

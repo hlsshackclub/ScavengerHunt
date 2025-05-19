@@ -113,17 +113,24 @@ function cipher(msg, shift) {
     return shifted.join("")
 }
 
+// function makeShifts(seed, len) {
+//     const rand = splitmix32(cyrb128(seed))
+//     let rs = []
+//     for (let i = 0; i < len; i++) {
+//         let shift = 0
+//         do {
+//             shift = rand() % 24 + 1
+//         } while (rs.includes(shift)) //no repeats!!
+//         rs.push(shift) //1 to 25
+//     }
+//     return rs
+// }
+
+//nvm chat we goin all the same shift now
 function makeShifts(seed, len) {
     const rand = splitmix32(cyrb128(seed))
-    let rs = []
-    for (let i = 0; i < len; i++) {
-        let shift = 0
-        do {
-            shift = rand() % 24 + 1
-        } while (rs.includes(shift)) //no repeats!!
-        rs.push(shift) //1 to 25
-    }
-    return rs
+    const shift = rand() % 24 + 1
+    return Array(len).fill(shift)
 }
 
 const robotShifts = makeShifts("robotShifts", robotMessages.length)
@@ -150,6 +157,26 @@ const robotMessagesCipheredFlat = robotMessagesCiphered.map(msg => msg.replaceAl
 const doubleAgentMessagesCipheredFlat = doubleAgentMessagesCiphered.map(msg => msg.replaceAll("\n", ""))
 const humanMessagesCipheredFlat = humanMessagesCiphered.map(msg => msg.replaceAll("\n", ""))
 
-const messagesFlat = robotMessagesFlat.concat(doubleAgentMessagesFlat, humanMessagesFlat)
+function orderMessages(robotMessages_, doubleAgentMessages_, humanMessages_) {
+    let ordered = []
+    let ri = 0
+    let di = 0
+    let hi = 0
+    for (const id of messageIdentities) {
+        if(id === 'robot') {
+            ordered.push(robotMessages_[ri])
+            ri++
+        } else if(id === 'doubleAgent') {
+            ordered.push(doubleAgentMessages_[di])
+            di++
+        } else {
+            ordered.push(humanMessages_[hi])
+            hi++
+        }
+    }
+    return ordered
+}
 
-const messagesCipheredFlat = robotMessagesCipheredFlat.concat(doubleAgentMessagesCipheredFlat, humanMessagesCipheredFlat)
+const messagesFlat = orderMessages(robotMessagesFlat, doubleAgentMessagesFlat, humanMessagesFlat)
+
+const messagesCipheredFlat = orderMessages(robotMessagesCipheredFlat, doubleAgentMessagesCipheredFlat, humanMessagesCipheredFlat)
