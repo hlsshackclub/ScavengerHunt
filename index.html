@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="editor.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-okaidia.min.css">
     <link rel="icon" type="image/png" href="robot_face.png">
+    <!-- ordering of these actually matters because some define consts or functions used in others...... not great.... -->
+    <script src="utils.js"></script>
+    <script src="reconMessages.js"></script>
     <script src="boxDrawings.js"></script>
     <script src="boss.js"></script>
     <!-- <script src="lineHeight.js"></script> -->
@@ -18,12 +21,10 @@
     <script src="cya.js"></script>
     <script src="flowfree.js"></script>
     <script src="manualTSP.js"></script>
-    <script src="utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js"></script>
     <script src="editor.js"></script>
     <script src="stations.js"></script>
-    <script src="reconMessages.js"></script>
     <script src="recon.js"></script>
     <meta charset="utf-8">
 </head>
@@ -357,7 +358,18 @@
         </div>
         <div id="reconDoubleAgentNextStep" class="hidden">
             <br>
-            LALAALLAALAALA
+            <p>You have now identified all 10 messages. Move on, or decode the messages with a caesar cipher (Hard)</p>
+            <div id="reconMediumFinishedChoices">
+                <br>
+                <button onclick="goToStationFromRecon();">Move On</button>
+                <button onclick="hide('reconMediumFinishedChoices'); moveEditorToStation(2, 'reconEditorContainer'); show('reconHard');">Decode The Messages</button>
+            </div>
+        </div>
+        <div id="reconHard" class="hidden">
+            <br>
+            <button onclick="goToStationFromRecon();">Move On</button>
+            <br>
+            <div id="reconEditorContainer"></div>
         </div>
         <br>
         <!-- <button onclick="setReconScore(1); goToStationFromRecon();">Temp Finish Easy Button</button>

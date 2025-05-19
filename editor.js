@@ -30,7 +30,16 @@ const stationDefaultTexts = [
 def findBestEMPSpot(targets, EMPSize):
     #Write your code here!`,
     String.raw
-        `#RECON DEFAULT TEXT`,
+        `#msgs is an array of all 10 messages (not formatted into squares though).
+#Each message has been "ciphered" by a different amount: the letters have been shifted forwards in the alphabet by some number of letters.
+#For example, ciphering the string "xylophone" with a shift of 3 would create "aborskrqh". Notice how the x and y have wrapped around to a and b.
+#Spaces are left alone when a message is ciphered.
+#You must populate the array decipheredMsgs with all of the messages deciphered (in the same order that they were in msgs).
+#Hint: split your code into multiple functions!
+
+msgs = ${JSON.stringify(messagesCipheredFlat)}
+
+decipheredMsgs = []`,
     String.raw
         `#files is a dictionary of {file name : file contents} pairs
 #File contents with the string "trap" inside them are trapped
