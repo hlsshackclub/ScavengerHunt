@@ -13,6 +13,12 @@
     --button-highlight-color-default: white;
     --button-highlight-color-highlighted: rgb(127, 127, 127);
     --button-highlight-color-clicked: black;
+    --button-color-default-important: black;
+    --button-color-highlighted-important: black;
+    --button-color-clicked-important: orange;
+    --button-highlight-color-default-important: orange;
+    --button-highlight-color-highlighted-important: rgb(127, 82, 0);
+    --button-highlight-color-clicked-important: black;
     --heading-color: black;
     --heading-highlight-color: white;
     --not-important-color: gray;
@@ -101,6 +107,20 @@ button.toggled {
 button:active {
     color: var(--button-color-clicked);
     background-color: var(--button-highlight-color-clicked);
+}
+
+button.importantButton {
+    background-color: var(--button-highlight-color-default-important);
+    color: var(--button-color-default-important);
+}
+
+button.importantButton:hover {
+    background-color: var(--button-highlight-color-highlighted-important);
+}
+
+button.importantButton:active {
+    color: var(--button-color-clicked-important);
+    background-color: var(--button-highlight-color-clicked-important);
 }
 
 input::placeholder {

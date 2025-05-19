@@ -211,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const codeEditor = document.getElementById("codeEditor");
     const runButton = document.getElementById("runButton");
     const testButton = document.getElementById("testButton");
+    const areYouSureButton = document.getElementById("areYouSureButton");
 
     codeEditor.addEventListener("input", function () {
         autoResizeEditor();
@@ -232,6 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     testButton.addEventListener("click", function () {
         runPythonTestCase(currentStation);
+    });
+
+    areYouSureButton.addEventListener("click", function () {
+        setEditorText(stationDefaultTexts[currentStation]);
     });
 });
 
