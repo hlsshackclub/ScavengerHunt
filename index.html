@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="editor.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-okaidia.min.css">
     <link rel="icon" type="image/png" href="robot_face.png">
+    <!-- ordering of these actually matters because some define consts or functions used in others...... not great.... -->
+    <script src="utils.js"></script>
+    <script src="reconMessages.js"></script>
     <script src="boxDrawings.js"></script>
     <script src="boss.js"></script>
     <!-- <script src="lineHeight.js"></script> -->
@@ -18,12 +21,11 @@
     <script src="cya.js"></script>
     <script src="flowfree.js"></script>
     <script src="manualTSP.js"></script>
-    <script src="utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js"></script>
     <script src="editor.js"></script>
     <script src="stations.js"></script>
-    <script src="reconMessages.js"></script>
+    <script src="recon.js"></script>
     <meta charset="utf-8">
 </head>
 
@@ -45,9 +47,9 @@
         </div>
         <div id="introDiv3" class="hidden">
             <br>
-            <button onclick="goToFirstStation()">Start</button>
-            </div>
+            <button class="importantButton" onclick="goToFirstStation()">Start</button>
         </div>
+    </div>
     </div>
     <h2 id="introComplete" class="hidden">Intro Complete</h2>
     <div id="station1CodeCheck"></div>
@@ -76,7 +78,8 @@
         <input id="inputN1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongN1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputN1', networkingCode, () => {hide('networkingCodeCheck'); show('networkingContainer')}, 'wrongN1')">
+        <button class="importantButton"
+            onclick="validateAndCall('inputN1', networkingCode, () => {hide('networkingCodeCheck'); show('networkingContainer')}, 'wrongN1')">
             Go to Networking</button>
     </div>
     <div id="networkingContainer" class="hidden">
@@ -113,7 +116,7 @@
                 <p class="win">You unscrambled the network!</p>
                 <br>
                 <p>Try the Medium or Hard puzzles, or move on to the next station now.</p>
-                <button onclick="goToStationFromNetworking();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
             </div>
             <p></p>
         </div>
@@ -141,7 +144,7 @@
             <div id="manualTSPWin" class="hidden">
                 <br>
                 <p>Try the Hard puzzle, or move on to the next station now.</p>
-                <button onclick="goToStationFromNetworking();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
             </div>
         </div>
         <div id="networkingHardContainer" class="hidden">
@@ -149,7 +152,7 @@
             <div id="networkingHardWin" class="hidden">
                 <br>
                 <p>Move on to the next station.</p>
-                <button onclick="goToStationFromNetworking();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
             </div>
         </div>
     </div>
@@ -166,7 +169,8 @@
         <input id="inputM1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongM1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputM1', manufacturingCode, () => {hide('manufacturingCodeCheck'); show('manufacturingContainer')}, 'wrongM1')">
+        <button class="importantButton"
+            onclick="validateAndCall('inputM1', manufacturingCode, () => {hide('manufacturingCodeCheck'); show('manufacturingContainer')}, 'wrongM1')">
             Go to Manufacturing</button>
     </div>
     <div id="manufacturingContainer" class="hidden">
@@ -188,7 +192,7 @@
         <div id="flowFreeContainer" class="hidden">
             <br>
             <p>Route the production plants "◆" into their corresponding disposal units "◉".</p>
-            <button onclick="goToStationFromManufacturing()" id="flowFreeBailMedium" class="hidden">
+            <button class="hidden importantButton" onclick="goToStationFromManufacturing()" id="flowFreeBailMedium" class="hidden">
                 Head to the next station (if you are stuck on Medium)
             </button>
             <div id="flowFree1Container">
@@ -225,7 +229,7 @@
                     <p> If you don't want to waste time, you can move on to the next station now.
                         Otherwise, you could also press on, or even go back and
                         destroy the manufacturing more permanently with EMP.</p>
-                    <button onclick="goToStationFromManufacturing()">
+                    <button class="importantButton" onclick="goToStationFromManufacturing()">
                         Head to the next station
                     </button>
                     <button onclick="hide('flowFree3Container'); 
@@ -268,7 +272,7 @@
                     <p class="win">All sections rerouted!</p>
                     <p>All the manufacturing sections are scrambled. You can now move on, or go back and destroy the
                         manufacturing more permanently with EMP.</p>
-                    <button onclick="goToStationFromManufacturing()">
+                    <button class="importantButton" onclick="goToStationFromManufacturing()">
                         Move on to the next station
                     </button>
                 </div>
@@ -279,7 +283,7 @@
             <div id="manufacturingHardWin" class="hidden">
                 <br>
                 <p>Move on to the next station.</p>
-                <button onclick="goToStationFromManufacturing();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromManufacturing();">Move On</button>
             </div>
         </div>
     </div>
@@ -296,16 +300,78 @@
         <input id="inputR1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongR1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputR1', reconCode, () => {hide('reconCodeCheck'); show('reconContainer')}, 'wrongR1')">
+        <button class="importantButton"
+            onclick="validateAndCall('inputR1', reconCode, () => {hide('reconCodeCheck'); show('reconContainer')}, 'wrongR1')">
             Go to Recon</button>
     </div>
     <div id="reconContainer" class="hidden">
         <br>
         <h2>Recon</h2>
-        <p>RECONONOOOOOOOOONNONONONONONONOONONONONOONONONONONONON</p>
-        <button onclick="setReconScore(1); goToStationFromRecon();">Temp Finish Easy Button</button>
-        <button onclick="setReconScore(2); goToStationFromRecon();">Temp Finish Medium Button</button>
-        <button onclick="setReconScore(3); goToStationFromRecon();">Temp Finish Hard Button</button>
+        <br>
+        <p>Around the room are 10 encrypted communication messages. Some of these messages are from your allies, but we have
+            recieved intel that some are from the robot. Supposedly, the robot's messages are fairly easy to spot.
+            <span>Please select the messages sent by the robot.</span>
+        </p>
+        <br>
+        <div id="reconEasySelectButtons">
+            <button onclick="toggleButton(this)">&nbsp1&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp2&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp3&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp4&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp5&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp6&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp7&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp8&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp9&nbsp</button>
+            <button onclick="toggleButton(this)">&nbsp10&nbsp</button>
+        </div>
+        <br>
+        <button onclick="checkRobotSelection()">Check</button>
+        <label id="reconRobotIdentifyWin" class="hidden win">You correctly identified the robot's messages!</label>
+        <label id="reconRobotIdentifyError" class="hidden error">You incorrectly identified some messages. Try again...</label>
+        <div id="reconRobotNextStep" class="hidden">
+            <br>
+            <p>We have also recieved intel that some other messages were sent by "double agents": robots pretending to be humans.
+                You can identify these as well (Medium), or move on to the next station. 
+                These ones are harder to spot, but they should be distinct from your allies' messages in some way.
+            </p>
+            <div id="reconEasyFinishedChoices">
+                <br>
+                <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+                <button onclick="hide('reconEasyFinishedChoices'); show('reconMedium')">Identify the Double Agent Messages</button>
+            </div>
+        </div>
+        <div id="reconMedium" class="hidden">
+            <br>
+            <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+            <br>
+            <br>
+            <p>Select the messages sent by double agents.</p>
+            <br>
+            <div id="reconMediumSelectButtons">
+                <!-- populated by js -->
+            </div>
+            <br>
+            <button onclick="checkDoubleAgentSelection()">Check</button>
+            <label id="reconDoubleAgentIdentifyWin" class="hidden win">You correctly identified the double agents' messages!</label>
+            <label id="reconDoubleAgentIdentifyError" class="hidden error">You incorrectly identified some messages. Try again...</label>
+        </div>
+        <div id="reconDoubleAgentNextStep" class="hidden">
+            <br>
+            <p>You have now identified all 10 messages. Move on, or decode the messages with a caesar cipher (Hard)</p>
+            <div id="reconMediumFinishedChoices">
+                <br>
+                <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+                <button onclick="hide('reconMediumFinishedChoices'); moveEditorToStation(2, 'reconEditorContainer'); show('reconHard');">Decode The Messages</button>
+            </div>
+        </div>
+        <div id="reconHard" class="hidden">
+            <br>
+            <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+            <br>
+            <div id="reconEditorContainer"></div>
+        </div>
+        <br>
     </div>
     <div id="reconComplete" class="hidden">
         <br>
@@ -320,7 +386,8 @@
         <input id="inputS1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
         <label id="wrongS1" class="hidden error">Wrong code.</label>
         <br>
-        <button onclick="validateAndCall('inputS1', securityCode, () => {hide('securityCodeCheck'); show('securityContainer')}, 'wrongS1')">
+        <button class="importantButton"
+            onclick="validateAndCall('inputS1', securityCode, () => {hide('securityCodeCheck'); show('securityContainer')}, 'wrongS1')">
             Go to Security</button>
     </div>
     <div id="securityContainer" class="hidden">
@@ -341,21 +408,20 @@
         <div id="terminalWinEasy" class="hidden">
             <p class="win">You have found the AI's password!</p>
             <p>Now you can either move on to the next station, or you can stick around and cause more damage.</p>
-            <button onclick="goToStationFromSecurity();">Next Station</button>
+            <button class="importantButton" onclick="goToStationFromSecurity();">Next Station</button>
             <button onclick="hide('terminalWinEasy');">Stick around (Medium/Hard)</button>
         </div>
         <div id="terminalWinMedium" class="hidden">
             <p class="win">You have deleted the AI's importantData!</p>
             <p>Now you can either move on to the next station, or create virus to remove ALL of the AI's data.</p>
-            <button onclick="hide('terminalWinMedium'); hide('securityContainer')">Next Station</button>
-            <button
-                onclick="moveEditorToStation(3, 'securityEditorContainer'); goToStationFromSecurity();">Create
+            <button class="importantButton" onclick="hide('terminalWinMedium'); hide('securityContainer')">Next Station</button>
+            <button onclick="moveEditorToStation(3, 'securityEditorContainer'); goToStationFromSecurity();">Create
                 a Virus (Hard)</button>
         </div>
         <div id="securityEditorContainer" class="hidden"></div>
         <div id="terminalWinHard" class="hidden">
             <p class="win">You have deleted ALL of the AI's data!</p>
-            <button onclick="goToStationFromSecurity();">Next Station</button>
+            <button class="importantButton" onclick="goToStationFromSecurity();">Next Station</button>
         </div>
     </div>
     <div id="securityComplete" class="hidden">
@@ -372,16 +438,18 @@
                 <pre id="highlighted" class="language-python editorHeight"
                     aria-hidden="true"><code class="language-python" id="highlightedContent"></code></pre>
             </div>
-            <button id="runButton" type="button" class="inputbox">Run Code</button>
-            <button id="testButton" type="button" class="inputbox">Run Test Case</button>
+            <button id="runButton" type="button">Run Code</button>
+            <button id="testButton" type="button">Run Test Case</button>
+            <button id="resetButton" type="button" onclick="toggleButton(this); toggleShow('areYouSureButton')">Reset Code</button>
+            <button id="areYouSureButton" type="button" class="importantButton hidden" onclick="depressButton('resetButton'); hide('areYouSureButton')">Are You Sure?</button>
             <div>
                 <br> <!-- for some reason i have to put this in a div -->
             </div>
-            <h2>Output</h2>
+            <h2>Code Output</h2>
             <div>
                 <pre id="outputArea" class="output"></pre>
             </div>
-            <h2>Test Cases</h2>
+            <h2>Test Output</h2>
             <div>
                 <pre id="testOutputArea" class="output"></pre>
             </div>

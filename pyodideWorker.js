@@ -1,5 +1,4 @@
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js", "utils.js");
-
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js", "utils.js", "reconMessages.js");
 
 //TODO: Fix memory leaks
 
@@ -303,18 +302,19 @@ logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Pass
 passed
 `,
 // Recon Hard
-runCases + String.raw`
+String.raw`
 caseI = 0
+decipheredMsgsExpected = ${JSON.stringify(messagesFlat)}
+
 passed = True
-failIndex = None''
-testFunc = decrypt
-
-runCase(("a", 1), lambda ans: ans == "b")
-runCase(("aopz pz hu lujvklk zljyla tlzzhnl", -7), lambda ans: ans == "this is an encoded secret message")
-runCase(("Qeb nrfzh yoltk clu grjmp lsbo qeb ixwv ald.", 3), lambda ans: ans == "The quick brown fox jumps over the lazy dog.")
-runCase(("Sqdqtyqd vqhcuhi hufehjut whemydw cehu mxuqj, eqji, ieoruqdi, tho fuqi qdt budjybi, rkj buii sqdebq, sehd veh whqyd qdt rqhbuo yd 2024. Yd wuduhqb, oyubti muhu xywxuh jxyi ouqh secfqhut myjx 2023. Xemuluh, jxuhu muhu iecu qhuqi, fqhjyskbqhbo yd Muijuhd Sqdqtq, mxuhu vqhcuhi sedjydkut je vqsu yiikui hubqjut je tho sedtyjyedi.", 10), lambda ans: ans == "Canadian farmers reported growing more wheat, oats, soybeans, dry peas and lentils, but less canola, corn for grain and barley in 2024. In general, yields were higher this year compared with 2023. However, there were some areas, particularly in Western Canada, where farmers continued to face issues related to dry conditions.")
-
-logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+for i in range(len(decipheredMsgsExpected)):
+    if decipheredMsgs[i] == decipheredMsgsExpected[i]:
+        logToTestOutput(f"<span class='win'>Message {i} deciphered correctly.</span>")
+    else:
+        logToTestOutput(f"<span class='error'>Message {i} deciphered incorrectly.</span>")
+        passed = False
+if passed:
+    logToTestOutput("<span class='win'>All messages deciphered correctly!</span>")
 passed
 `,
 // Security Hard

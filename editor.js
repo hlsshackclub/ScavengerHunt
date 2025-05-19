@@ -30,7 +30,15 @@ const stationDefaultTexts = [
 def findBestEMPSpot(targets, EMPSize):
     #Write your code here!`,
     String.raw
-        `#RECON DEFAULT TEXT`,
+        `#msgs is an array of all 10 messages (not formatted into squares though).
+#Each message has been "ciphered" by the same amount: the letters have been shifted forwards in the alphabet by some number of letters.
+#For example, ciphering the string "xylo phone" with a shift of 3 would create "abor skrqh". Notice how the x and y have wrapped around to a and b.
+#Note that spaces are left alone when a message is ciphered.
+#You must populate the array decipheredMsgs with all of the messages deciphered (in the same order that they were in msgs).
+
+msgs = ${JSON.stringify(messagesCipheredFlat).replaceAll(",", "\n,")}
+
+decipheredMsgs = []`,
     String.raw
         `#files is a dictionary of {file name : file contents} pairs
 #File contents with the string "trap" inside them are trapped
@@ -203,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const codeEditor = document.getElementById("codeEditor");
     const runButton = document.getElementById("runButton");
     const testButton = document.getElementById("testButton");
+    const areYouSureButton = document.getElementById("areYouSureButton");
 
     codeEditor.addEventListener("input", function () {
         autoResizeEditor();
@@ -224,6 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     testButton.addEventListener("click", function () {
         runPythonTestCase(currentStation);
+    });
+
+    areYouSureButton.addEventListener("click", function () {
+        setEditorText(stationDefaultTexts[currentStation]);
     });
 });
 
