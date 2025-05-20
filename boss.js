@@ -54,8 +54,8 @@ function testMaze(){
 }
 
 function drawMaze(r) {
-    let maze = Array.from({ length: 60 }, () => Array(100).fill('█'));
-    const connectionChar = "<span style='color:grey'>█</span>";
+    let maze = Array.from({ length: 59 }, () => Array(98).fill("<span style='background-color:white'>█</span>"));
+    const connectionChar = "<span style='background-color:grey; color:grey;'>█</span>";
     for (const room of r) {
         for (let i = room.offset[1]; i < room.offset[1] + room.size[1]; i++){
             for (let j = room.offset[0]; j < room.offset[0] + room.size[0]; j++){
@@ -81,7 +81,7 @@ function drawMaze(r) {
                         }
                     break;
                     case "east":
-                        for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1]+room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
+    for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1]+room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
                             maze[i][room.offset[0]+room.size[0]] = connectionChar;
                         }
                     break;
@@ -212,9 +212,27 @@ console.log(rooms[26])
 
 addEventListener("DOMContentLoaded", () => {
     m = drawMaze(rooms);
-    rows = []
-    for (row of m) {
-        rows.push(row.join(""));
+    //rows = []
+    //for (row of m) {
+    //    rows.push(row.join(""));
+    //}
+    //document.getElementById('maze').innerHTML = rows.join("<br>");
+
+    const table = document.createElement("table");
+    const tbody = document.createElement("tbody");
+    for (let row = 0; row < m.length; row++) {
+        const tr = document.createElement("tr");
+
+        for (let col = 0; col < m[0].length; col++) {
+            const td = document.createElement("td");
+            td.innerHTML = m[row][col];
+
+            tr.appendChild(td);
+        }
+
+        tbody.appendChild(tr);
     }
-    document.getElementById('maze').innerHTML = rows.join("<br>");
+    table.appendChild(tbody);
+    document.getElementById("maze").appendChild(table);
+
 });

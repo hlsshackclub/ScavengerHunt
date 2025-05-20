@@ -1,0 +1,14 @@
+#maze table {
+    border-collapse: collapse;
+    font-size: var(--font-size-default);
+}
+
+#maze td {
+    padding: 0;
+    position: relative;
+
+    width: 1ch;
+    height: var(--line-height-default);
+    overflow: hidden;
+    font-size: calc(1.1 * var(--font-size-default));
+}
