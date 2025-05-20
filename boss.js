@@ -4,14 +4,6 @@ class Room {
         this.size = size;
         this.offset = offset;
     }
-    getConnectingRoom(direction) {
-        try {
-            return this.connectingRooms[direction];
-        }
-        catch (e) {
-            return undefined;
-        }
-    }
     setConnectingRoom(direction, room) {
         this.connectingRooms[direction] = room;
     }
@@ -62,11 +54,38 @@ function testMaze(){
 }
 
 function drawMaze(r) {
-    maze = Array.from({ length: 60 }, () => Array(100).fill('█'));
+    let maze = Array.from({ length: 60 }, () => Array(100).fill('█'));
+    const connectionChar = "<span style='color:grey'>█</span>";
     for (const room of r) {
         for (let i = room.offset[1]; i < room.offset[1] + room.size[1]; i++){
             for (let j = room.offset[0]; j < room.offset[0] + room.size[0]; j++){
                 maze[i][j] = " ";
+            }
+        }
+        for (const [con, cRoom] of Object.entries(room.connectingRooms)) {
+            if (cRoom){
+                switch (con) {
+                    case "north":
+                        for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0]+room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
+                            maze[room.offset[1]-1][i] = connectionChar;
+                        }
+                    break;
+                    case "south":
+                        for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0]+room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
+                            maze[room.offset[1]+room.size[1]][i] = connectionChar;
+                        }
+                    break;
+                    case "west":
+                        for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1]+room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
+                            maze[i][room.offset[0]-1] = connectionChar;
+                        }
+                    break;
+                    case "east":
+                        for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1]+room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
+                            maze[i][room.offset[0]+room.size[0]] = connectionChar;
+                        }
+                    break;
+                }
             }
         }
     }
@@ -74,118 +93,122 @@ function drawMaze(r) {
 }
 
 let roomSizes = [
-    [18, 7], [10, 3], [6, 5], [6, 3], [10, 3], [6, 7], [6, 5], [14, 3], [6, 3], [6, 3], [6, 5], [10, 3], [6, 5], [6, 7], [6, 3], [6, 3], [10, 3], [14, 3], [6, 3], [10, 3], [6, 3], [6, 5], [6, 3], [14, 3], [6, 7], [10, 3], [18, 7], [6, 5], [6, 3], [6, 5], [6, 5], [10, 3], [6, 3], [6, 7], [6, 7], [10, 3], [10, 3], [10, 3], [10, 3], [6, 5], [14, 3], [10, 3], [6, 5], [18, 7], [10, 3], [10, 5], [10, 3]
+    [18, 7], [10, 3], [6, 5], [6, 3], [10, 3], [6, 7], [6, 5], [14, 3], [6, 3], [6, 3], [6, 5], [10, 3], [6, 5], [6, 7], [6, 3], [6, 3], [10, 3], [14, 3], [6, 3], [10, 3], [6, 3], [6, 5], [6, 3], [14, 3], [6, 7], [10, 3], [18, 7], [6, 5], [6, 3], [6, 5], [6, 5], [10, 3], [6, 3], [6, 7], [6, 7], [10, 3], [10, 3], [10, 3], [10, 3], [6, 5], [14, 3], [10, 3], [6, 5], [18, 7], [10, 3], [10, 5], [10, 3], [5,3]
 ];
 
 //[x,y]
 let roomOffsets = [
-    [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [10, 43], [2, 45], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53]
+    [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
 ];
 
 
 function initMaze(){
-    for (let i = 0; i < 47; i++) {
+    for (let i = 0; i < roomOffsets.length; i++) {
         rooms[i+1] = new Room(roomSizes[i], roomOffsets[i]);
     }
 
     // ROOM CONNECTIONS (this took way too long)
 
     //start
-    connectRooms(0, 1, "west");
-    connectRooms(0, 43, "east");
+    connectRooms(0, 25, "west");
+    connectRooms(0, 26, "east");
     //room1
-    connectRooms(1, 2, "west");
-    connectRooms(1, 45, "south");
+    connectRooms(25, 22, "west");
+    connectRooms(25, 32, "south");
     //room2
-    connectRooms(2, 3, "west");
-    connectRooms(2, 36, "north");
+    connectRooms(22, 24, "west");
+    connectRooms(22, 18, "north");
     //room3
-    connectRooms(3, 4, "south");
+    connectRooms(24, 29, "south");
     //room4
-    connectRooms(4, 5, "south");
+    connectRooms(29, 31, "south");
     //room5
-    connectRooms(5, 6, "east");
+    connectRooms(31, 37, "east");
     //room6
-    connectRooms(6, 7, "south");
-    connectRooms(6, 46, "east");
+    connectRooms(37, 39, "south");
+    connectRooms(37, 34, "east");
     //room7
-    connectRooms(7, 8, "west");
+    connectRooms(39, 48, "west");
     //room8
-    connectRooms(8, 9, "east");
+    connectRooms(40, 44, "east");
+    connectRooms(40, 48, "north");
     //room9
-    connectRooms(9, 10, "east");
+    connectRooms(44, 46, "east");
     //room10
-    connectRooms(10, 11, "east");
+    connectRooms(46, 45, "east");
     //room11
-    connectRooms(11, 12, "east");
+    connectRooms(45, 47, "east");
     //room12
-    connectRooms(12, 13, "north");
+    connectRooms(47, 43, "north");
     //room13
-    connectRooms(13, 14, "west");
+    connectRooms(43, 42, "west");
     //room14
-    connectRooms(14, 15, "north");
-    connectRooms(14, 47, "west");
+    connectRooms(42, 35, "north");
+    connectRooms(42, 41, "west");
     //room15
-    connectRooms(15, 16, "east");
-    connectRooms(15, 44, "west");
+    connectRooms(35, 38, "east");
+    connectRooms(35, 30, "west");
     //room 16
-    connectRooms(16, 17, "east");
+    connectRooms(38, 36, "east");
     //room17
-    connectRooms(17, 18, "east");
+    connectRooms(36, 33, "east");
     //room18
-    connectRooms(18, 19, "north");
+    connectRooms(33, 28, "north");
     //room19
-    connectRooms(19, 20, "west");
-    connectRooms(19, 21, "north");
+    connectRooms(28, 27, "west");
+    connectRooms(28, 23, "north");
     //room21
-    connectRooms(21, 22, "north");
+    connectRooms(23, 20, "north");
     //room22
-    connectRooms(22, 23, "north");
+    connectRooms(20, 15, "north");
     //room23
-    connectRooms(23, 24, "west");
+    connectRooms(15, 13, "west");
     //room24
-    connectRooms(24, 25, "north");
+    connectRooms(13, 10, "north");
+    connectRooms(13, 19, "south");
     //room25
-    connectRooms(25, 26, "west");
+    connectRooms(10, 7, "west");
     //room26
-    connectRooms(26, 27, "north");
+    connectRooms(7, 4, "north");
     //room27
-    connectRooms(27, 28, "west");
+    connectRooms(4, 5, "west");
     //room28
-    connectRooms(28, 29, "north");
+    connectRooms(5, 2, "north");
     //room29
-    connectRooms(29, 30, "west");
+    connectRooms(2, 3, "west");
     //room30
-    connectRooms(30, 31, "south");
+    connectRooms(3, 8, "south");
     //room31
-    connectRooms(31, 32, "south");
+    connectRooms(8, 12, "south");
     //room32
-    connectRooms(32, 33, "west");
-    connectRooms(32, 35, "south");
+    connectRooms(12, 6, "west");
+    connectRooms(12, 16, "south");
     //room33
-    connectRooms(33, 34, "north");
+    connectRooms(6, 1, "north");
     //room35
-    connectRooms(35, 36, "east");
+    connectRooms(16, 18, "east");
     //room36
-    connectRooms(36, 37, "east");
+    connectRooms(18, 14, "east");
     //room38
-    connectRooms(38, 39, "east");
+    connectRooms(9, 11, "east");
     //room39
-    connectRooms(39, 40, "south");
+    connectRooms(11, 17, "south");
     //room40
-    connectRooms(40, 41, "east");
-    connectRooms(40, 42, "south");
+    connectRooms(17, 19, "east");
+    connectRooms(17, 21, "south");
     //room42
-    connectRooms(42, 43, "south");
+    connectRooms(21, 26, "south");
     //room44 
-    connectRooms(44, 45, "west");
+    connectRooms(30, 32, "west");
     //room45
-    connectRooms(45, 46, "west");
+    connectRooms(32, 34, "west");
     //room46
-    connectRooms(46, 47, "south");
+    connectRooms(34, 41, "south");
 }
 
 initMaze();
+
+console.log(rooms[26])
 
 addEventListener("DOMContentLoaded", () => {
     m = drawMaze(rooms);
