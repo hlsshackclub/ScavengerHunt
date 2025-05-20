@@ -34,6 +34,8 @@ let currentRoom = undefined;
 let startRoom = new Room([6,3], [42,27]);
 let rooms = [startRoom];
 
+currentRoom = startRoom;
+
 function testMaze(){
     maze = Array.from({ length: 29 }, () => Array(24).fill(' '));
     for (const room of rooms)  {
@@ -206,12 +208,34 @@ function initMaze(){
     connectRooms(34, 41, "south");
 }
 
+function move(direction){
+    let nextRoom = currentRoom.connectingRooms[direction];
+    if (nextRoom) {
+        currentRoom = nextRoom;
+        if (!(currentRoom in visibleRooms)) {visibleRooms.push(currentRoom)};
+        updateMaze(visibleRooms);
+    }
+}
+
+function updateMaze(rooms){
+    let m = drawMaze(visibleRooms);
+    console.log(cells);
+    for (let row = 0; row < m.length; row++) {
+        for (let col = 0; col < m[0].length; col++) {
+            cells[row][col].innerHTML = m[row][col];
+        }
+    }
+}
+
+const directionMapping = {w: "north", a: "west", s: "south", d: "east"};
+
 initMaze();
 
-console.log(rooms[26])
+visibleRooms = [startRoom]
+let cells = []
 
 addEventListener("DOMContentLoaded", () => {
-    m = drawMaze(rooms);
+    let m = drawMaze(visibleRooms);
     //rows = []
     //for (row of m) {
     //    rows.push(row.join(""));
@@ -222,17 +246,27 @@ addEventListener("DOMContentLoaded", () => {
     const tbody = document.createElement("tbody");
     for (let row = 0; row < m.length; row++) {
         const tr = document.createElement("tr");
+        cells.push([]);
 
         for (let col = 0; col < m[0].length; col++) {
             const td = document.createElement("td");
             td.innerHTML = m[row][col];
 
             tr.appendChild(td);
+            cells[row].push(td);
         }
 
         tbody.appendChild(tr);
     }
     table.appendChild(tbody);
+    table.setAttribute('tabindex', '0');
+    table.addEventListener('keydown', (e) => {
+        if (["w", "a", "s", "d"].includes(e.key)) {
+            move(directionMapping[e.key]);
+        }
+    });
+    table.addEventListener('click', () => {
+        table.focus();
+    });
     document.getElementById("maze").appendChild(table);
-
 });
