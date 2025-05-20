@@ -217,14 +217,18 @@ function move(direction){
     }
 }
 
+let player = "<span style='background-color:green; color:green;'>█</span>";
+
 function updateMaze(rooms){
     let m = drawMaze(visibleRooms);
-    console.log(cells);
     for (let row = 0; row < m.length; row++) {
         for (let col = 0; col < m[0].length; col++) {
             cells[row][col].innerHTML = m[row][col];
         }
     }
+    let playerPos = [currentRoom.offset[0] + Math.floor(currentRoom.size[0]/2) -1, currentRoom.offset[1] + Math.floor(currentRoom.size[1]/2)];
+    cells[playerPos[1]][playerPos[0]].innerHTML = player;
+    cells[playerPos[1]][playerPos[0]+1].innerHTML = player; 
 }
 
 const directionMapping = {w: "north", a: "west", s: "south", d: "east"};
@@ -269,4 +273,5 @@ addEventListener("DOMContentLoaded", () => {
         table.focus();
     });
     document.getElementById("maze").appendChild(table);
+    updateMaze(visibleRooms);
 });
