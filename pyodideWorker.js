@@ -309,9 +309,9 @@ decipheredMsgsExpected = ${JSON.stringify(messagesFlat)}
 passed = True
 for i in range(len(decipheredMsgsExpected)):
     if decipheredMsgs[i] == decipheredMsgsExpected[i]:
-        logToTestOutput(f"<span class='win'>Message {i} deciphered correctly.</span>")
+        logToTestOutput(f"<span class='win'>Message {i+1} deciphered correctly.</span>")
     else:
-        logToTestOutput(f"<span class='error'>Message {i} deciphered incorrectly.</span>")
+        logToTestOutput(f"<span class='error'>Message {i+1} deciphered incorrectly.</span>")
         passed = False
 if passed:
     logToTestOutput("<span class='win'>All messages deciphered correctly!</span>")

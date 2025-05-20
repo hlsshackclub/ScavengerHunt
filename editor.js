@@ -55,7 +55,6 @@ const stationWinFuncs = [
                 return
             }
             wonAlready = true
-            console.log("NETWORKING HARD WIN!!!!!!")
             setNetworkingScore(3)
             show("networkingHardWin")
         }
@@ -68,13 +67,11 @@ const stationWinFuncs = [
                 return
             }
             wonAlready = true
-            console.log("MANUFACTURING HARD WIN!!!!!!")
             setManufacturingScore(3)
             show("manufacturingHardWin")
         }
         return inner
     })(),
-    () => { },
     (() => {
         wonAlready = false
         function inner() {
@@ -82,7 +79,18 @@ const stationWinFuncs = [
                 return
             }
             wonAlready = true
-            console.log("SECURITY HARD WIN!!!!!!")
+            setReconScore(3)
+            show("reconHardWin")
+        }
+        return inner
+    })(),
+    (() => {
+        wonAlready = false
+        function inner() {
+            if (wonAlready) {
+                return
+            }
+            wonAlready = true
             setSecurityScore(3)
             show("terminalWinHard")
         }
