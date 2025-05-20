@@ -176,6 +176,7 @@ function initMaze(){
     connectRooms(4, 5, "west");
     //room28
     connectRooms(5, 2, "north");
+    connectRooms(5, 9, "south");
     //room29
     connectRooms(2, 3, "west");
     //room30
