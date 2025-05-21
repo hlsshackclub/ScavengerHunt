@@ -46,10 +46,6 @@
     color: rgb(255, 255, 255)
 }
 
-#maze span.player {
-    font-size: calc(4 * var(--font-size-emoji))
-}
-
-#maze span.robot {
+#maze span.emoji {
     font-size: calc(4 * var(--font-size-emoji))
 }

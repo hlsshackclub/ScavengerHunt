@@ -128,6 +128,7 @@ function setupBoss() {
         CONNECTION_INVISIBLE: "*",
         PLAYER: "P",
         COMPUTER: "C",
+        SERVER: "S",
         ROBOT: "R",
     });
 
@@ -162,9 +163,14 @@ function setupBoss() {
             }
         }
         for (const room of rooms) {
+            //add computer and server chars
             if (room.hasComputer && room.visible) {
                 let computerLoc = [room.offset[1] + Math.floor(room.size[1] / 2), room.offset[0] + Math.floor(room.size[0] / 2)]
                 cells[computerLoc[0]][computerLoc[1]] = CellTypes.COMPUTER;
+                for(delta of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]]) {
+                    const serverLoc = v2Add(computerLoc, [delta[1], delta[0]]) //x and y are swapped here for some reason
+                    cells[serverLoc[0]][serverLoc[1]] = CellTypes.SERVER;
+                }
             }
         }
         for (const room of rooms) {
@@ -292,15 +298,17 @@ function setupBoss() {
                     } else if (cText === CellTypes.CONNECTION) {
                         tcText = "<span class='connection'>░</span>"
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText += `<span class='player'>${playerHealthEmojis[playerHealth]}</span>`
+                        tcText += `<span class='emoji'>${playerHealthEmojis[playerHealth]}</span>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
                     } else if (cText === CellTypes.ROBOT) {
-                        tcText = "<span class='robot'>🤖</span>";
+                        tcText = "<span class='emoji'>🤖</span>";
                     } else if (cText === CellTypes.COMPUTER) {
-                        tcText = "<span class='player'>🖥️</span>";
+                        tcText = "<span class='emoji'>🖥️</span>";
+                    } else if (cText === CellTypes.SERVER) {
+                        tcText = "<span class='emoji'>🗄️</span>";
                     }
                 }
                 tCells[row][col].innerHTML = tcText;

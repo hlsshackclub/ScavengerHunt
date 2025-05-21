@@ -191,5 +191,5 @@ function testingGoToBossfight() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    //testingGoToThirdStation()
+    //testingGoToBossfight()
 });
