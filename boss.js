@@ -35,7 +35,7 @@ function setupBoss() {
 
     let startRoom = new Room([7, 3], [42, 27], false, true);
     let rooms = [startRoom];
-    //computer rooms are 1, 28, 44
+    let computerRooms = [1, 28, 44];
 
     let roomSizes = [
         [19, 7], [11, 3], [7, 5], [7, 3], [11, 3], [7, 7], [7, 5], [15, 3], [7, 3], [7, 3], [7, 5], [11, 3], [7, 5], [7, 7], [7, 3], [7, 3], [11, 3], [15, 3], [7, 3], [11, 3], [7, 3], [7, 5], [7, 3], [15, 3], [7, 7], [11, 3], [19, 7], [7, 5], [7, 3], [7, 5], [7, 5], [11, 3], [7, 3], [7, 7], [7, 7], [11, 3], [11, 3], [11, 3], [11, 3], [7, 5], [15, 3], [11, 3], [7, 5], [19, 7], [11, 3], [11, 5], [11, 3], [6, 3]
@@ -178,6 +178,7 @@ function setupBoss() {
         CONNECTION: "+",
         CONNECTION_INVISIBLE: "*",
         PLAYER: "P",
+        COMPUTER: "C",
         ROBOT: "R",
     });
 
@@ -209,6 +210,9 @@ function setupBoss() {
                 for (let j = room.offset[0]; j < room.offset[0] + room.size[0]; j++) {
                     cells[i][j] = room.visible ? CellTypes.INSIDE_VISIBLE : room.fogged ? CellTypes.INSIDE_FOGGED : CellTypes.INSIDE_INVISIBLE;
                 }
+            }
+            if (computerRooms.includes(rooms.indexOf(room)) and room.visible){
+                cells[room.offset[1] + Math.floor(room.size[1]/2)][room.offset[0] + Math.floor(room.size[0]/2)] = CellTypes.COMPUTER;
             }
         }
         for (const room of rooms) {
