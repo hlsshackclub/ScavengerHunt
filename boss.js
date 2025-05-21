@@ -286,10 +286,12 @@ function setupBoss() {
 
             for (let col = 0; col < tableWidth; col++) {
                 const td = document.createElement("td");
-                td.innerHTML = cells[row][col];
-
                 tr.appendChild(td);
-                tCells[row].push(td);
+
+                const div = document.createElement("div");
+                td.appendChild(div)
+
+                tCells[row].push(div);
             }
 
             tbody.appendChild(tr);
