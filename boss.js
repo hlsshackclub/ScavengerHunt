@@ -166,6 +166,8 @@ function setupBoss() {
     initMaze()
 
     let playerPos = [45, 28]
+    let playerHealth = 10
+    const playerHealthEmojis = ["🪦", "😣", "😞", "😟", "😕", "😐", "🙂", "😊", "😃", "😄", "😁"]
 
     const CellTypes = Object.freeze({
         OUTSIDE: "x",
@@ -186,7 +188,7 @@ function setupBoss() {
         let mediumMode = true;
         if (mediumMode) {
             let c = getRooms(playerPos).flatMap(room => Object.values(room.connectingRooms));
-            for (const connected of c){
+            for (const connected of c) {
                 if (connected) {
                     connected.fogged = true;
                 }
@@ -321,7 +323,7 @@ function setupBoss() {
                     } else if (cText === CellTypes.CONNECTION) {
                         tcText = "<span class='connection'>░</span>"
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText = "<span class='player'>⍟</span>"
+                        tcText = `<span class='player'>${playerHealthEmojis[playerHealth]}</span>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
