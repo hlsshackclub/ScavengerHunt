@@ -178,11 +178,8 @@ function setupBoss() {
         CONNECTION: "+",
         CONNECTION_INVISIBLE: "*",
         PLAYER: "P",
-<<<<<<< HEAD
         COMPUTER: "C",
-=======
         ROBOT: "R",
->>>>>>> 65ea93859aa549e4eac58cc20474d1e70241b571
     });
 
     let cells = undefined
