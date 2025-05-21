@@ -253,8 +253,8 @@ function setupBoss() {
     testPrintCells(renderToCells(rooms, playerPos))
 
     //both must be odd
-    const tableWidth = 41
-    const tableHeight = 21
+    const tableWidth = 31
+    const tableHeight = 13
     let tCells = []
     function renderToTable() {
         const playerPosInTable = [(tableWidth - 1) / 2, (tableHeight - 1) / 2]
@@ -262,11 +262,24 @@ function setupBoss() {
         for (let row = 0; row < tCells.length; row++) {
             for (let col = 0; col < tCells[0].length; col++) {
                 const cPos = v2Add([col, row], delta)
-                let cText = ""
+                let tcText = ""
                 if(cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
-                    cText = cells[cPos[1]][cPos[0]];
+                    const cText = cells[cPos[1]][cPos[0]];
+                    if(cText === CellTypes.OUTSIDE) {
+                        tcText = "<span class='outside'>█</span>"
+                    } else if(cText === CellTypes.WALL) {
+                        tcText = "<span class='wall'>█</span>"
+                    } else if(cText === CellTypes.INSIDE_VISIBLE) {
+                        tcText = "<span class='inside-visible'></span>"
+                    } else if(cText === CellTypes.INSIDE_INVISIBLE) {
+                        tcText = "<span class='inside-invisible'>▓</span>"
+                    } else if(cText === CellTypes.CONNECTION) {
+                        tcText = "<span class='connection'>░</span>"
+                    } else if(cText === CellTypes.PLAYER) {
+                        tcText = "<span class='player'>⍟</span>"
+                    }
                 }
-                tCells[row][col].innerHTML = cText;
+                tCells[row][col].innerHTML = tcText;
             }
         }
     }

@@ -7,13 +7,13 @@
     padding: 0;
     position: relative;
 
-    width: 1ch;
-    height: var(--line-height-default);
+    width: 3ch;
+    height: calc(3 * var(--line-height-default));
     overflow: hidden;
 }
 
 #maze div {
-    font-size: calc(1 * var(--font-size-default));
+    font-size: calc(4.5 * var(--font-size-default));
     position: absolute;
     top: 0;
     left: 0;
@@ -22,4 +22,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#maze span.outside {
+    color: rgb(255, 255, 255)
+}
+
+#maze span.wall {
+    color: rgb(255, 255, 255)
+}
+
+#maze span.inside-visible {
+    color: rgb(0, 0, 0)
+}
+
+#maze span.inside-invisible {
+    /* font-size: var(--font-size-default); */
+    color: rgb(255, 255, 255)
+}
+
+#maze span.connection {
+    /* font-size: var(--font-size-default); */
+    color: rgb(255, 255, 255)
+}
+
+#maze span.player {
+    font-size: calc(2 * var(--font-size-default))
 }
