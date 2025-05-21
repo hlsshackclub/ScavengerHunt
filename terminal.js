@@ -283,6 +283,7 @@ function r(args, type, command) {
 	if (path === importantDataFile){
 	    //Medium Win
         setSecurityScore(2)
+        hide('terminalWinEasy');
 	    show("terminalWinMedium")
 	}
         path.parent.files.splice(index, 1);
