@@ -7,6 +7,7 @@ let sudoAccess = false;
 const password = "1357d";
 const fakePassword = "1357b";
 let sudoersFile = undefined;
+const noPerms = 'Permission denied (try using sudo [command])'
 
 class User {
     constructor(name, home, group) {
@@ -136,7 +137,7 @@ function ls(args) {
         else return `ls: ${args[0]}: Directory not found`
     }
 
-    if (!checkPerms(path, currentUser, "r")) return `ls: ${path.name}: Permission denied`;
+    if (!checkPerms(path, currentUser, "r")) return `ls: ${path.name}: ${noPerms}`;
 
     const output = path.files.map(file => {
         if (file instanceof Directory) return `[DIR] ${file.name}`;
@@ -162,7 +163,7 @@ function cd(args) {
 
     path = getByName(args[0], currentPath, Directory);
     if (path) {
-        if (!checkPerms(path, currentUser, "r")) return `cd: ${args[0]}: Permission denied`;
+        if (!checkPerms(path, currentUser, "r")) return `cd: ${args[0]}: ${noPerms}`;
         currentPath = path;
         return `Changed directory to ${getPathString(currentPath)}`;
     } else {
@@ -182,7 +183,8 @@ function sudo(args) {
         return;
     }
 
-    if (parseSudoers().some(s => currentUser.groups.includes(s))) {
+    let parsedSudoers = parseSudoers()
+    if (parsedSudoers.some(s => currentUser.groups.includes(s)) || parsedSudoers.includes(currentUser.name)) {
         nextArgs = args.join(" ");
         return ["Enter password: ", (args) => {
             if (args === password) {
@@ -202,7 +204,7 @@ function sudo(args) {
             }
         }];
     } else {
-        return "sudo: permission denied";
+        return "sudo: permission denied (check help sudo)";
     }
 }
 
@@ -213,7 +215,7 @@ function cat(args) {
 
     const path = getByName(args[0], currentPath, File);
     if (path) {
-    	if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: Permission denied`;
+    	if (!checkPerms(path, currentUser, "r")) return `cat: ${path.name}: ${noPerms}`;
 	if (path === passwordFile){
 	    //Easy Win
         setSecurityScore(1)
@@ -253,7 +255,7 @@ function create(args, type, command, owner) {
         dir = getByName(p, currentPath, Directory);
     }
 
-    if (!checkPerms(dir, currentUser, "w")) return `${command}: Permission denied`;
+    if (!checkPerms(dir, currentUser, "w")) return `${command}: ${noPerms}`;
 
     const n = new type(name, dir, dir.perms, owner);
     dir.files.push(n);
@@ -279,7 +281,7 @@ function r(args, type, command) {
         if (path instanceof Directory && path.files.length > 0) {
             return (`${command}: '${args[0]}': Directory not empty`);
         }
-        if (!checkPerms(path, currentUser, "w")) return `${command}: Permission denied`;
+        if (!checkPerms(path, currentUser, "w")) return `${command}: ${noPerms}`;
 	if (path === importantDataFile){
 	    //Medium Win
         setSecurityScore(2)
@@ -370,7 +372,7 @@ function echo(args) {
             const index = args.indexOf(">>");
             const fileName = args[index + 1];
             const file = getByName(fileName, currentPath, File);
-	    if (!checkPerms(file, currentUser, "w")) return `echo: Permission denied`;
+	    if (!checkPerms(file, currentUser, "w")) return `echo: ${noPerms}`;
             if (file) {
                 file.content += "\n" + args.slice(0, index).join(" ");
                 return (`Wrote to ${fileName}`);
@@ -381,7 +383,7 @@ function echo(args) {
         const index = args.indexOf(">");
         const fileName = args[index + 1];
         const file = getByName(fileName, currentPath, File);
-	if (!checkPerms(file, currentUser, "w")) return `echo: Permission denied`;
+	if (!checkPerms(file, currentUser, "w")) return `echo: ${noPerms}`;
         if (file) {
             file.content = args.slice(0, index).join(" ");
             return (`Wrote to ${fileName}`);
@@ -452,6 +454,7 @@ const aliases = {
     "read": "cat",
     "makeDirectory": "mkdir",
     "makeFile": "touch",
+    "write": "echo",
 };
 
 const functions = {
@@ -468,13 +471,13 @@ const functions = {
 };
 
 const funcHelp = {
-    "echo": "[string] - display a line of text\n    use > to write to a file\n    use >> to append to a file",
+    "echo": "[string] - display a line of text or overwrite/write to a file\n    use [text to write] > [file] to overwrite a file\n    use [text to append] >> [file] to append to a file",
     "help": "[command] - detailed help for a command\n    use help without arguments to list all commands",
     "cd": "[directory] - change the current directory\n    use .. to go up a directory\n    use / or run without arguments to go to the root directory",
     "ls": "[directory] - list directory contents\n    use -l for detailed list",
     "rm": "[file] - remove files",
     "rmdir": "[directory] - remove empty directories",
-    "sudo": '[command] [options] - execute a command as root\n    can only be used if "wheel" is in /etc/sudoers\n    you will be prompted for a password',
+    "sudo": '[command] [options] - execute a command as root\n    can only be used if "wheel" or "hacker" are in /etc/sudoers\n    you will be prompted for a password',
     "mkdir": "[directory] - create a new directory",
     "touch": "[file] - create a new file",
     "cat": "[file] - display file contents",
