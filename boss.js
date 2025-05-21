@@ -294,6 +294,7 @@ function setupBoss() {
     //     console.log(cells.map(row => row.join('')).join('\n'))
     // }
 
+    renderToCells(rooms, playerPos)
     //testPrintCells(renderToCells(rooms, playerPos))
 
     //both must be odd
