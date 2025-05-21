@@ -49,3 +49,20 @@
 #maze span.emoji {
     font-size: calc(4 * var(--font-size-emoji))
 }
+
+#maze {
+    position: relative;
+    width: fit-content;
+}
+
+.mazeArrow {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    height: 10px;
+    width: 100px;
+    font-size: calc(1.5*var(--font-size-default)) !important;
+  
+    mix-blend-mode: difference;
+    z-index: 10;
+}

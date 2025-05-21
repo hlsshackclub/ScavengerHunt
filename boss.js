@@ -8,6 +8,7 @@ function setupBoss() {
             this.hasRobot = hasRobot
             this.hasComputer = hasComputer
             this.visible = visible
+            this.midPoint = [this.offset[0] + Math.floor(this.size[0]/2), this.offset[1] + Math.floor(this.size[1]/2)];
         }
         setConnectingRoom(direction, room) {
             this.connectingRooms[direction] = room;
@@ -46,6 +47,8 @@ function setupBoss() {
         [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
     ];
 
+    const computerRooms = [];
+
     function initMaze() {
         for (let i = 0; i < roomOffsets.length; i++) {
             rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
@@ -61,11 +64,13 @@ function setupBoss() {
         }
 
         for (const room of robotRooms) {
-            rooms[room].hasRobot = true
+            rooms[room].hasRobot = true;
         }
 
+
         for (const i of [1, 27, 44]) {
-            rooms[i].hasComputer = true
+            rooms[i].hasComputer = true;
+            computerRooms.push(rooms[i]);
         }
 
         // ROOM CONNECTIONS (this took way too long)
@@ -132,7 +137,7 @@ function setupBoss() {
         ROBOT: "R",
     });
 
-    let cells = undefined
+    let cells = undefined;
     function renderToCells() {
         let width = Math.max(...(rooms.map(room => room.offset[0] + room.size[0] + 1)))
         let height = Math.max(...(rooms.map(room => room.offset[1] + room.size[1] + 1)))
@@ -165,7 +170,7 @@ function setupBoss() {
         for (const room of rooms) {
             //add computer and server chars
             if (room.hasComputer && room.visible) {
-                let computerLoc = [room.offset[1] + Math.floor(room.size[1] / 2), room.offset[0] + Math.floor(room.size[0] / 2)]
+                let computerLoc = [room.midPoint[1], room.midPoint[0]]
                 cells[computerLoc[0]][computerLoc[1]] = CellTypes.COMPUTER;
                 for(delta of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]]) {
                     const serverLoc = v2Add(computerLoc, [delta[1], delta[0]]) //x and y are swapped here for some reason
@@ -316,10 +321,62 @@ function setupBoss() {
         }
     }
 
+    function renderArrows() {
+        for ([i, computer] of computerRooms.entries()) {
+            let y = playerPos[1] - computer.midPoint[1];
+            let x = (playerPos[0] - computer.midPoint[0]) / 2.79028584411;
+            let rad = ((x > 0 ? Math.PI : 0) - Math.atan(y/x))*-1;
+            console.log(rad * (180/Math.PI), x, y);
+
+            const lineHeight = 2 * parseFloat(window.getComputedStyle(document.querySelector(':root')).getPropertyValue('--line-height-default'));
+            console.log(lineHeight);
+            let lenX = lineHeight * Math.cos(rad);
+            let lenY = lineHeight * Math.sin(rad);
+
+            const arrow = document.getElementById("mazeArrow" + toString(i));
+            arrow.style.top = "50%";
+            arrow.style.left = "50%";
+            let transString = "translate(-50%, -50%) translate(" + lenX + "rem, " + lenY + "rem) rotate(" + rad + "rad)";
+            console.log(transString);
+            arrow.style.transform = transString;
+            arrow.innerText = "->";
+        }
+    }
+
+    function initArrows() {
+        for ([i, computer] of computerRooms.entries()) {
+            let y = playerPos[1] - computer.midPoint[1];
+            let x = (playerPos[0] - computer.midPoint[0]) / 2.79028584411;
+            let rad = ((x > 0 ? Math.PI : 0) - Math.atan(y/x))*-1;
+            console.log(rad * (180/Math.PI), x, y);
+
+            const lineHeight = 2 * parseFloat(window.getComputedStyle(document.querySelector(':root')).getPropertyValue('--line-height-default'));
+            console.log(lineHeight);
+            let lenX = lineHeight * Math.cos(rad);
+            let lenY = lineHeight * Math.sin(rad);
+
+            const maze = document.getElementById("maze");
+            const arrow = document.createElement("div");
+            arrow.classList.add("mazeArrow");
+            arrow.setAttribute("id", "mazeArrow" + toString(i));
+            arrow.style.top = "50%";
+            arrow.style.left = "50%";
+            let transString = "translate(-50%, -50%) translate(" + lenX + "rem, " + lenY + "rem) rotate(" + rad + "rad)";
+            console.log(transString);
+            arrow.style.transform = transString;
+            arrow.innerText = "->";
+            maze.appendChild(arrow);
+        }  
+    }
+
+    //placeholder for now
+    let arrows = true;
+
     function moveAndUpdate(delta) {
         move(delta);
         renderToCells();
         renderToTable();
+        if(arrows) {renderArrows();}
     }
 
     addEventListener("DOMContentLoaded", () => {
@@ -341,7 +398,8 @@ function setupBoss() {
 
             tbody.appendChild(tr);
         }
-        renderToTable()
+        renderToTable();
+        if (arrows) {initArrows();}
         table.appendChild(tbody);
         table.setAttribute('tabindex', '0');
         let wInterval = undefined
