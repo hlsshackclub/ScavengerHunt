@@ -1,10 +1,11 @@
 function setupBoss() {
     class Room {
-        constructor(size, offset) {
+        constructor(size, offset, hasRobot=false, visible=false) {
             this.connectingRooms = { north: undefined, east: undefined, south: undefined, west: undefined };
             this.size = size;
             this.offset = offset;
-            this.visible = false
+            this.hasRobot = hasRobot
+            this.visible = visible
         }
         setConnectingRoom(direction, room) {
             this.connectingRooms[direction] = room;
@@ -31,7 +32,7 @@ function setupBoss() {
         }
     }
 
-    let startRoom = new Room([7, 3], [42, 27]); startRoom.visible = true
+    let startRoom = new Room([7, 3], [42, 27], false, true);
     let rooms = [startRoom];
     //computer rooms are 1, 28, 44
 
@@ -44,10 +45,16 @@ function setupBoss() {
         [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
     ];
 
+    let robotRooms = [1, 2, 3, 4, 5]
+
     function initMaze() {
         for (let i = 0; i < roomOffsets.length; i++) {
             rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
         }
+
+        for(const room of robotRooms) [
+            rooms[room].hasRobot = true
+        ]
 
         // ROOM CONNECTIONS (this took way too long)
 
