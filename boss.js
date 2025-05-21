@@ -1,11 +1,12 @@
 function setupBoss() {
     class Room {
-        constructor(size, offset, hasRobot = false, visible = false) {
+        constructor(size, offset, hasRobot = false, hasComputer = false, visible = false) {
             this.connectingRooms = { north: undefined, east: undefined, south: undefined, west: undefined };
             this.size = size;
             this.offset = offset;
             this.fogged = false;
             this.hasRobot = hasRobot
+            this.hasComputer = hasComputer
             this.visible = visible
         }
         setConnectingRoom(direction, room) {
@@ -33,9 +34,8 @@ function setupBoss() {
         }
     }
 
-    let startRoom = new Room([7, 3], [42, 27], false, true);
+    let startRoom = new Room([7, 3], [42, 27], false, false, true);
     let rooms = [startRoom];
-    let computerRooms = [1, 27, 44];
 
     let roomSizes = [
         [19, 7], [11, 3], [7, 5], [7, 3], [11, 3], [7, 7], [7, 5], [15, 3], [7, 3], [7, 3], [7, 5], [11, 3], [7, 5], [7, 7], [7, 3], [7, 3], [11, 3], [15, 3], [7, 3], [11, 3], [7, 3], [7, 5], [7, 3], [15, 3], [7, 7], [11, 3], [19, 7], [7, 5], [7, 3], [7, 5], [7, 5], [11, 3], [7, 3], [7, 7], [7, 7], [11, 3], [11, 3], [11, 3], [11, 3], [7, 5], [15, 3], [11, 3], [7, 5], [19, 7], [11, 3], [11, 5], [11, 3], [6, 3]
@@ -64,104 +64,53 @@ function setupBoss() {
             rooms[room].hasRobot = true
         }
 
-        // ROOM CONNECTIONS (this took way too long)
+        for (const i of [1, 27, 44]) {
+            rooms[i].hasComputer = true
+        }
 
-        //start
-        connectRooms(0, 25, "west");
-        connectRooms(0, 26, "east");
-        //room1
-        connectRooms(25, 22, "west");
-        connectRooms(25, 32, "south");
-        //room2
-        connectRooms(22, 24, "west");
-        connectRooms(22, 18, "north");
-        //room3
-        connectRooms(24, 29, "south");
-        //room4
-        connectRooms(29, 31, "south");
-        //room5
-        connectRooms(31, 37, "east");
-        //room6
-        connectRooms(37, 39, "south");
-        connectRooms(37, 34, "east");
-        //room7
-        connectRooms(39, 48, "west");
-        //room8
-        connectRooms(40, 44, "east");
-        connectRooms(40, 48, "north");
-        //room9
-        connectRooms(44, 46, "east");
-        //room10
-        connectRooms(46, 45, "east");
-        //room11
-        connectRooms(45, 47, "east");
-        //room12
-        connectRooms(47, 43, "north");
-        //room13
-        connectRooms(43, 42, "west");
-        //room14
-        connectRooms(42, 35, "north");
-        connectRooms(42, 41, "west");
-        //room15
-        connectRooms(35, 38, "east");
-        connectRooms(35, 30, "west");
-        //room 16
-        connectRooms(38, 36, "east");
-        //room17
-        connectRooms(36, 33, "east");
-        //room18
-        connectRooms(33, 28, "north");
-        //room19
-        connectRooms(28, 27, "west");
-        connectRooms(28, 23, "north");
-        //room21
-        connectRooms(23, 20, "north");
-        //room22
-        connectRooms(20, 15, "north");
-        //room23
-        connectRooms(15, 13, "west");
-        //room24
-        connectRooms(13, 10, "north");
-        connectRooms(13, 19, "south");
-        //room25
-        connectRooms(10, 7, "west");
-        //room26
-        connectRooms(7, 4, "north");
-        //room27
-        connectRooms(4, 5, "west");
-        //room28
-        connectRooms(5, 2, "north");
-        connectRooms(5, 9, "south");
-        //room29
-        connectRooms(2, 3, "west");
-        //room30
-        connectRooms(3, 8, "south");
-        //room31
-        connectRooms(8, 12, "south");
-        //room32
-        connectRooms(12, 6, "west");
-        connectRooms(12, 16, "south");
-        //room33
-        connectRooms(6, 1, "north");
-        //room35
-        connectRooms(16, 18, "east");
-        //room36
-        connectRooms(18, 14, "east");
-        //room38
-        connectRooms(9, 11, "east");
-        //room39
-        connectRooms(11, 17, "south");
-        //room40
-        connectRooms(17, 19, "east");
-        connectRooms(17, 21, "south");
-        //room42
-        connectRooms(21, 26, "south");
-        //room44 
-        connectRooms(30, 32, "west");
-        //room45
-        connectRooms(32, 34, "west");
-        //room46
-        connectRooms(34, 41, "south");
+        // ROOM CONNECTIONS (this took way too long)
+        connectRooms(0, 25, "west"); connectRooms(0, 26, "east"); //start
+        connectRooms(25, 22, "west"); connectRooms(25, 32, "south"); //room1
+        connectRooms(22, 24, "west"); connectRooms(22, 18, "north"); //room2
+        connectRooms(24, 29, "south"); //room3
+        connectRooms(29, 31, "south"); //room4
+        connectRooms(31, 37, "east"); //room5
+        connectRooms(37, 39, "south"); connectRooms(37, 34, "east"); //room6
+        connectRooms(39, 48, "west"); //room7
+        connectRooms(40, 44, "east"); connectRooms(40, 48, "north"); //room8
+        connectRooms(44, 46, "east"); //room9
+        connectRooms(46, 45, "east"); //room10
+        connectRooms(45, 47, "east"); //room11
+        connectRooms(47, 43, "north"); //room12
+        connectRooms(43, 42, "west"); //room13
+        connectRooms(42, 35, "north"); connectRooms(42, 41, "west"); //room14
+        connectRooms(35, 38, "east"); connectRooms(35, 30, "west"); //room15
+        connectRooms(38, 36, "east"); //room 16
+        connectRooms(36, 33, "east"); //room17
+        connectRooms(33, 28, "north"); //room18
+        connectRooms(28, 27, "west"); connectRooms(28, 23, "north"); //room19
+        connectRooms(23, 20, "north"); //room21
+        connectRooms(20, 15, "north"); //room22
+        connectRooms(15, 13, "west"); //room23
+        connectRooms(13, 10, "north"); connectRooms(13, 19, "south"); //room24
+        connectRooms(10, 7, "west"); //room25
+        connectRooms(7, 4, "north"); //room26
+        connectRooms(4, 5, "west"); //room27
+        connectRooms(5, 2, "north"); connectRooms(5, 9, "south"); //room28
+        connectRooms(2, 3, "west"); //room29
+        connectRooms(3, 8, "south"); //room30 
+        connectRooms(8, 12, "south"); //room31
+        connectRooms(12, 6, "west"); connectRooms(12, 16, "south"); //room32
+        connectRooms(6, 1, "north"); //room33
+        connectRooms(16, 18, "east"); //room35
+        connectRooms(18, 14, "east"); //room36
+        connectRooms(9, 11, "east"); //room38
+        connectRooms(11, 17, "south"); //room39
+        connectRooms(17, 19, "east"); connectRooms(17, 21, "south"); //room40
+        connectRooms(21, 26, "south"); //room42
+        connectRooms(30, 32, "west"); //room44  
+        connectRooms(32, 34, "west"); //room45
+        connectRooms(34, 41, "south"); //room46
     }
     initMaze()
 
@@ -211,14 +160,16 @@ function setupBoss() {
                     cells[i][j] = room.visible ? CellTypes.INSIDE_VISIBLE : room.fogged ? CellTypes.INSIDE_FOGGED : CellTypes.INSIDE_INVISIBLE;
                 }
             }
-            if (computerRooms.includes(rooms.indexOf(room)) && room.visible){
-                let computerLoc = [room.offset[1] + Math.floor(room.size[1]/2), room.offset[0] + Math.floor(room.size[0]/2)]
+        }
+        for (const room of rooms) {
+            if (room.hasComputer && room.visible) {
+                let computerLoc = [room.offset[1] + Math.floor(room.size[1] / 2), room.offset[0] + Math.floor(room.size[0] / 2)]
                 cells[computerLoc[0]][computerLoc[1]] = CellTypes.COMPUTER;
             }
         }
         for (const room of rooms) {
             //add robot chars
-            if (room.hasRobot && room.visible) {
+            if (room.hasRobot && !room.hasComputer && room.visible) {
                 const robotPos = room.offset
                 cells[robotPos[1]][robotPos[0]] = CellTypes.ROBOT
             }
@@ -284,7 +235,7 @@ function setupBoss() {
     }
 
     function checkRobotDamage(newRoom) {
-        if(newRoom.hasRobot) {
+        if (newRoom.hasRobot) {
             playerHealth -= 1
         }
     }
