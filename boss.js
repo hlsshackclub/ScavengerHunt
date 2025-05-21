@@ -184,6 +184,15 @@ function setupBoss() {
         let width = Math.max(...(rooms.map(room => room.offset[0] + room.size[0] + 1)))
         let height = Math.max(...(rooms.map(room => room.offset[1] + room.size[1] + 1)))
         cells = Array.from({ length: height }, () => Array(width).fill(CellTypes.OUTSIDE));
+        let mediumMode = true;
+        if (mediumMode) {
+            let c = getRooms(playerPos).flatMap(room => Object.values(room.connectingRooms));
+            for (const connected of c){
+                if (connected) {
+                    connected.fogged = true;
+                }
+            }
+        }
 
         for (const room of rooms) {
             //carve out room borders
@@ -209,7 +218,7 @@ function setupBoss() {
 
         for (const room of rooms) {
             //draw connections
-            let conType = room.visible ? CellTypes.CONNECTION : CellTypes.CONNECTION_INVISIBLE;
+            let conType = (room.visible || room.fogged) ? CellTypes.CONNECTION : CellTypes.CONNECTION_INVISIBLE;
             for (const [con, cRoom] of Object.entries(room.connectingRooms)) {
                 if (cRoom) {
                     switch (con) {
