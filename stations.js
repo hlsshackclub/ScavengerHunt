@@ -58,8 +58,8 @@ function goToThirdStation() {
     }
 }
 
-function goToOutro() {
-    show("outro")
+function goToBossfight() {
+    show("bossfightCodeCheck")
 }
 
 function setNetworkingScore(difficulty) {
@@ -122,7 +122,7 @@ function goToStationFromRecon() {
         document.getElementById("station4Complete").appendChild(document.getElementById("securityComplete"))
         show("securityCodeCheck")
     } else {
-        goToOutro()
+        goToBossfight()
     }
 }
 
@@ -138,7 +138,7 @@ function goToStationFromSecurity() {
         document.getElementById("station4Complete").appendChild(document.getElementById("reconComplete"))
         show("reconCodeCheck")
     } else {
-        goToOutro()
+        goToBossfight()
     }
 }
 
@@ -179,7 +179,7 @@ function testingGoToFourthStation() {
     }
 }
 
-function testingGoToOutro() {
+function testingGoToBossfight() {
     testingGoToFourthStation()
     if(reconFirst) {
         securityScore = 3
@@ -191,5 +191,5 @@ function testingGoToOutro() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    //testingGoToThirdStation()
+    testingGoToBossfight()
 });
