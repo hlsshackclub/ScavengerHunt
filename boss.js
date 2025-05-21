@@ -1,6 +1,6 @@
 function setupBoss() {
     class Room {
-        constructor(size, offset, hasRobot=false, visible=false) {
+        constructor(size, offset, hasRobot = false, visible = false) {
             this.connectingRooms = { north: undefined, east: undefined, south: undefined, west: undefined };
             this.size = size;
             this.offset = offset;
@@ -53,15 +53,15 @@ function setupBoss() {
 
         let rand = splitmix32f(cyrb128("boss"))
         let robotRooms = []
-        for(let i = 1; i < rooms.length; i++) {
+        for (let i = 1; i < rooms.length; i++) {
             const r = rand()
             console.log(r)
-            if(r < 0.2) {
+            if (r < 0.2) {
                 robotRooms.push(i)
             }
         }
 
-        for(const room of robotRooms) {
+        for (const room of robotRooms) {
             rooms[room].hasRobot = true
         }
 
@@ -299,23 +299,23 @@ function setupBoss() {
             for (let col = 0; col < tCells[0].length; col++) {
                 const cPos = v2Add([col, row], delta)
                 let tcText = ""
-                if(cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
+                if (cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
                     const cText = cells[cPos[1]][cPos[0]];
-                    if(cText === CellTypes.OUTSIDE) {
+                    if (cText === CellTypes.OUTSIDE) {
                         tcText = "<span class='outside'>█</span>"
-                    } else if(cText === CellTypes.WALL) {
+                    } else if (cText === CellTypes.WALL) {
                         tcText = "<span class='wall'>█</span>"
-                    } else if(cText === CellTypes.INSIDE_VISIBLE) {
+                    } else if (cText === CellTypes.INSIDE_VISIBLE) {
                         tcText = "<span class='inside-visible'></span>"
-                    } else if(cText === CellTypes.INSIDE_FOGGED) {
+                    } else if (cText === CellTypes.INSIDE_FOGGED) {
                         tcText = "<span class='inside-invisible'>▓</span>"
-                    } else if(cText === CellTypes.CONNECTION) {
+                    } else if (cText === CellTypes.CONNECTION) {
                         tcText = "<span class='connection'>░</span>"
-                    } else if(cText === CellTypes.PLAYER) {
+                    } else if (cText === CellTypes.PLAYER) {
                         tcText = "<span class='player'>⍟</span>"
-                    } else if(cText === CellTypes.CONNECTION_INVISIBLE) {
+                    } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
-                    } else if(cText === CellTypes.INSIDE_INVISIBLE) {
+                    } else if (cText === CellTypes.INSIDE_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
                     }
                 }
@@ -352,11 +352,47 @@ function setupBoss() {
         renderToTable()
         table.appendChild(tbody);
         table.setAttribute('tabindex', '0');
+        let wInterval = undefined
+        let aInterval = undefined
+        let sInterval = undefined
+        let dInterval = undefined
         table.addEventListener('keydown', (e) => {
             if (["w", "a", "s", "d"].includes(e.key)) {
-                moveAndUpdate(keyToDir[e.key])
+                if (e.repeat) {
+                    return
+                }
+                function moveInDir() {
+                    moveAndUpdate(keyToDir[e.key])
+                }
+                moveInDir()
+                const firstMoveDelay = 150
+                const moveDelay = 50
+                if (e.key == 'w') {
+                    clearInterval(sInterval)
+                    wInterval = setTimeout(() => wInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                } else if (e.key == 'a') {
+                    clearInterval(dInterval)
+                    aInterval = setTimeout(() => aInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                } else if (e.key == 's') {
+                    clearInterval(wInterval)
+                    sInterval = setTimeout(() => sInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                } else {
+                    clearInterval(aInterval)
+                    dInterval = setTimeout(() => dInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                }
             }
         });
+        table.addEventListener('keyup', (e) => {
+            if (e.key == 'w') {
+                clearInterval(wInterval)
+            } else if (e.key == 'a') {
+                clearInterval(aInterval)
+            } else if (e.key == 's') {
+                clearInterval(sInterval)
+            } else {
+                clearInterval(dInterval)
+            }
+        })
         table.addEventListener('click', () => {
             table.focus();
         });
