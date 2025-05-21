@@ -47,5 +47,9 @@
 }
 
 #maze span.player {
-    font-size: calc(2 * var(--font-size-default))
+    font-size: calc(4 * var(--font-size-emoji))
+}
+
+#maze span.robot {
+    font-size: calc(4 * var(--font-size-emoji))
 }

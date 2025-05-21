@@ -55,8 +55,7 @@ function setupBoss() {
         let robotRooms = []
         for (let i = 1; i < rooms.length; i++) {
             const r = rand()
-            console.log(r)
-            if (r < 0.2) {
+            if (r < 0.5) {
                 robotRooms.push(i)
             }
         }
@@ -167,6 +166,8 @@ function setupBoss() {
     initMaze()
 
     let playerPos = [45, 28]
+    let playerHealth = 10
+    const playerHealthEmojis = ["🪦", "😣", "😞", "😟", "😕", "😐", "🙂", "😊", "😃", "😄", "😁"]
 
     const CellTypes = Object.freeze({
         OUTSIDE: "x",
@@ -177,7 +178,11 @@ function setupBoss() {
         CONNECTION: "+",
         CONNECTION_INVISIBLE: "*",
         PLAYER: "P",
+<<<<<<< HEAD
         COMPUTER: "C",
+=======
+        ROBOT: "R",
+>>>>>>> 65ea93859aa549e4eac58cc20474d1e70241b571
     });
 
     let cells = undefined
@@ -188,13 +193,12 @@ function setupBoss() {
         let mediumMode = true;
         if (mediumMode) {
             let c = getRooms(playerPos).flatMap(room => Object.values(room.connectingRooms));
-            for (const connected of c){
+            for (const connected of c) {
                 if (connected) {
                     connected.fogged = true;
                 }
             }
         }
-
         for (const room of rooms) {
             //carve out room borders
             for (let i = room.offset[1] - 1; i < room.offset[1] + room.size[1] + 1; i++) {
@@ -214,12 +218,18 @@ function setupBoss() {
                 cells[room.offset[1] + Math.floor(room.size[1]/2)][room.offset[0] + Math.floor(room.size[0]/2)] = CellTypes.COMPUTER;
             }
         }
+        for (const room of rooms) {
+            //add robot chars
+            if (room.hasRobot && room.visible) {
+                const robotPos = room.offset
+                cells[robotPos[1]][robotPos[0]] = CellTypes.ROBOT
+            }
+        }
         function setConType(list, y, x, cType) {
             if (list[y][x] !== CellTypes.CONNECTION) {
                 list[y][x] = cType;
             }
         }
-
         for (const room of rooms) {
             //draw connections
             let conType = (room.visible || room.fogged) ? CellTypes.CONNECTION : CellTypes.CONNECTION_INVISIBLE;
@@ -275,6 +285,12 @@ function setupBoss() {
         }
     }
 
+    function checkRobotDamage(newRoom) {
+        if(newRoom.hasRobot) {
+            playerHealth -= 1
+        }
+    }
+
     const keyToDir = { w: [0, -1], a: [-1, 0], s: [0, 1], d: [1, 0] }
     function move(delta) {
         const newPos = v2Add(playerPos, delta)
@@ -289,17 +305,19 @@ function setupBoss() {
                 }
                 //if you're walking into a new room then
                 room.visible = true
+                checkRobotDamage(room)
                 //probably do something with the enemies here
             }
         }
         playerPos = v2Add(playerPos, delta)
     }
 
-    function testPrintCells() {
-        console.log(cells.map(row => row.join('')).join('\n'))
-    }
+    // function testPrintCells() {
+    //     console.log(cells.map(row => row.join('')).join('\n'))
+    // }
 
-    testPrintCells(renderToCells(rooms, playerPos))
+    renderToCells(rooms, playerPos)
+    //testPrintCells(renderToCells(rooms, playerPos))
 
     //both must be odd
     const tableWidth = 31
@@ -325,11 +343,13 @@ function setupBoss() {
                     } else if (cText === CellTypes.CONNECTION) {
                         tcText = "<span class='connection'>░</span>"
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText = "<span class='player'>⍟</span>"
+                        tcText += `<span class='player'>${playerHealthEmojis[playerHealth]}</span>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
+                    } else if (cText === CellTypes.ROBOT) {
+                        tcText = "<span class='robot'>🤖</span>";
                     }
                 }
                 tCells[row][col].innerHTML = tcText;
@@ -410,6 +430,12 @@ function setupBoss() {
         table.addEventListener('click', () => {
             table.focus();
         });
+        table.addEventListener('blur', () => {
+            clearInterval(wInterval)
+            clearInterval(aInterval)
+            clearInterval(sInterval)
+            clearInterval(dInterval)
+        })
         document.getElementById("maze").appendChild(table);
     });
 }
