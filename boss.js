@@ -276,7 +276,7 @@ function setupBoss() {
 
     //both must be odd
     const tableWidth = 31
-    const tableHeight = 13
+    const tableHeight = 11
     let tCells = []
     function renderToTable() {
         const playerPosInTable = [(tableWidth - 1) / 2, (tableHeight - 1) / 2]
@@ -341,6 +341,24 @@ function setupBoss() {
 
             tbody.appendChild(tr);
         }
+
+        const mazeTopOuter = document.getElementById("mazeTopOuter");
+        const mazeTopInner = document.getElementById("mazeTopInner");
+        const mazeLeftOuter = document.getElementById("mazeLeftOuter");
+        const mazeLeftInner = document.getElementById("mazeLeftInner");
+        const mazeRightOuter = document.getElementById("mazeRightOuter");
+        const mazeRightInner = document.getElementById("mazeRightInner");
+        const mazeBottomOuter = document.getElementById("mazeBottomOuter");
+        const mazeBottomInner = document.getElementById("mazeBottomInner");
+
+        const topBottomText = '#'.repeat(tableWidth * 3 + 4)
+        const leftRightText = '#<br>'.repeat(tableHeight * 3 - 1) + '#'
+
+        mazeTopOuter.innerHTML = topBottomText; mazeTopInner.innerHTML = topBottomText;
+        mazeBottomOuter.innerHTML = topBottomText; mazeBottomInner.innerHTML = topBottomText;
+        mazeLeftOuter.innerHTML = leftRightText; mazeLeftInner.innerHTML = leftRightText;
+        mazeRightOuter.innerHTML = leftRightText; mazeRightInner.innerHTML = leftRightText;
+
         renderToTable()
         table.appendChild(tbody);
         table.setAttribute('tabindex', '0');
