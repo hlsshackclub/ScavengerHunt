@@ -151,64 +151,6 @@ function setupBoss() {
 
     let playerPos = [45, 28]
 
-    // function testMaze(){
-    //     maze = Array.from({ length: 29 }, () => Array(24).fill(' '));
-    //     for (const room of rooms)  {
-    //         for (let i = 0; i < room.size[1]; i++) {
-    //             for (let j = 0; j < room.size[0]; j++) {
-    //                 maze[room.offset[1]+i][room.offset[0]+j] = "x";
-    //             }
-    //         }
-    //     }
-
-    //     let rows = []
-    //     for (row of maze) {
-    //         rows.push(row.join("").trimEnd());
-    //     }
-
-    //     const answer = " xxxxx xxxxx   xxx xxxxx xxxxx  xx xxxxx xx  xxxxx  xx   xx  xxx xx  xx xxxx xx   xxxx  xx xxxx xxxx xxxx  xxxxx     xx   xx    xxx  xx xx   xxxx   xx    xx  xxx xxxx   xxxxxxxx  xxxxx  xxx     xxxxxx  xx xx  xxx      xx     xx       xx  xxxxxxxxxxxxx xxxxx xx  xxxxxxxxxxxxx xxxxxxx xx     xx      xxxxxxx xx     xx  xx  xxxxxxx  xx     xxxxx        xx  xx   xxxxxxxxx   xxxxx  xxxxxxx     xxxxxxxx    xxxxx     xxxxx  xxx  xx     xxxxxxx   xxxxxxxxx      xxxxxxxxxxxxxxxx        xx  xxxxx   xxx  xx  xxxxxxxxxxxxxx  xxxxxxxx   xxx       xxx"
-    //     return (rows.join("") === answer);
-    // }
-    //
-    // function drawMaze(r) {
-    //     let maze = Array.from({ length: 59 }, () => Array(98).fill("<span style='background-color:white'>█</span>"));
-    //     const connectionChar = "<span style='background-color:grey; color:grey;'>█</span>";
-    //     for (const room of r) {
-    //         for (let i = room.offset[1]; i < room.offset[1] + room.size[1]; i++){
-    //             for (let j = room.offset[0]; j < room.offset[0] + room.size[0]; j++){
-    //                 maze[i][j] = " ";
-    //             }
-    //         }
-    //         for (const [con, cRoom] of Object.entries(room.connectingRooms)) {
-    //             if (cRoom){
-    //                 switch (con) {
-    //                     case "north":
-    //                         for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0]+room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
-    //                             maze[room.offset[1]-1][i] = connectionChar;
-    //                         }
-    //                     break;
-    //                     case "south":
-    //                         for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0]+room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
-    //                             maze[room.offset[1]+room.size[1]][i] = connectionChar;
-    //                         }
-    //                     break;
-    //                     case "west":
-    //                         for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1]+room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
-    //                             maze[i][room.offset[0]-1] = connectionChar;
-    //                         }
-    //                     break;
-    //                     case "east":
-    //     for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1]+room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
-    //                             maze[i][room.offset[0]+room.size[0]] = connectionChar;
-    //                         }
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return maze
-    // }
-
     const CellTypes = Object.freeze({
         OUTSIDE: "x",
         WALL: "X",
@@ -245,21 +187,11 @@ function setupBoss() {
             for (const [con, cRoom] of Object.entries(room.connectingRooms)) {
                 if (cRoom) {
                     switch (con) {
-                        // case "north":
-                        //     for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0] + room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
-                        //         cells[room.offset[1] - 1][i] = CellTypes.CONNECTION;
-                        //     }
-                        //     break;
                         case "south":
                             for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0] + room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
                                 cells[room.offset[1] + room.size[1]][i] = CellTypes.CONNECTION;
                             }
                             break;
-                        // case "west":
-                        //     for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1] + room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
-                        //         cells[i][room.offset[0] - 1] = CellTypes.CONNECTION;
-                        //     }
-                        //     break;
                         case "east":
                             for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1] + room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
                                 cells[i][room.offset[0] + room.size[0]] = CellTypes.CONNECTION;
@@ -272,12 +204,46 @@ function setupBoss() {
         cells[playerPos[1]][playerPos[0]] = CellTypes.PLAYER
     }
 
-    function getRoom(pos, rooms) {
+    function getRooms(pos) {
+        //check for in room
         for (const room of rooms) {
             if (pos[0] >= room.offset[0] && pos[0] < room.offset[0] + room.size[0] && pos[1] >= room.offset[1] && pos[1] < room.offset[1] + room.size[1]) {
-                return room
+                return [room]
             }
         }
+
+        //check for between 2 rooms (connection)
+        let room1 = undefined
+        for (const room of rooms) {
+            if ((pos[0] >= room.offset[0] - 1 && pos[0] < room.offset[0] + room.size[0] + 1 && pos[1] >= room.offset[1] - 1 && pos[1] < room.offset[1] + room.size[1] + 1)
+                && !((pos[0] == room.offset[0] - 1 || pos[0] == room.offset[0] + room.size[0]) && (pos[1] == room.offset[1] - 1 || pos[1] == room.offset[1] + room.size[1]))) {
+                if (room1 === undefined) {
+                    room1 = room
+                } else {
+                    return [room1, room]
+                }
+            }
+        }
+    }
+
+    const keyToDir = { w: [0, -1], a: [-1, 0], s: [0, 1], d: [1, 0] }
+    function move(delta) {
+        const newPos = v2Add(playerPos, delta)
+        const rooms = getRooms(newPos);
+        if (rooms === undefined) {
+            return; //tried to move into a wall
+        }
+        if (rooms.length === 2) {
+            for (const room of rooms) {
+                if (room.visible) {
+                    continue;
+                }
+                //if you're walking into a new room then
+                room.visible = true
+                //probably do something with the enemies here
+            }
+        }
+        playerPos = v2Add(playerPos, delta)
     }
 
     function testPrintCells() {
@@ -286,38 +252,24 @@ function setupBoss() {
 
     testPrintCells(renderToCells(rooms, playerPos))
 
-    // function move(direction) {
-    //     let nextRoom = currentRoom.connectingRooms[direction];
-    //     if (nextRoom) {
-    //         currentRoom = nextRoom;
-    //         if (!(currentRoom in visibleRooms)) { visibleRooms.push(currentRoom) };
-    //         updateMaze(visibleRooms);
-    //     }
-    // }
+    const tableWidth = 30
+    const tableHeight = 30
+    let tCells = []
+    function renderToTable() {
+        for (let row = 0; row < cells.length; row++) {
+            for (let col = 0; col < cells[0].length; col++) {
+                tCells[row][col].innerHTML = cells[row][col];
+            }
+        }
+    }
 
-    // let player = "<span style='background-color:green; color:green;'>█</span>";
-
-    // function updateMaze(rooms) {
-    //     let m = drawMaze(visibleRooms);
-    //     for (let row = 0; row < m.length; row++) {
-    //         for (let col = 0; col < m[0].length; col++) {
-    //             cells[row][col].innerHTML = m[row][col];
-    //         }
-    //     }
-    //     let playerPos = [currentRoom.offset[0] + Math.floor(currentRoom.size[0] / 2) - 1, currentRoom.offset[1] + Math.floor(currentRoom.size[1] / 2)];
-    //     cells[playerPos[1]][playerPos[0]].innerHTML = player;
-    //     cells[playerPos[1]][playerPos[0] + 1].innerHTML = player;
-    // }
-
-    // const directionMapping = { w: "north", a: "west", s: "south", d: "east" };
-
-    // initMaze();
-
-    // visibleRooms = [startRoom]
-    // let cells = []
+    function moveAndUpdate(delta) {
+        move(delta)
+        renderToCells()
+        renderToTable()
+    }
 
     addEventListener("DOMContentLoaded", () => {
-        let m = drawMaze(visibleRooms);
         //rows = []
         //for (row of m) {
         //    rows.push(row.join(""));
@@ -326,34 +278,32 @@ function setupBoss() {
 
         const table = document.createElement("table");
         const tbody = document.createElement("tbody");
-        for (let row = 0; row < m.length; row++) {
+        for (let row = 0; row < cells.length; row++) {
             const tr = document.createElement("tr");
-            cells.push([]);
+            tCells.push([]);
 
-            for (let col = 0; col < m[0].length; col++) {
+            for (let col = 0; col < cells[0].length; col++) {
                 const td = document.createElement("td");
-                td.innerHTML = m[row][col];
+                td.innerHTML = cells[row][col];
 
                 tr.appendChild(td);
-                cells[row].push(td);
+                tCells[row].push(td);
             }
 
             tbody.appendChild(tr);
         }
+        renderToTable()
         table.appendChild(tbody);
         table.setAttribute('tabindex', '0');
         table.addEventListener('keydown', (e) => {
             if (["w", "a", "s", "d"].includes(e.key)) {
-                move(directionMapping[e.key]);
+                moveAndUpdate(keyToDir[e.key])
             }
         });
         table.addEventListener('click', () => {
             table.focus();
         });
         document.getElementById("maze").appendChild(table);
-        updateMaze(visibleRooms);
     });
-
 }
-
 setupBoss()
