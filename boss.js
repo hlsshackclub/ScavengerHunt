@@ -55,7 +55,6 @@ function setupBoss() {
         let robotRooms = []
         for (let i = 1; i < rooms.length; i++) {
             const r = rand()
-            console.log(r)
             if (r < 0.2) {
                 robotRooms.push(i)
             }
@@ -291,11 +290,11 @@ function setupBoss() {
         playerPos = v2Add(playerPos, delta)
     }
 
-    function testPrintCells() {
-        console.log(cells.map(row => row.join('')).join('\n'))
-    }
+    // function testPrintCells() {
+    //     console.log(cells.map(row => row.join('')).join('\n'))
+    // }
 
-    testPrintCells(renderToCells(rooms, playerPos))
+    //testPrintCells(renderToCells(rooms, playerPos))
 
     //both must be odd
     const tableWidth = 31
