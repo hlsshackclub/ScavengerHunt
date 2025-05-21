@@ -252,13 +252,21 @@ function setupBoss() {
 
     testPrintCells(renderToCells(rooms, playerPos))
 
-    const tableWidth = 30
-    const tableHeight = 30
+    //both must be odd
+    const tableWidth = 41
+    const tableHeight = 21
     let tCells = []
     function renderToTable() {
-        for (let row = 0; row < cells.length; row++) {
-            for (let col = 0; col < cells[0].length; col++) {
-                tCells[row][col].innerHTML = cells[row][col];
+        const playerPosInTable = [(tableWidth - 1) / 2, (tableHeight - 1) / 2]
+        const delta = v2Sub(playerPos, playerPosInTable)
+        for (let row = 0; row < tCells.length; row++) {
+            for (let col = 0; col < tCells[0].length; col++) {
+                const cPos = v2Add([col, row], delta)
+                let cText = ""
+                if(cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
+                    cText = cells[cPos[1]][cPos[0]];
+                }
+                tCells[row][col].innerHTML = cText;
             }
         }
     }
@@ -270,19 +278,13 @@ function setupBoss() {
     }
 
     addEventListener("DOMContentLoaded", () => {
-        //rows = []
-        //for (row of m) {
-        //    rows.push(row.join(""));
-        //}
-        //document.getElementById('maze').innerHTML = rows.join("<br>");
-
         const table = document.createElement("table");
         const tbody = document.createElement("tbody");
-        for (let row = 0; row < cells.length; row++) {
+        for (let row = 0; row < tableHeight; row++) {
             const tr = document.createElement("tr");
             tCells.push([]);
 
-            for (let col = 0; col < cells[0].length; col++) {
+            for (let col = 0; col < tableWidth; col++) {
                 const td = document.createElement("td");
                 td.innerHTML = cells[row][col];
 
