@@ -375,19 +375,20 @@ function setupBoss() {
                 }
                 moveInDir()
                 const firstMoveDelay = 150
-                const moveDelay = 50
+                const moveDelayVertical = 75
+                const moveDelayHorizontal = moveDelayVertical / 2.79028584411
                 if (e.key == 'w') {
                     clearInterval(sInterval)
-                    wInterval = setTimeout(() => wInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                    wInterval = setTimeout(() => wInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)
                 } else if (e.key == 'a') {
                     clearInterval(dInterval)
-                    aInterval = setTimeout(() => aInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                    aInterval = setTimeout(() => aInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
                 } else if (e.key == 's') {
                     clearInterval(wInterval)
-                    sInterval = setTimeout(() => sInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                    sInterval = setTimeout(() => sInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)
                 } else {
                     clearInterval(aInterval)
-                    dInterval = setTimeout(() => dInterval = setInterval(moveInDir, moveDelay), firstMoveDelay)
+                    dInterval = setTimeout(() => dInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
                 }
             }
         });
