@@ -64,6 +64,24 @@
     <div id="station4CodeCheck"></div>
     <div id="station4"></div>
     <div id="station4Complete"></div>
+    <div id="bossfightCodeCheck" class="hidden">
+        <br>
+        <p>
+            You're ready to fight the Evil Robot.
+        </p>
+        <label>Input Bossfight code:</label>
+        <input id="inputB1" class="codeinput inputbox" type="text" placeholder="code" maxlength=5>
+        <label id="wrongB1" class="hidden error">Wrong code.</label>
+        <br>
+        <button class="importantButton"
+            onclick="validateAndCall('inputB1', bossfightCode, () => {hide('bossfightCodeCheck'); show('bossfight')}, 'wrongB1')">
+            Go to Bossfight</button>
+    </div>
+    <div id="bossfight" class="hidden">
+        <br>
+        <div id="maze">
+    </div>
+    </div>
     <div id="outro" class="hidden">
         <br>
         <h2>Outro</h2>
@@ -459,8 +477,6 @@
                 <pre id="testOutputArea" class="output"></pre>
             </div>
         </div>
-    </div>
-    <div id="maze">
     </div>
     <br><br><br><br> <!-- so content doesn't end at very bottom -->
 </body>
