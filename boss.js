@@ -55,7 +55,7 @@ function setupBoss() {
         let robotRooms = []
         for (let i = 1; i < rooms.length; i++) {
             const r = rand()
-            if (r < 0.2) {
+            if (r < 0.5) {
                 robotRooms.push(i)
             }
         }
@@ -178,6 +178,7 @@ function setupBoss() {
         CONNECTION: "+",
         CONNECTION_INVISIBLE: "*",
         PLAYER: "P",
+        ROBOT: "R",
     });
 
     let cells = undefined
@@ -194,7 +195,6 @@ function setupBoss() {
                 }
             }
         }
-
         for (const room of rooms) {
             //carve out room borders
             for (let i = room.offset[1] - 1; i < room.offset[1] + room.size[1] + 1; i++) {
@@ -211,12 +211,18 @@ function setupBoss() {
                 }
             }
         }
+        for (const room of rooms) {
+            //add robot chars
+            if (room.hasRobot && room.visible) {
+                const robotPos = room.offset
+                cells[robotPos[1]][robotPos[0]] = CellTypes.ROBOT
+            }
+        }
         function setConType(list, y, x, cType) {
             if (list[y][x] !== CellTypes.CONNECTION) {
                 list[y][x] = cType;
             }
         }
-
         for (const room of rooms) {
             //draw connections
             let conType = (room.visible || room.fogged) ? CellTypes.CONNECTION : CellTypes.CONNECTION_INVISIBLE;
@@ -272,6 +278,12 @@ function setupBoss() {
         }
     }
 
+    function checkRobotDamage(newRoom) {
+        if(newRoom.hasRobot) {
+            playerHealth -= 1
+        }
+    }
+
     const keyToDir = { w: [0, -1], a: [-1, 0], s: [0, 1], d: [1, 0] }
     function move(delta) {
         const newPos = v2Add(playerPos, delta)
@@ -286,6 +298,7 @@ function setupBoss() {
                 }
                 //if you're walking into a new room then
                 room.visible = true
+                checkRobotDamage(room)
                 //probably do something with the enemies here
             }
         }
@@ -323,11 +336,13 @@ function setupBoss() {
                     } else if (cText === CellTypes.CONNECTION) {
                         tcText = "<span class='connection'>░</span>"
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText = `<span class='player'>${playerHealthEmojis[playerHealth]}</span>`
+                        tcText += `<span class='player'>${playerHealthEmojis[playerHealth]}</span>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
                         tcText = "<span class='wall'>█</span>";
+                    } else if (cText === CellTypes.ROBOT) {
+                        tcText = "<span class='robot'>🤖</span>";
                     }
                 }
                 tCells[row][col].innerHTML = tcText;
