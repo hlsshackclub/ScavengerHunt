@@ -406,6 +406,12 @@ function setupBoss() {
         table.addEventListener('click', () => {
             table.focus();
         });
+        table.addEventListener('blur', () => {
+            clearInterval(wInterval)
+            clearInterval(aInterval)
+            clearInterval(sInterval)
+            clearInterval(dInterval)
+        })
         document.getElementById("maze").appendChild(table);
     });
 }
