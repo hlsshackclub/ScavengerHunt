@@ -4,7 +4,8 @@ function setupBoss() {
             this.connectingRooms = { north: undefined, east: undefined, south: undefined, west: undefined };
             this.size = size;
             this.offset = offset;
-            this.visible = false
+            this.visible = false;
+            this.fogged = false;
         }
         setConnectingRoom(direction, room) {
             this.connectingRooms[direction] = room;
@@ -157,7 +158,9 @@ function setupBoss() {
         WALL: "X",
         INSIDE_VISIBLE: " ",
         INSIDE_INVISIBLE: "-",
+        INSIDE_FOGGED: "F",
         CONNECTION: "+",
+        CONNECTION_INVISIBLE: "*",
         PLAYER: "P",
     });
 
@@ -179,23 +182,40 @@ function setupBoss() {
             //carve out rooms
             for (let i = room.offset[1]; i < room.offset[1] + room.size[1]; i++) {
                 for (let j = room.offset[0]; j < room.offset[0] + room.size[0]; j++) {
-                    cells[i][j] = room.visible ? CellTypes.INSIDE_VISIBLE : CellTypes.INSIDE_INVISIBLE;
+                    cells[i][j] = room.visible ? CellTypes.INSIDE_VISIBLE : room.fogged ? CellTypes.INSIDE_FOGGED : CellTypes.INSIDE_INVISIBLE;
                 }
             }
         }
+        function setConType(list, y, x, cType) {
+            if (list[y][x] !== CellTypes.CONNECTION) {
+                list[y][x] = cType;
+            }
+        }
+
         for (const room of rooms) {
             //draw connections
+            let conType = room.visible ? CellTypes.CONNECTION : CellTypes.CONNECTION_INVISIBLE;
             for (const [con, cRoom] of Object.entries(room.connectingRooms)) {
                 if (cRoom) {
                     switch (con) {
                         case "south":
                             for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0] + room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
-                                cells[room.offset[1] + room.size[1]][i] = CellTypes.CONNECTION;
+                                setConType(cells, room.offset[1] + room.size[1], i, conType);
+                            }
+                            break;
+                        case "north":
+                            for (let i = Math.max(room.offset[0], cRoom.offset[0]); i < Math.min((room.offset[0] + room.size[0]), (cRoom.offset[0] + cRoom.size[0])); i++) {
+                                setConType(cells, room.offset[1] - 1, i, conType);
                             }
                             break;
                         case "east":
                             for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1] + room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
-                                cells[i][room.offset[0] + room.size[0]] = CellTypes.CONNECTION;
+                                setConType(cells, i, room.offset[0] + room.size[0], conType);
+                            }
+                            break;
+                        case "west":
+                            for (let i = Math.max(room.offset[1], cRoom.offset[1]); i < Math.min((room.offset[1] + room.size[1]), (cRoom.offset[1] + cRoom.size[1])); i++) {
+                                setConType(cells, i, room.offset[0] - 1, conType);
                             }
                             break;
                     }
@@ -272,12 +292,16 @@ function setupBoss() {
                         tcText = "<span class='wall'>█</span>"
                     } else if(cText === CellTypes.INSIDE_VISIBLE) {
                         tcText = "<span class='inside-visible'></span>"
-                    } else if(cText === CellTypes.INSIDE_INVISIBLE) {
+                    } else if(cText === CellTypes.INSIDE_FOGGED) {
                         tcText = "<span class='inside-invisible'>▓</span>"
                     } else if(cText === CellTypes.CONNECTION) {
                         tcText = "<span class='connection'>░</span>"
                     } else if(cText === CellTypes.PLAYER) {
                         tcText = "<span class='player'>⍟</span>"
+                    } else if(cText === CellTypes.CONNECTION_INVISIBLE) {
+                        tcText = "<span class='wall'>█</span>";
+                    } else if(cText === CellTypes.INSIDE_INVISIBLE) {
+                        tcText = "<span class='wall'>█</span>";
                     }
                 }
                 tCells[row][col].innerHTML = tcText;
@@ -286,9 +310,9 @@ function setupBoss() {
     }
 
     function moveAndUpdate(delta) {
-        move(delta)
-        renderToCells()
-        renderToTable()
+        move(delta);
+        renderToCells();
+        renderToTable();
     }
 
     addEventListener("DOMContentLoaded", () => {
