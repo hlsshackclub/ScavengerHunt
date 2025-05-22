@@ -10,7 +10,6 @@ function setupBoss() {
             this.hasRobot = hasRobot
             this.hasComputer = hasComputer
             this.visible = visible
-            this.midPoint = [this.offset[0] + Math.floor(this.size[0]/2), this.offset[1] + Math.floor(this.size[1]/2)];
         }
         setConnectingRoom(direction, room) {
             this.connectingRooms[direction] = room;
@@ -328,57 +327,6 @@ function setupBoss() {
         }
     }
 
-    function renderArrows() {
-        for ([i, computer] of computerRooms.entries()) {
-            let y = playerPos[1] - computer.midPoint[1];
-            let x = (playerPos[0] - computer.midPoint[0]) / 2.79028584411;
-            let rad = ((x > 0 ? Math.PI : 0) - Math.atan(y/x))*-1;
-            console.log(rad * (180/Math.PI), x, y);
-
-            const lineHeight = 2 * parseFloat(window.getComputedStyle(document.querySelector(':root')).getPropertyValue('--line-height-default'));
-            console.log(lineHeight);
-            let lenX = lineHeight * Math.cos(rad);
-            let lenY = lineHeight * Math.sin(rad);
-
-            const arrow = document.getElementById("mazeArrow" + toString(i));
-            arrow.style.top = "50%";
-            arrow.style.left = "50%";
-            let transString = "translate(-50%, -50%) translate(" + lenX + "rem, " + lenY + "rem) rotate(" + rad + "rad)";
-            console.log(transString);
-            arrow.style.transform = transString;
-            arrow.innerText = "->";
-        }
-    }
-
-    function initArrows() {
-        for ([i, computer] of computerRooms.entries()) {
-            let y = playerPos[1] - computer.midPoint[1];
-            let x = (playerPos[0] - computer.midPoint[0]) / 2.79028584411;
-            let rad = ((x > 0 ? Math.PI : 0) - Math.atan(y/x))*-1;
-            console.log(rad * (180/Math.PI), x, y);
-
-            const lineHeight = 2 * parseFloat(window.getComputedStyle(document.querySelector(':root')).getPropertyValue('--line-height-default'));
-            console.log(lineHeight);
-            let lenX = lineHeight * Math.cos(rad);
-            let lenY = lineHeight * Math.sin(rad);
-
-            const maze = document.getElementById("maze");
-            const arrow = document.createElement("div");
-            arrow.classList.add("mazeArrow");
-            arrow.setAttribute("id", "mazeArrow" + toString(i));
-            arrow.style.top = "50%";
-            arrow.style.left = "50%";
-            let transString = "translate(-50%, -50%) translate(" + lenX + "rem, " + lenY + "rem) rotate(" + rad + "rad)";
-            console.log(transString);
-            arrow.style.transform = transString;
-            arrow.innerText = "->";
-            maze.appendChild(arrow);
-        }  
-    }
-
-    //placeholder for now
-    let arrows = true;
-
     function moveAndUpdate(delta) {
         move(delta);
         renderToCells();
@@ -497,8 +445,7 @@ function setupBoss() {
 
             tbody.appendChild(tr);
         }
-        renderToTable();
-        if (arrows) {initArrows();}
+        renderToTable()
         table.appendChild(tbody);
         table.setAttribute('tabindex', '0');
         let wInterval = undefined
