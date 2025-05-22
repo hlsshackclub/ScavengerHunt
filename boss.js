@@ -1,4 +1,6 @@
 function setupBoss() {
+    const aspectRatio = 0.35838622129; // the visible aspect ratio width/height of a cell
+
     class Room {
         constructor(size, offset, hasRobot = false, hasComputer = false, visible = false) {
             this.connectingRooms = { north: undefined, east: undefined, south: undefined, west: undefined };
@@ -46,33 +48,34 @@ function setupBoss() {
         [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
     ];
 
-    const robotRooms = (() => {
-        let rand = splitmix32f(cyrb128("boss"))
-        let robotRooms = []
-        for (let i = 1; i < rooms.length; i++) {
-            const r = rand()
-            if (r < 0.5) {
-                robotRooms.push(i)
-            }
-        }
-        return robotRooms
-    })()
-
     const computerRooms = [1, 27, 44]
 
-    function initMaze() {
-        for (let i = 0; i < roomOffsets.length; i++) {
-            rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
-        }
+    for (let i = 0; i < roomOffsets.length; i++) {
+        rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
+    }
 
-        for (const i of robotRooms) {
-            rooms[i].hasRobot = true
+    const robotRooms = (() => {
+        let rand = splitmix32f(cyrb128("boss"))
+        let rRooms = []
+        for (let i = 1; i < rooms.length; i++) {
+            const r = rand()
+            console.log(r)
+            if (r < 0.5 && !computerRooms.includes(i)) {
+                rRooms.push(i)
+            }
         }
+        return rRooms
+    })()
 
-        for (const i of computerRooms) {
-            rooms[i].hasComputer = true
-        }
+    for (const i of robotRooms) {
+        rooms[i].hasRobot = true
+    }
 
+    for (const i of computerRooms) {
+        rooms[i].hasComputer = true
+    }
+
+    {
         // ROOM CONNECTIONS (this took way too long)
         connectRooms(0, 25, "west"); connectRooms(0, 26, "east"); //start
         connectRooms(25, 22, "west"); connectRooms(25, 32, "south"); //room1
@@ -117,7 +120,6 @@ function setupBoss() {
         connectRooms(32, 34, "west"); //room45
         connectRooms(34, 41, "south"); //room46
     }
-    initMaze()
 
     let playerPos = [45, 28]
     let playerHealth = 10
@@ -184,7 +186,7 @@ function setupBoss() {
         }
         for (const room of rooms) {
             //add robot chars
-            if (room.hasRobot && !room.hasComputer && room.visible) {
+            if (room.hasRobot && room.visible) {
                 const robotPos = room.offset
                 cells[robotPos[1]][robotPos[0]] = CellTypes.ROBOT
             }
@@ -315,7 +317,7 @@ function setupBoss() {
                     } else if (cText === CellTypes.ROBOT) {
                         tcText = "<span class='emoji'>🤖</span>";
                     } else if (cText === CellTypes.COMPUTER) {
-                        tcText = "<span class='emoji'>🖥️</span>";
+                        tcText = "<span class='computer'>🖥️</span>";
                     } else if (cText === CellTypes.SERVER) {
                         tcText = "<span class='emoji'>🗄️</span>";
                     }
@@ -333,8 +335,12 @@ function setupBoss() {
     }
 
     function getComputerArrows() {
+        const currentRooms = getRooms(playerPos)
         let arrows = []
         for (i of computerRooms) {
+            if (currentRooms.includes(rooms[i])) {
+                continue
+            }
             const pos = getRoomCenter(rooms[i])
             arrows.push(v2Sub(pos, playerPos))
         }
@@ -370,27 +376,44 @@ function setupBoss() {
         const leftX = -rightX
 
         for (const arrow of arrows) {
+            if (v2Eq(arrow, [0, 0])) {
+                continue
+            }
             let pos = rayRectIntersection(arrow[0], arrow[1], cellsWidth + 3, cellsHeight + 3) //half a cell missing on each side
             pos = pos.map(Math.round)
+
+            let char = 'X'
+            // const angle = Math.atan2(-arrow[1], arrow[0] * aspectRatio); // negative y because screen coords
+            // const deg = (angle * 180 / Math.PI + 360) % 360;
+            // if (deg >= 337.5 || deg < 22.5) char = '→';
+            // else if (deg >= 22.5 && deg < 67.5) char = '↗';
+            // else if (deg >= 67.5 && deg < 112.5) char = '↑';
+            // else if (deg >= 112.5 && deg < 157.5) char = '↖';
+            // else if (deg >= 157.5 && deg < 202.5) char = '←';
+            // else if (deg >= 202.5 && deg < 247.5) char = '↙';
+            // else if (deg >= 247.5 && deg < 292.5) char = '↓';
+            // else if (deg >= 292.5 && deg < 337.5) char = '↘';
+            char = `<span class="mazeArrow">${char}</span>`
+
             if (pos[1] === topY) {
-                topTextOuter[pos[0] + rightX] = 'X'
+                topTextOuter[pos[0] + rightX] = char
             } else if (pos[1] === bottomY) {
-                bottomTextOuter[pos[0] + rightX] = 'X'
+                bottomTextOuter[pos[0] + rightX] = char
             } else if (pos[0] === leftX) {
                 if (pos[1] === topY + 1) {
-                    topTextInner[0] = 'X'
+                    topTextInner[0] = char
                 } else if (pos[1] === bottomY - 1) {
-                    bottomTextInner[0] = 'X'
+                    bottomTextInner[0] = char
                 } else {
-                    leftTextOuter[pos[1] + bottomY - 2] = 'X'
+                    leftTextOuter[pos[1] + bottomY - 2] = char
                 }
             } else if (pos[0] === rightX) {
                 if (pos[1] === topY + 1) {
-                    topTextInner[topTextInner.length - 1] = 'X'
+                    topTextInner[topTextInner.length - 1] = char
                 } else if (pos[1] === bottomY - 1) {
-                    bottomTextInner[bottomTextInner.length - 1] = 'X'
+                    bottomTextInner[bottomTextInner.length - 1] = char
                 } else {
-                    rightTextOuter[pos[1] + bottomY - 2] = 'X'
+                    rightTextOuter[pos[1] + bottomY - 2] = char
                 }
             }
         }
@@ -443,7 +466,7 @@ function setupBoss() {
                 moveInDir()
                 const firstMoveDelay = 150
                 const moveDelayVertical = 75
-                const moveDelayHorizontal = moveDelayVertical / 2.79028584411
+                const moveDelayHorizontal = moveDelayVertical * aspectRatio
                 if (e.key == 'w') {
                     clearInterval(sInterval)
                     wInterval = setTimeout(() => wInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)

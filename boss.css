@@ -46,6 +46,16 @@
     color: rgb(255, 255, 255)
 }
 
+#maze span.computer {
+    background-color: var(--win-color);
+    font-size: calc(4 * var(--font-size-emoji))
+}
+
 #maze span.emoji {
     font-size: calc(4 * var(--font-size-emoji))
+}
+
+span.mazeArrow{
+    color: var(--win-color);
+    /* font-size: calc(4 * var(--font-size-emoji)) */
 }
