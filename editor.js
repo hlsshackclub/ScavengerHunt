@@ -19,7 +19,16 @@ function printToTestOutput(message) {
 
 const stationDefaultTexts = [
     String.raw
-        `#NETWORKING DEFAULT TEXT`,
+        `#servers is a 2d array of integers, where 0 means there's no server there, and any other number means a server of that ID is there.
+#servers is indexed with y coordinate first, x coordinate second
+#location is an array of the form [x, y] which is the location of the disconnected computer
+#You must return the ID of the server that is closest to the disconnected computer
+#For example, if the server with ID 1 is at [0, 0], and the server with ID 2 is at [4,4], a disconnected computer at [0, 1] would be closest to server #1.
+#Note: The distance between the computer and the server is calculated using the Manhattan distance.
+#The Manhattan distance between two points is the sum of the absolute differences of both their x and y coordinates.
+
+def findClosestServer(servers, location):
+    #Write your code here!`,
     String.raw
         `#targets is a 2d array of 1s and 0s. 1 means there's a target there, 0 means there's no target there
 #targets is indexed with y coordinate first, x coordinate second
