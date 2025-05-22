@@ -46,11 +46,7 @@ function setupBoss() {
         [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
     ];
 
-    function initMaze() {
-        for (let i = 0; i < roomOffsets.length; i++) {
-            rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
-        }
-
+    const robotRooms = (() => {
         let rand = splitmix32f(cyrb128("boss"))
         let robotRooms = []
         for (let i = 1; i < rooms.length; i++) {
@@ -59,12 +55,21 @@ function setupBoss() {
                 robotRooms.push(i)
             }
         }
+        return robotRooms
+    })()
 
-        for (const room of robotRooms) {
-            rooms[room].hasRobot = true
+    const computerRooms = [1, 27, 44]
+
+    function initMaze() {
+        for (let i = 0; i < roomOffsets.length; i++) {
+            rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
         }
 
-        for (const i of [1, 27, 44]) {
+        for (const i of robotRooms) {
+            rooms[i].hasRobot = true
+        }
+
+        for (const i of computerRooms) {
             rooms[i].hasComputer = true
         }
 
@@ -132,6 +137,10 @@ function setupBoss() {
         ROBOT: "R",
     });
 
+    function getRoomCenter(room) {
+        return [room.offset[0] + Math.floor(room.size[0] / 2), room.offset[1] + Math.floor(room.size[1] / 2)]
+    }
+
     let cells = undefined
     function renderToCells() {
         let width = Math.max(...(rooms.map(room => room.offset[0] + room.size[0] + 1)))
@@ -165,11 +174,11 @@ function setupBoss() {
         for (const room of rooms) {
             //add computer and server chars
             if (room.hasComputer && room.visible) {
-                let computerLoc = [room.offset[1] + Math.floor(room.size[1] / 2), room.offset[0] + Math.floor(room.size[0] / 2)]
-                cells[computerLoc[0]][computerLoc[1]] = CellTypes.COMPUTER;
-                for(delta of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]]) {
-                    const serverLoc = v2Add(computerLoc, [delta[1], delta[0]]) //x and y are swapped here for some reason
-                    cells[serverLoc[0]][serverLoc[1]] = CellTypes.SERVER;
+                let computerLoc = getRoomCenter(room)
+                cells[computerLoc[1]][computerLoc[0]] = CellTypes.COMPUTER;
+                for (delta of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]]) {
+                    const serverLoc = v2Add(computerLoc, delta) //x and y are swapped here for some reason
+                    cells[serverLoc[1]][serverLoc[0]] = CellTypes.SERVER;
                 }
             }
         }
@@ -320,6 +329,81 @@ function setupBoss() {
         move(delta);
         renderToCells();
         renderToTable();
+        makeBorderWithArrows(getComputerArrows());
+    }
+
+    function getComputerArrows() {
+        let arrows = []
+        for (i of computerRooms) {
+            const pos = getRoomCenter(rooms[i])
+            arrows.push(v2Sub(pos, playerPos))
+        }
+        return arrows
+    }
+
+    function makeBorderWithArrows(arrows) {
+        const mazeTopOuter = document.getElementById("mazeTopOuter");
+        const mazeTopInner = document.getElementById("mazeTopInner");
+        const mazeLeftOuter = document.getElementById("mazeLeftOuter");
+        const mazeLeftInner = document.getElementById("mazeLeftInner");
+        const mazeRightOuter = document.getElementById("mazeRightOuter");
+        const mazeRightInner = document.getElementById("mazeRightInner");
+        const mazeBottomOuter = document.getElementById("mazeBottomOuter");
+        const mazeBottomInner = document.getElementById("mazeBottomInner");
+
+        const cellsHeight = tableHeight * 3
+        const cellsWidth = tableWidth * 3
+
+        let topTextOuter = Array(cellsWidth + 4).fill(' ')
+        let topTextInner = Array(cellsWidth + 4).fill('#'); topTextInner[0] = ' '; topTextInner[topTextInner.length - 1] = ' '
+        let bottomTextOuter = topTextOuter.slice()
+        let bottomTextInner = topTextInner.slice()
+        let leftTextOuter = Array(cellsHeight).fill(' ')
+        let leftTextInner = Array(cellsHeight).fill('#');
+        let rightTextOuter = leftTextOuter.slice()
+        let rightTextInner = leftTextInner.slice()
+
+        //assume center of maze is (0, 0) and each cell has width and height 1
+        const bottomY = Math.floor((cellsHeight + 4) / 2)
+        const topY = -bottomY
+        const rightX = Math.floor((cellsWidth + 4) / 2)
+        const leftX = -rightX
+
+        for (const arrow of arrows) {
+            let pos = rayRectIntersection(arrow[0], arrow[1], cellsWidth + 3, cellsHeight + 3) //half a cell missing on each side
+            pos = pos.map(Math.round)
+            if (pos[1] === topY) {
+                topTextOuter[pos[0] + rightX] = 'X'
+            } else if (pos[1] === bottomY) {
+                bottomTextOuter[pos[0] + rightX] = 'X'
+            } else if (pos[0] === leftX) {
+                if (pos[1] === topY + 1) {
+                    topTextInner[0] = 'X'
+                } else if (pos[1] === bottomY - 1) {
+                    bottomTextInner[0] = 'X'
+                } else {
+                    leftTextOuter[pos[1] + bottomY - 2] = 'X'
+                }
+            } else if (pos[0] === rightX) {
+                if (pos[1] === topY + 1) {
+                    topTextInner[topTextInner.length - 1] = 'X'
+                } else if (pos[1] === bottomY - 1) {
+                    bottomTextInner[bottomTextInner.length - 1] = 'X'
+                } else {
+                    rightTextOuter[pos[1] + bottomY - 2] = 'X'
+                }
+            }
+        }
+
+        topTextOuter = topTextOuter.join(""); topTextInner = topTextInner.join("")
+        bottomTextOuter = bottomTextOuter.join(""); bottomTextInner = bottomTextInner.join("")
+        leftTextOuter = leftTextOuter.join("<br>"); leftTextInner = leftTextInner.join("<br>")
+        rightTextOuter = rightTextOuter.join("<br>"); rightTextInner = rightTextInner.join("<br>")
+
+        mazeTopOuter.innerHTML = topTextOuter; mazeTopInner.innerHTML = topTextInner;
+        mazeBottomOuter.innerHTML = bottomTextOuter; mazeBottomInner.innerHTML = bottomTextInner;
+        mazeLeftOuter.innerHTML = leftTextOuter; mazeLeftInner.innerHTML = leftTextInner;
+        mazeRightOuter.innerHTML = rightTextOuter; mazeRightInner.innerHTML = rightTextInner;
     }
 
     addEventListener("DOMContentLoaded", () => {
@@ -341,24 +425,6 @@ function setupBoss() {
 
             tbody.appendChild(tr);
         }
-
-        const mazeTopOuter = document.getElementById("mazeTopOuter");
-        const mazeTopInner = document.getElementById("mazeTopInner");
-        const mazeLeftOuter = document.getElementById("mazeLeftOuter");
-        const mazeLeftInner = document.getElementById("mazeLeftInner");
-        const mazeRightOuter = document.getElementById("mazeRightOuter");
-        const mazeRightInner = document.getElementById("mazeRightInner");
-        const mazeBottomOuter = document.getElementById("mazeBottomOuter");
-        const mazeBottomInner = document.getElementById("mazeBottomInner");
-
-        const topBottomText = '#'.repeat(tableWidth * 3 + 4)
-        const leftRightText = '#<br>'.repeat(tableHeight * 3 - 1) + '#'
-
-        mazeTopOuter.innerHTML = topBottomText; mazeTopInner.innerHTML = topBottomText;
-        mazeBottomOuter.innerHTML = topBottomText; mazeBottomInner.innerHTML = topBottomText;
-        mazeLeftOuter.innerHTML = leftRightText; mazeLeftInner.innerHTML = leftRightText;
-        mazeRightOuter.innerHTML = leftRightText; mazeRightInner.innerHTML = leftRightText;
-
         renderToTable()
         table.appendChild(tbody);
         table.setAttribute('tabindex', '0');
@@ -414,6 +480,8 @@ function setupBoss() {
             clearInterval(dInterval)
         })
         document.getElementById("maze").appendChild(table);
+
+        makeBorderWithArrows([])
     });
 }
 setupBoss()
