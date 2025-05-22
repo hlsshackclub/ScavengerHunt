@@ -121,3 +121,20 @@ function shuffleArray(array, seed) {
 
     return array
 }
+
+//gpt
+function rayRectIntersection(x, y, w, h) {
+    if (x === 0 && y === 0) {
+        return undefined; // Edge case: origin itself
+    }
+
+    const halfW = w / 2;
+    const halfH = h / 2;
+
+    const tx = (x !== 0) ? halfW / Math.abs(x) : Infinity;
+    const ty = (y !== 0) ? halfH / Math.abs(y) : Infinity;
+
+    const t = Math.min(tx, ty);
+
+    return [x * t, y * t]
+}

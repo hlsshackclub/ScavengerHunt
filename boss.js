@@ -1,4 +1,6 @@
 function setupBoss() {
+    const aspectRatio = 0.35838622129; // the visible aspect ratio width/height of a cell
+
     class Room {
         constructor(size, offset, hasRobot = false, hasComputer = false, visible = false) {
             this.connectingRooms = { north: undefined, east: undefined, south: undefined, west: undefined };
@@ -47,32 +49,34 @@ function setupBoss() {
         [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
     ];
 
-    const computerRooms = [];
+    const computerRooms = [1, 27, 44]
 
-    function initMaze() {
-        for (let i = 0; i < roomOffsets.length; i++) {
-            rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
-        }
+    for (let i = 0; i < roomOffsets.length; i++) {
+        rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
+    }
 
+    const robotRooms = (() => {
         let rand = splitmix32f(cyrb128("boss"))
-        let robotRooms = []
+        let rRooms = []
         for (let i = 1; i < rooms.length; i++) {
             const r = rand()
-            if (r < 0.5) {
-                robotRooms.push(i)
+            console.log(r)
+            if (r < 0.5 && !computerRooms.includes(i)) {
+                rRooms.push(i)
             }
         }
+        return rRooms
+    })()
 
-        for (const room of robotRooms) {
-            rooms[room].hasRobot = true;
-        }
+    for (const i of robotRooms) {
+        rooms[i].hasRobot = true
+    }
 
+    for (const i of computerRooms) {
+        rooms[i].hasComputer = true
+    }
 
-        for (const i of [1, 27, 44]) {
-            rooms[i].hasComputer = true;
-            computerRooms.push(rooms[i]);
-        }
-
+    {
         // ROOM CONNECTIONS (this took way too long)
         connectRooms(0, 25, "west"); connectRooms(0, 26, "east"); //start
         connectRooms(25, 22, "west"); connectRooms(25, 32, "south"); //room1
@@ -117,7 +121,6 @@ function setupBoss() {
         connectRooms(32, 34, "west"); //room45
         connectRooms(34, 41, "south"); //room46
     }
-    initMaze()
 
     let playerPos = [45, 28]
     let playerHealth = 10
@@ -137,7 +140,11 @@ function setupBoss() {
         ROBOT: "R",
     });
 
-    let cells = undefined;
+    function getRoomCenter(room) {
+        return [room.offset[0] + Math.floor(room.size[0] / 2), room.offset[1] + Math.floor(room.size[1] / 2)]
+    }
+
+    let cells = undefined
     function renderToCells() {
         let width = Math.max(...(rooms.map(room => room.offset[0] + room.size[0] + 1)))
         let height = Math.max(...(rooms.map(room => room.offset[1] + room.size[1] + 1)))
@@ -170,17 +177,17 @@ function setupBoss() {
         for (const room of rooms) {
             //add computer and server chars
             if (room.hasComputer && room.visible) {
-                let computerLoc = [room.midPoint[1], room.midPoint[0]]
-                cells[computerLoc[0]][computerLoc[1]] = CellTypes.COMPUTER;
-                for(delta of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]]) {
-                    const serverLoc = v2Add(computerLoc, [delta[1], delta[0]]) //x and y are swapped here for some reason
-                    cells[serverLoc[0]][serverLoc[1]] = CellTypes.SERVER;
+                let computerLoc = getRoomCenter(room)
+                cells[computerLoc[1]][computerLoc[0]] = CellTypes.COMPUTER;
+                for (delta of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]]) {
+                    const serverLoc = v2Add(computerLoc, delta) //x and y are swapped here for some reason
+                    cells[serverLoc[1]][serverLoc[0]] = CellTypes.SERVER;
                 }
             }
         }
         for (const room of rooms) {
             //add robot chars
-            if (room.hasRobot && !room.hasComputer && room.visible) {
+            if (room.hasRobot && room.visible) {
                 const robotPos = room.offset
                 cells[robotPos[1]][robotPos[0]] = CellTypes.ROBOT
             }
@@ -281,7 +288,7 @@ function setupBoss() {
 
     //both must be odd
     const tableWidth = 31
-    const tableHeight = 13
+    const tableHeight = 11
     let tCells = []
     function renderToTable() {
         const playerPosInTable = [(tableWidth - 1) / 2, (tableHeight - 1) / 2]
@@ -293,27 +300,27 @@ function setupBoss() {
                 if (cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
                     const cText = cells[cPos[1]][cPos[0]];
                     if (cText === CellTypes.OUTSIDE) {
-                        tcText = "<span class='outside'>█</span>"
+                        tcText = "<div class='outside'>█</div>"
                     } else if (cText === CellTypes.WALL) {
-                        tcText = "<span class='wall'>█</span>"
+                        tcText = "<div class='wall'>█</div>"
                     } else if (cText === CellTypes.INSIDE_VISIBLE) {
-                        tcText = "<span class='inside-visible'></span>"
+                        tcText = "<div class='inside-visible'></div>"
                     } else if (cText === CellTypes.INSIDE_FOGGED) {
-                        tcText = "<span class='inside-invisible'>▓</span>"
+                        tcText = "<div class='inside-invisible'>▓</div>"
                     } else if (cText === CellTypes.CONNECTION) {
-                        tcText = "<span class='connection'>░</span>"
+                        tcText = "<div class='connection'>░</div>"
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText += `<span class='emoji'>${playerHealthEmojis[playerHealth]}</span>`
+                        tcText += `<div class='emoji'>${playerHealthEmojis[playerHealth]}</div>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
-                        tcText = "<span class='wall'>█</span>";
+                        tcText = "<div class='wall'>█</div>";
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
-                        tcText = "<span class='wall'>█</span>";
+                        tcText = "<div class='wall'>█</div>";
                     } else if (cText === CellTypes.ROBOT) {
-                        tcText = "<span class='emoji'>🤖</span>";
+                        tcText = "<div class='emoji'>🤖</div>";
                     } else if (cText === CellTypes.COMPUTER) {
-                        tcText = "<span class='emoji'>🖥️</span>";
+                        tcText = "<div class='computer'>🖥️</div>";
                     } else if (cText === CellTypes.SERVER) {
-                        tcText = "<span class='emoji'>🗄️</span>";
+                        tcText = "<div class='emoji'>🗄️</div>";
                     }
                 }
                 tCells[row][col].innerHTML = tcText;
@@ -376,7 +383,102 @@ function setupBoss() {
         move(delta);
         renderToCells();
         renderToTable();
-        if(arrows) {renderArrows();}
+        makeBorderWithArrows(getComputerArrows());
+    }
+
+    function getComputerArrows() {
+        const currentRooms = getRooms(playerPos)
+        let arrows = []
+        for (i of computerRooms) {
+            if (currentRooms.includes(rooms[i])) {
+                continue
+            }
+            const pos = getRoomCenter(rooms[i])
+            arrows.push(v2Sub(pos, playerPos))
+        }
+        return arrows
+    }
+
+    function makeBorderWithArrows(arrows) {
+        const mazeTopOuter = document.getElementById("mazeTopOuter");
+        const mazeTopInner = document.getElementById("mazeTopInner");
+        const mazeLeftOuter = document.getElementById("mazeLeftOuter");
+        const mazeLeftInner = document.getElementById("mazeLeftInner");
+        const mazeRightOuter = document.getElementById("mazeRightOuter");
+        const mazeRightInner = document.getElementById("mazeRightInner");
+        const mazeBottomOuter = document.getElementById("mazeBottomOuter");
+        const mazeBottomInner = document.getElementById("mazeBottomInner");
+
+        const cellsHeight = tableHeight * 3
+        const cellsWidth = tableWidth * 3
+
+        let topTextOuter = Array(cellsWidth + 4).fill(' ')
+        let topTextInner = Array(cellsWidth + 4).fill('#'); topTextInner[0] = ' '; topTextInner[topTextInner.length - 1] = ' '
+        let bottomTextOuter = topTextOuter.slice()
+        let bottomTextInner = topTextInner.slice()
+        let leftTextOuter = Array(cellsHeight).fill(' ')
+        let leftTextInner = Array(cellsHeight).fill('#');
+        let rightTextOuter = leftTextOuter.slice()
+        let rightTextInner = leftTextInner.slice()
+
+        //assume center of maze is (0, 0) and each cell has width and height 1
+        const bottomY = Math.floor((cellsHeight + 4) / 2)
+        const topY = -bottomY
+        const rightX = Math.floor((cellsWidth + 4) / 2)
+        const leftX = -rightX
+
+        for (const arrow of arrows) {
+            if (v2Eq(arrow, [0, 0])) {
+                continue
+            }
+            let pos = rayRectIntersection(arrow[0], arrow[1], cellsWidth + 3, cellsHeight + 3) //half a cell missing on each side
+            pos = pos.map(Math.round)
+
+            let char = 'X'
+            // const angle = Math.atan2(-arrow[1], arrow[0] * aspectRatio); // negative y because screen coords
+            // const deg = (angle * 180 / Math.PI + 360) % 360;
+            // if (deg >= 337.5 || deg < 22.5) char = '→';
+            // else if (deg >= 22.5 && deg < 67.5) char = '↗';
+            // else if (deg >= 67.5 && deg < 112.5) char = '↑';
+            // else if (deg >= 112.5 && deg < 157.5) char = '↖';
+            // else if (deg >= 157.5 && deg < 202.5) char = '←';
+            // else if (deg >= 202.5 && deg < 247.5) char = '↙';
+            // else if (deg >= 247.5 && deg < 292.5) char = '↓';
+            // else if (deg >= 292.5 && deg < 337.5) char = '↘';
+            char = `<span class="mazeArrow">${char}</span>`
+
+            if (pos[1] === topY) {
+                topTextOuter[pos[0] + rightX] = char
+            } else if (pos[1] === bottomY) {
+                bottomTextOuter[pos[0] + rightX] = char
+            } else if (pos[0] === leftX) {
+                if (pos[1] === topY + 1) {
+                    topTextInner[0] = char
+                } else if (pos[1] === bottomY - 1) {
+                    bottomTextInner[0] = char
+                } else {
+                    leftTextOuter[pos[1] + bottomY - 2] = char
+                }
+            } else if (pos[0] === rightX) {
+                if (pos[1] === topY + 1) {
+                    topTextInner[topTextInner.length - 1] = char
+                } else if (pos[1] === bottomY - 1) {
+                    bottomTextInner[bottomTextInner.length - 1] = char
+                } else {
+                    rightTextOuter[pos[1] + bottomY - 2] = char
+                }
+            }
+        }
+
+        topTextOuter = topTextOuter.join(""); topTextInner = topTextInner.join("")
+        bottomTextOuter = bottomTextOuter.join(""); bottomTextInner = bottomTextInner.join("")
+        leftTextOuter = leftTextOuter.join("<br>"); leftTextInner = leftTextInner.join("<br>")
+        rightTextOuter = rightTextOuter.join("<br>"); rightTextInner = rightTextInner.join("<br>")
+
+        mazeTopOuter.innerHTML = topTextOuter; mazeTopInner.innerHTML = topTextInner;
+        mazeBottomOuter.innerHTML = bottomTextOuter; mazeBottomInner.innerHTML = bottomTextInner;
+        mazeLeftOuter.innerHTML = leftTextOuter; mazeLeftInner.innerHTML = leftTextInner;
+        mazeRightOuter.innerHTML = rightTextOuter; mazeRightInner.innerHTML = rightTextInner;
     }
 
     addEventListener("DOMContentLoaded", () => {
@@ -390,10 +492,7 @@ function setupBoss() {
                 const td = document.createElement("td");
                 tr.appendChild(td);
 
-                const div = document.createElement("div");
-                td.appendChild(div)
-
-                tCells[row].push(div);
+                tCells[row].push(td);
             }
 
             tbody.appendChild(tr);
@@ -417,7 +516,7 @@ function setupBoss() {
                 moveInDir()
                 const firstMoveDelay = 150
                 const moveDelayVertical = 75
-                const moveDelayHorizontal = moveDelayVertical / 2.79028584411
+                const moveDelayHorizontal = moveDelayVertical * aspectRatio
                 if (e.key == 'w') {
                     clearInterval(sInterval)
                     wInterval = setTimeout(() => wInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)
@@ -454,6 +553,8 @@ function setupBoss() {
             clearInterval(dInterval)
         })
         document.getElementById("maze").appendChild(table);
+
+        makeBorderWithArrows([])
     });
 }
 setupBoss()
