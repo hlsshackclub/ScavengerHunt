@@ -24,34 +24,34 @@
     justify-content: center;
 }
 
-#maze span.outside {
+#maze div.outside {
     color: rgb(255, 255, 255)
 }
 
-#maze span.wall {
+#maze div.wall {
     color: rgb(255, 255, 255)
 }
 
-#maze span.inside-visible {
+#maze div.inside-visible {
     color: rgb(0, 0, 0)
 }
 
-#maze span.inside-invisible {
+#maze div.inside-invisible {
     /* font-size: var(--font-size-default); */
     color: rgb(255, 255, 255)
 }
 
-#maze span.connection {
+#maze div.connection {
     /* font-size: var(--font-size-default); */
     color: rgb(255, 255, 255)
 }
 
-#maze span.computer {
+#maze div.computer {
     background-color: var(--win-color);
     font-size: calc(4 * var(--font-size-emoji))
 }
 
-#maze span.emoji {
+#maze div.emoji {
     font-size: calc(4 * var(--font-size-emoji))
 }
 

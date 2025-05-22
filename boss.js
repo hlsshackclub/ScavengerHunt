@@ -299,27 +299,27 @@ function setupBoss() {
                 if (cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
                     const cText = cells[cPos[1]][cPos[0]];
                     if (cText === CellTypes.OUTSIDE) {
-                        tcText = "<span class='outside'>█</span>"
+                        tcText = "<div class='outside'>█</div>"
                     } else if (cText === CellTypes.WALL) {
-                        tcText = "<span class='wall'>█</span>"
+                        tcText = "<div class='wall'>█</div>"
                     } else if (cText === CellTypes.INSIDE_VISIBLE) {
-                        tcText = "<span class='inside-visible'></span>"
+                        tcText = "<div class='inside-visible'></div>"
                     } else if (cText === CellTypes.INSIDE_FOGGED) {
-                        tcText = "<span class='inside-invisible'>▓</span>"
+                        tcText = "<div class='inside-invisible'>▓</div>"
                     } else if (cText === CellTypes.CONNECTION) {
-                        tcText = "<span class='connection'>░</span>"
+                        tcText = "<div class='connection'>░</div>"
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText += `<span class='emoji'>${playerHealthEmojis[playerHealth]}</span>`
+                        tcText += `<div class='emoji'>${playerHealthEmojis[playerHealth]}</div>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
-                        tcText = "<span class='wall'>█</span>";
+                        tcText = "<div class='wall'>█</div>";
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
-                        tcText = "<span class='wall'>█</span>";
+                        tcText = "<div class='wall'>█</div>";
                     } else if (cText === CellTypes.ROBOT) {
-                        tcText = "<span class='emoji'>🤖</span>";
+                        tcText = "<div class='emoji'>🤖</div>";
                     } else if (cText === CellTypes.COMPUTER) {
-                        tcText = "<span class='computer'>🖥️</span>";
+                        tcText = "<div class='computer'>🖥️</div>";
                     } else if (cText === CellTypes.SERVER) {
-                        tcText = "<span class='emoji'>🗄️</span>";
+                        tcText = "<div class='emoji'>🗄️</div>";
                     }
                 }
                 tCells[row][col].innerHTML = tcText;
@@ -440,10 +440,7 @@ function setupBoss() {
                 const td = document.createElement("td");
                 tr.appendChild(td);
 
-                const div = document.createElement("div");
-                td.appendChild(div)
-
-                tCells[row].push(div);
+                tCells[row].push(td);
             }
 
             tbody.appendChild(tr);
