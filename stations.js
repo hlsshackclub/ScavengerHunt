@@ -190,6 +190,7 @@ function testingGoToBossfight() {
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
     //testingGoToBossfight()
 });

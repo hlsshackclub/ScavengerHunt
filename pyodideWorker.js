@@ -142,8 +142,75 @@ def runCase(input, passFunc):
 const testCases = [
 // Networking Hard TODO:
 //TODO: make
-String.raw`
-True
+runCases + String.raw`
+caseI = 0
+passed = True
+failIndex = None
+testFunc = findClosestServer
+
+servers1 = [[1, 0 , 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 2]]
+servers2 = [[0, 0 , 1, 0, 0],[0, 0, 0, 0, 0],[2, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 3]]
+servers3 = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
+    [0, 0, 5, 0, 0, 0, 0, 0, 0, 0]]
+servers4 = [
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+    [5, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
+    [7, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 8],
+    [9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 10]]
+servers5 = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 9, 0, 0, 0, 0, 0, 0],
+    [3, 0, 0, 0, 0, 0, 0, 0, 4, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 5, 0]]
+
+def findClosestServerAnswer(servers, location):
+    # Find the closest server to the given location
+    closest_server = None
+    min_distance = float('inf')
+
+    for i in range(len(servers)):
+        for j in range(len(servers[i])):
+            if servers[i][j] != 0:
+                distance = abs(j - location[0]) + abs(i - location[1])
+                if distance < min_distance:
+                    min_distance = distance
+                    closest_server = servers[i][j]
+    return closest_server
+
+runCase((servers1, [1, 1]), lambda ans: ans == findClosestServerAnswer(servers1, [1, 1]))
+runCase((servers1, [3, 3]), lambda ans: ans == findClosestServerAnswer(servers1, [3, 3]))
+runCase((servers2, [2, 4]), lambda ans: ans == findClosestServerAnswer(servers2, [2, 4]))
+runCase((servers2, [3, 0]), lambda ans: ans == findClosestServerAnswer(servers2, [3, 0]))
+runCase((servers3, [4, 7]), lambda ans: ans == findClosestServerAnswer(servers3, [4, 7]))
+runCase((servers3, [1, 6]), lambda ans: ans == findClosestServerAnswer(servers3, [1, 6]))
+runCase((servers4, [8, 8]), lambda ans: ans == findClosestServerAnswer(servers4, [8, 8]))
+runCase((servers4, [1, 2]), lambda ans: ans == findClosestServerAnswer(servers4, [1, 2]))
+runCase((servers5, [9, 4]), lambda ans: ans == findClosestServerAnswer(servers5, [9, 4]))
+runCase((servers5, [4, 3]), lambda ans: ans == findClosestServerAnswer(servers5, [4, 3]))
+
+logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
+passed
 `,
 // Manufacturing Hard
 runCases + String.raw`
