@@ -11,10 +11,13 @@
 }
 
 #terminalLabel {
+    font-size: var(--font-size-default);
     height: var(--line-height-default);
 }
 
 #terminal {
+    font-size: var(--font-size-default);
+    font-family: var(--font-family-default);
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-wrap: break-word;

@@ -62,12 +62,13 @@ function initSystem() {
     currentUser = admin;
     root.owner = admin;
     mkdir(["home"]);
-    mkdir(["home/hacker"]);
+    //mkdir(["home/hacker"]);
     mkdir(["home/root"]);
     admin.home = getByName("/home/root", root, Directory);
-    user = new User("hacker", getByName("/home/hacker", root, Directory), "users");
+    //user = new User("hacker", getByName("/home/hacker", root, Directory), "users");
+    user = new User("hacker", undefined, "users");
     users.push(user);
-    getByName("/home/hacker", root, Directory).owner = user;
+    //getByName("/home/hacker", root, Directory).owner = user;
     mkdir(["etc"]);
     mkdir(["home/root/SuperSecretFolder"]);
     touch(["home/root/SuperSecretFolder/password.txt"]);
