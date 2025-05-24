@@ -66,7 +66,7 @@
         </div>
         <div id="introDiv3" class="hidden">
             <br>
-            <button class="importantButton" onclick="goToFirstStation()">Start</button>
+            <button class="importantButton" onclick="goToFirstStation(); saveCurrentState();">Start</button>
         </div>
     </div>
     </div>
@@ -141,7 +141,7 @@
         </div>
         <br>
         <button id='seeEndingButton' class="hidden importantButton"
-            onclick="hide('bossfight'); show('bossfightComplete'); show('ending')">See your ending</button>
+            onclick="goToEnding(); saveCurrentState();">See your ending</button>
     </div>
     <div id="bossfightComplete" class="hidden">
         <br>
@@ -153,6 +153,8 @@
         <br>
         <p>WIP!!!!! populate this from makeEnding so that ending with more time gives you a better ending, and running
             out of time or dying obviously loses</p>
+        <br>
+        <button class="importantButton" onclick="clearSave(); reloadGame();">Play Again</button>
     </div>
     <div id="networkingCodeCheck" class="hidden">
         <br>
@@ -206,7 +208,7 @@
                 <br>
                 <p>You can attempt more complex network operations (Medium/Hard)<br>or proceed to the next critical
                     system.</p>
-                <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromNetworking(); saveCurrentState();">Move On</button>
             </div>
             <p></p>
         </div>
@@ -237,7 +239,7 @@
                 <p class="win">Manual disinfection route optimized!<br>Key systems are back online.</p>
                 <br>
                 <p>You can attempt a full network disinfection (Hard)<br>or advance to the next station.</p>
-                <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromNetworking(); saveCurrentState();">Move On</button>
             </div>
         </div>
         <div id="networkingHardContainer" class="hidden">
@@ -246,7 +248,7 @@
                 <br>
                 <p class="win">Automated disinfection successful!<br>The AI's malware has been purged from this
                     network.<br>Proceed to the next station to continue dismantling the AI's control.</p>
-                <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromNetworking(); saveCurrentState();">Move On</button>
             </div>
         </div>
     </div>
@@ -293,7 +295,7 @@
                 minimizing<br>
                 collateral damage to the facility.
             </p>
-            <button class="hidden importantButton" onclick="goToStationFromManufacturing()" id="flowFreeBailMedium"
+            <button class="hidden importantButton" onclick="goToStationFromManufacturing(); saveCurrentState();" id="flowFreeBailMedium"
                 class="hidden">
                 Head to the next station (if you are stuck on Medium)
             </button>
@@ -331,7 +333,7 @@
                     <p> You can continue to sabotage more assembly lines (Medium),<br>
                         attempt to disable the plant with an EMP (Hard),<br>
                         or move to the next target.</p>
-                    <button class="importantButton" onclick="goToStationFromManufacturing()">
+                    <button class="importantButton" onclick="goToStationFromManufacturing(); saveCurrentState();">
                         Embark for the next station
                     </button>
                     <button onclick="hide('flowFree3Container'); 
@@ -375,7 +377,7 @@
                     <p class="win">All manufacturing sections rerouted!<br>The AI's production lines are in chaos.</p>
                     <p>The plant is severely crippled. You can move on to the next station,<br>
                         or attempt a permanent shutdown using an EMP (Hard).</p>
-                    <button class="importantButton" onclick="goToStationFromManufacturing()">
+                    <button class="importantButton" onclick="goToStationFromManufacturing(); saveCurrentState();">
                         Embark for the next station
                     </button>
                 </div>
@@ -387,7 +389,7 @@
                 <br>
                 <p class="win">EMP activated! The AI's manufacturing plant is permanently offline.<br>Excellent work.
                     Proceed to the next station.</p>
-                <button class="importantButton" onclick="goToStationFromManufacturing();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromManufacturing(); saveCurrentState();">Move On</button>
             </div>
         </div>
     </div>
@@ -447,14 +449,14 @@
             </p>
             <div id="reconEasyFinishedChoices">
                 <br>
-                <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromRecon(); saveCurrentState();">Move On</button>
                 <button onclick="hide('reconEasyFinishedChoices'); show('reconMedium')">Identify the Double Agent
                     Messages</button>
             </div>
         </div>
         <div id="reconMedium" class="hidden">
             <br>
-            <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+            <button class="importantButton" onclick="goToStationFromRecon(); saveCurrentState();">Move On</button>
             <br>
             <br>
             <p>Select the messages sent by double agents.</p>
@@ -475,7 +477,7 @@
                 the next station.</p>
             <div id="reconMediumFinishedChoices">
                 <br>
-                <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromRecon(); saveCurrentState();">Move On</button>
                 <button
                     onclick="hide('reconMediumFinishedChoices'); moveEditorToStation(2, 'reconEditorContainer'); show('reconHard');">Decode
                     The Messages</button>
@@ -483,14 +485,14 @@
         </div>
         <div id="reconHard" class="hidden">
             <br>
-            <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+            <button class="importantButton" onclick="goToStationFromRecon(); saveCurrentState();">Move On</button>
             <br>
             <div id="reconEditorContainer"></div>
             <div id="reconHardWin" class="hidden">
                 <br>
                 <p class="win">All messages decrypted! Vital intelligence recovered.<br>Proceed to the next station with
                     this new information.</p>
-                <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
+                <button class="importantButton" onclick="goToStationFromRecon(); saveCurrentState();">Move On</button>
             </div>
         </div>
         <br>
@@ -534,24 +536,24 @@
         <div id="terminalWinEasy" class="hidden">
             <p class="win">AI Master Password acquired! Access codes secured.</p>
             <p>You can now proceed to the next station or attempt further system sabotage (Medium/Hard).</p>
-            <button class="importantButton" onclick="goToStationFromSecurity();">Next Station</button>
+            <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
         </div>
         <div id="terminalWinMedium" class="hidden">
             <p class="win">Critical AI data successfully deleted! System integrity compromised.</p>
             <p>You can advance to the next station or escalate your efforts by deploying a data-wiping virus (Hard).</p>
-            <button class="importantButton" onclick="goToStationFromSecurity();">Next Station</button>
+            <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
             <button
                 onclick="moveEditorToStation(3, 'securityEditorContainer'); hide('terminalContainer'); hide('terminalWinMedium'); show('securityHard')">Create
                 a Virus (Hard)</button>
         </div>
         <div id="securityHard" class="hidden">
             <br>
-            <button class="importantButton" onclick="goToStationFromSecurity();">Move On (if stuck on Hard)</button>
+            <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Move On (if stuck on Hard)</button>
             <br>
             <div id="securityEditorContainer"></div>
             <div id="terminalWinHard" class="hidden">
                 <p class="win">Data-wipe virus deployed! The AI's core data has been irrevocably corrupted!</p>
-                <button class="importantButton" onclick="goToStationFromSecurity();">Next Station</button>
+                <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
             </div>
         </div>
     </div>

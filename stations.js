@@ -6,13 +6,14 @@ const bossfightCode = 55555
 
 let currentStation = 0
 
-const networkingFirst = Math.random() >= 0.5;
-const reconFirst = Math.random() >= 0.5;
+let networkingFirst = Math.random() >= 0.5; //can be overwridden when loading a save
+let reconFirst = Math.random() >= 0.5;
 
 let networkingScore = 0
 let manufacturingScore = 0
 let reconScore = 0
 let securityScore = 0
+let endingState = undefined
 
 function scoreToName(difficulty) {
     if(difficulty === 1) {
@@ -61,6 +62,13 @@ function goToThirdStation() {
 function goToBossfight() {
     setupBossStation()
     show("bossfightCodeCheck")
+}
+
+function goToEnding() {
+    hide('bossfightCodeCheck')
+    hide('bossfight'); 
+    show('bossfightComplete'); 
+    show('ending')
 }
 
 function setNetworkingScore(difficulty) {
@@ -143,55 +151,101 @@ function goToStationFromSecurity() {
     }
 }
 
-function testingGoToFirstStation() {
+
+
+function savingGoToFirstStation() {
     goToFirstStation()
 }
 
-function testingGoToSecondStation() {
-    testingGoToFirstStation()
+function savingGoToSecondStation() {
+    savingGoToFirstStation()
     if(networkingFirst) {
-        networkingScore = 3;
         goToStationFromNetworking()
     } else {
-        manufacturingScore = 3;
         goToStationFromManufacturing()
     }
 }
 
-function testingGoToThirdStation() {
-    testingGoToSecondStation()
+function savingGoToThirdStation() {
+    savingGoToSecondStation()
     if(networkingFirst) {
-        manufacturingScore = 3;
         goToStationFromManufacturing()
     } else {
-        networkingScore = 3;
         goToStationFromNetworking()
     }
 }
 
-function testingGoToFourthStation() {
-    testingGoToThirdStation()
+function savingGoToFourthStation() {
+    savingGoToThirdStation()
     if(reconFirst) {
-        reconScore = 3
         goToStationFromRecon()
     } else {
-        securityScore = 3
         goToStationFromSecurity()
     }
 }
 
-function testingGoToBossfight() {
-    testingGoToFourthStation()
+function savingGoToBossfight() {
+    savingGoToFourthStation()
     if(reconFirst) {
-        securityScore = 3
         goToStationFromSecurity()
     } else {
-        reconScore = 3
         goToStationFromRecon()
     }
 }
 
+function savingGoToEnding() {
+    savingGoToBossfight()
+    goToEnding()
+}
+
+function loadSave() {
+    const save = JSON.parse(localStorage.getItem("save"))
+    if(save === null) {
+        return
+    }
+    networkingFirst = save.networkingFirst
+    reconFirst = save.reconFirst
+    networkingScore = save.networkingScore
+    manufacturingScore = save.manufacturingScore
+    reconScore = save.reconScore
+    securityScore = save.securityScore
+    endingState = save.endingState
+    const stationsComplete = (networkingScore > 0) + (manufacturingScore > 0) + (reconScore > 0) + (securityScore > 0) + (endingState !== undefined)
+    switch(stationsComplete) {
+        case 0: 
+            break; //could go to first station but idk
+        case 1: 
+            savingGoToSecondStation()
+            break;
+        case 2:
+            savingGoToThirdStation()
+            break;
+        case 3:
+            savingGoToFourthStation()
+            break;
+        case 4:
+            savingGoToBossfight()
+            break;
+        case 5:
+            savingGoToEnding()
+            break;
+    }
+}
+
+function saveCurrentState() {
+    const save = {networkingFirst: networkingFirst, reconFirst: reconFirst, networkingScore: networkingScore, manufacturingScore, reconScore, securityScore, endingState}
+    localStorage.setItem("save", JSON.stringify(save))
+    //console.log(JSON.parse(JSON.stringify(save)))
+}
+
+function clearSave() {
+    localStorage.clear()
+}
+
+function reloadGame() {
+    location.reload()
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    //testingGoToThirdStation()
+    loadSave()
 });

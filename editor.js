@@ -128,13 +128,11 @@ const pyodideReadyPromise = new Promise((resolve) => {
 
 pyodideWorker.onmessage = function (event) {
     if (event.data.type === "pyodideReady") {
-        console.log("pyodide!!")
         document.getElementById("codeEditor").removeAttribute("disabled");
         pyodideReadyResolve()
         setEditorText('')
     } else if (event.data.type === "run") {
         if (event.data.codeError !== undefined) {
-            console.log(event.data.codeOutput.slice(-1))
             printToOutput(event.data.codeOutput + (["\n", ""].includes(event.data.codeOutput.slice(-1)) ? "" : "\n") + event.data.codeError)
             printToTestOutput('')
         } else {

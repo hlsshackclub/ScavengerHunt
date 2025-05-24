@@ -560,7 +560,7 @@ function setupBoss(endGame) {
     }
 
     function makeReturn(won) {
-        return {won, maxComputersRemaining, computersRemaining, maxTime: 1, timeRemaining, maxHealth, health}
+        return { won, maxComputersRemaining, computersRemaining, maxTime: 1, timeRemaining, maxHealth, health }
     }
 
     function moveAndUpdate(delta) {
@@ -570,7 +570,6 @@ function setupBoss(endGame) {
         }
         updateHealthAndTime(newRoom)
         updateVisuals(rooms, newRoom)
-        console.log({timeRemaining})
         if (health === 0 || timeRemaining === 0) {
             removeEventListeners()
             endGame(makeReturn(false))
@@ -680,33 +679,31 @@ function setupBoss(endGame) {
         table.removeEventListener("blur", handleBlur)
     }
 
-    addEventListener("DOMContentLoaded", () => {
-        table = document.createElement("table");
-        const tbody = document.createElement("tbody");
-        for (let row = 0; row < tableHeight; row++) {
-            const tr = document.createElement("tr");
-            tCells.push([]);
+    table = document.createElement("table");
+    const tbody = document.createElement("tbody");
+    for (let row = 0; row < tableHeight; row++) {
+        const tr = document.createElement("tr");
+        tCells.push([]);
 
-            for (let col = 0; col < tableWidth; col++) {
-                const td = document.createElement("td");
-                tr.appendChild(td);
+        for (let col = 0; col < tableWidth; col++) {
+            const td = document.createElement("td");
+            tr.appendChild(td);
 
-                tCells[row].push(td);
-            }
-
-            tbody.appendChild(tr);
+            tCells[row].push(td);
         }
-        table.appendChild(tbody);
-        table.setAttribute('tabindex', '0');
-        table.addEventListener('keydown', handleKeydown);
-        table.addEventListener('keyup', handleKeyup)
-        table.addEventListener('click', handleClick);
-        table.addEventListener('blur', handleBlur)
-        document.getElementById("maze").appendChild(table);
 
-        updateVisuals(getRooms(playerPos))
-        printRemainingComputers('')
-    });
+        tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    table.setAttribute('tabindex', '0');
+    table.addEventListener('keydown', handleKeydown);
+    table.addEventListener('keyup', handleKeyup)
+    table.addEventListener('click', handleClick);
+    table.addEventListener('blur', handleBlur)
+    document.getElementById("maze").appendChild(table);
+
+    updateVisuals(getRooms(playerPos))
+    printRemainingComputers('')
 }
 
 function setupBossPrep() {
@@ -716,7 +713,8 @@ function setupBossPrep() {
 function setupBossStation() {
     setupBossPrep()
     setupBoss(endingData => {
-        makeEnding(endingData)
+        endingState = endingData
+        makeEnding()
         show("seeEndingButton")
     })
 }

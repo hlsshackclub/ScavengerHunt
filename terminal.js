@@ -197,7 +197,6 @@ function sudo(args) {
                 nextArgs = undefined;
                 sudoAccess = true;
             } else {
-                console.log(args);
                 inCommand = false;
                 nextFunc = undefined;
                 nextArgs = undefined;

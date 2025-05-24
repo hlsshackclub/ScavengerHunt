@@ -15,7 +15,6 @@ function validateAndShow(inputBox, wantedCode, toShow, wrongToShow) {
         document.getElementById(toShow).classList.remove("hidden");
         document.getElementById(wrongToShow).classList.add("hidden");
     } else {
-        console.log(document.getElementById(wrongToShow))
         document.getElementById(toShow).classList.add("hidden");
         document.getElementById(wrongToShow).classList.remove("hidden");
     }
