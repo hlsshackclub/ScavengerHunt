@@ -15,7 +15,7 @@
     box-sizing: border-box;
     margin: 0;
     border: none;
-    font-family: monospace;
+    font-family: var(--font-family-default);
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
     line-height: var(--line-height-default);
