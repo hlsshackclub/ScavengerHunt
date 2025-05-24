@@ -1,3 +1,8 @@
+@font-face {
+  font-family: ConsolasLoaded;
+  src: url(consolas.ttf);
+}
+
 :root {
     --background-color-default: black;
     --background-color-inputbox: rgb(55, 55, 55);
@@ -26,7 +31,7 @@
     --win-color: rgb(0, 255, 0);
     --font-size-default: calc(min(max(10px, 100vh/40/1.1), 30px));
     --font-size-emoji: calc(7/20 * var(--font-size-default));
-    --font-family-default: "Inconsolata", "Consolas", monospace;
+    --font-family-default: "ConsolasLoaded", "Consolas", "monospace";
     --font-weight-default: normal;
     --line-height-default: 1.1rem;
     --tab-size-default: 4;
@@ -61,7 +66,12 @@ pre {
     margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
     padding: 0;
@@ -70,7 +80,8 @@ h1, h2, h3, h4, h5, h6 {
     background-color: var(--heading-highlight-color);
 }
 
-input, textarea {
+input,
+textarea {
     background-color: var(--background-color-inputbox);
     color: var(--text-color-default);
     border: 0;
@@ -95,7 +106,8 @@ button {
     height: var(--line-height-default);
 }
 
-button:hover, button.toggled:hover {
+button:hover,
+button.toggled:hover {
     background-color: var(--button-highlight-color-highlighted);
 }
 
@@ -137,7 +149,7 @@ input::placeholder {
 }
 
 .flex-table-holder-holder {
-    display: flex; 
+    display: flex;
     align-items: flex-start;
 }
 
@@ -149,7 +161,8 @@ input::placeholder {
     display: none;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     overflow-x: hidden;
