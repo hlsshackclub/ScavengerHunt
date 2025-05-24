@@ -1,7 +1,7 @@
 function setupBoss() {
     const bossNetworkingScore = 1
     const bossManufacturingScore = 1
-    const bossReconScore = 3
+    const bossReconScore = 1
     const bossSecurityScore = 1
 
     const aspectRatio = 0.35838622129; // the visible aspect ratio width/height of a cell
@@ -85,6 +85,12 @@ function setupBoss() {
 
     for (const i of computerRooms) {
         rooms[i].hasComputer = true
+    }
+
+    if(bossReconScore >= 2) {
+        for(const room of rooms) {
+            room.fogged = true
+        }
     }
 
     {
@@ -413,7 +419,7 @@ function setupBoss() {
             room.visible = true
         }
 
-        if (bossReconScore >= 2) {
+        if (bossReconScore === 1) { //if higher, all rooms start fogged
             let c = rooms.flatMap(room => Object.values(room.connectingRooms));
             for (const connected of c) {
                 if (connected) {
