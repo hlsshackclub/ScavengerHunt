@@ -14,6 +14,10 @@ function v2MDist(a, b) {
     return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1])
 }
 
+function v2DistSquared(a, b) {
+    return Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)
+}
+
 //https://stackoverflow.com/a/37580979
 function* permute(permutation) {
     var length = permutation.length,
@@ -78,7 +82,7 @@ function splitmix32(a) {
 }
 function splitmix32f(a) { // ok but here i want floats
     const rand = splitmix32(a)
-    return function() {
+    return function () {
         return rand() / 4294967296
     }
 }
@@ -137,4 +141,16 @@ function rayRectIntersection(x, y, w, h) {
     const t = Math.min(tx, ty);
 
     return [x * t, y * t]
+}
+
+//https://stackoverflow.com/a/44134328
+function hslToHex(h, s, l) {
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
 }

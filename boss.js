@@ -18,6 +18,7 @@ function setupBoss() {
             this.fogged = false;
             this.hasRobot = hasRobot
             this.hasComputer = hasComputer
+            this.hasDisabledComputer = false;
             this.visible = visible
         }
         setConnectingRoom(direction, room) {
@@ -57,7 +58,8 @@ function setupBoss() {
         [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
     ];
 
-    const computerRooms = [1, 27, 44].slice(0, 4 - bossNetworkingScore)
+    let computersRemaining = 4 - bossNetworkingScore
+    const computerRooms = [1, 27, 44].slice(0, computersRemaining)
 
     for (let i = 0; i < roomOffsets.length; i++) {
         rooms[i + 1] = new Room(roomSizes[i], roomOffsets[i]);
@@ -73,7 +75,6 @@ function setupBoss() {
         } else {
             var probability = 9 / rooms.length //get approximately 9 robots
         }
-        console.log(probability)
         for (let i = 1; i < rooms.length; i++) {
             const r = rand()
             if (r < probability && !computerRooms.includes(i)) {
@@ -164,7 +165,9 @@ function setupBoss() {
         CONNECTION_INVISIBLE: "*",
         PLAYER: "P",
         COMPUTER: "C",
+        COMPUTER_DISABLED: "c",
         SERVER: "S",
+        SERVER_DISABLED: "s",
         ROBOT: "R",
     });
 
@@ -196,11 +199,13 @@ function setupBoss() {
         for (const room of rooms) {
             //add computer and server chars
             if (room.hasComputer && room.visible) {
+                const c = room.hasDisabledComputer ? CellTypes.COMPUTER_DISABLED : CellTypes.COMPUTER
+                const s = room.hasDisabledComputer ? CellTypes.SERVER_DISABLED : CellTypes.SERVER
                 let computerLoc = getRoomCenter(room)
-                cells[computerLoc[1]][computerLoc[0]] = CellTypes.COMPUTER;
+                cells[computerLoc[1]][computerLoc[0]] = c;
                 for (delta of [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]]) {
-                    const serverLoc = v2Add(computerLoc, delta) //x and y are swapped here for some reason
-                    cells[serverLoc[1]][serverLoc[0]] = CellTypes.SERVER;
+                    const serverLoc = v2Add(computerLoc, delta)
+                    cells[serverLoc[1]][serverLoc[0]] = s;
                 }
             }
         }
@@ -304,8 +309,12 @@ function setupBoss() {
                         tcText = "<div class='emoji'>🤖</div>";
                     } else if (cText === CellTypes.COMPUTER) {
                         tcText = "<div class='computer'>🖥️</div>";
+                    } else if (cText === CellTypes.COMPUTER_DISABLED) {
+                        tcText = "<div class='computer-disabled'>🖥️</div>";
                     } else if (cText === CellTypes.SERVER) {
                         tcText = "<div class='emoji'>🗄️</div>";
+                    } else if (cText === CellTypes.SERVER_DISABLED) {
+                        tcText = "<div class='emoji'>🔥</div>";
                     }
                 }
                 tCells[row][col].innerHTML = tcText;
@@ -411,7 +420,7 @@ function setupBoss() {
     }
 
     function updateHealthAndTime(newRoom) {
-        if(newRoom !== undefined && newRoom.hasRobot) {
+        if (newRoom !== undefined && newRoom.hasRobot) {
             playerHealth -= 1
         }
         timeRemaining -= timeDecline
@@ -432,11 +441,21 @@ function setupBoss() {
         }
     }
 
+    function getBarColor(amount) {
+        const zeroHue = 0
+        const maxHue = 120
+        return hslToHex(amount * maxHue + (1 - amount) * zeroHue, 100, 50)
+    }
+
     function updateHealthbar() {
         const healthbar = document.getElementById('mazeHealthbar')
         const maxWidth = tableWidth * 3 + 4
         let width = Math.ceil(playerHealth / maxHealth * maxWidth)
-        healthbar.innerHTML = '#'.repeat(width)
+        if(width === 0) {
+            healthbar.innerHTML = '<br>'
+        } else {
+            healthbar.innerHTML = `<span style='color:${getBarColor(playerHealth / maxHealth)}'>${'#'.repeat(width)}</span>`
+        }
     }
 
     function updateTimebar() {
@@ -446,16 +465,23 @@ function setupBoss() {
         if (timeRemaining > 0) {
             width = 1 + Math.floor(timeRemaining * (maxWidth - 1))
         }
-        timebar.innerHTML = '#'.repeat(width)
+        if(width === 0) {
+            timebar.innerHTML = '<br>'
+        } else {
+            timebar.innerHTML = `<span style='color:${getBarColor(timeRemaining)}'>${'#'.repeat(width)}</span>`
+        }
     }
 
-    function updateVisuals(rooms) {
+    function updateVisuals(rooms, newRoom) {
         updateVisibleAndFogged(rooms)
         renderToCells();
         renderToTable();
         makeBorderWithArrows(getComputerArrows());
         updateHealthbar()
         updateTimebar()
+        if(newRoom !== undefined && newRoom.hasComputer && !newRoom.hasDisabledComputer) {
+            printComputerFound()
+        }
     }
 
     const keyToDir = { w: [0, -1], a: [-1, 0], s: [0, 1], d: [1, 0] }
@@ -466,8 +492,8 @@ function setupBoss() {
             return [false, rooms, undefined]; //tried to move into a wall
         }
         let newRoom = undefined
-        for(const room of rooms) {
-            if(room.visible === false) {
+        for (const room of rooms) {
+            if (room.visible === false) {
                 newRoom = room
                 break
             }
@@ -482,7 +508,29 @@ function setupBoss() {
             return;
         }
         updateHealthAndTime(newRoom)
-        updateVisuals(rooms)
+        updateVisuals(rooms, newRoom)
+    }
+
+    function printComputerFound() {
+        document.getElementById("maze-status").innerHTML += `<br>Computer #${4 - computersRemaining} found! Walk up to it and press E to destroy it.`
+    }
+
+    function printComputerDisabled() {
+        document.getElementById("maze-status").innerHTML += `<br><span class='win'>Computer #${4 - computersRemaining} destroyed!</span>`
+        computersRemaining--
+    }
+
+    function printRemainingComputers(prefix) {
+        document.getElementById("maze-status").innerHTML += `${prefix}${computersRemaining} computers remain.`
+    }
+
+    function tryDisableComputer() {
+        const rooms = getRooms(playerPos)
+        if(rooms.length === 1 && rooms[0].hasComputer && !rooms[0].hasDisabledComputer && v2DistSquared(getRoomCenter(rooms[0]), playerPos) < 4) {
+            rooms[0].hasDisabledComputer = true
+            printComputerDisabled()
+            printRemainingComputers(' ')
+        }
     }
 
     addEventListener("DOMContentLoaded", () => {
@@ -532,6 +580,9 @@ function setupBoss() {
                     clearInterval(aInterval)
                     dInterval = setTimeout(() => dInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
                 }
+            } else if(e.key === 'e') {
+                tryDisableComputer()
+                updateVisuals(getRooms(playerPos))
             }
         });
         table.addEventListener('keyup', (e) => {
@@ -557,6 +608,7 @@ function setupBoss() {
         document.getElementById("maze").appendChild(table);
 
         updateVisuals(getRooms(playerPos))
+        printRemainingComputers('')
     });
 }
 setupBoss()

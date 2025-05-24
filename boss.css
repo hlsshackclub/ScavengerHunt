@@ -47,7 +47,12 @@
 }
 
 #maze div.computer {
-    background-color: var(--win-color);
+    background-color: rgb(62, 255, 62);
+    font-size: calc(4 * var(--font-size-emoji))
+}
+
+#maze div.computer-disabled {
+    background-color: rgb(255, 30, 30);
     font-size: calc(4 * var(--font-size-emoji))
 }
 
@@ -58,4 +63,21 @@
 span.mazeArrow{
     color: var(--win-color);
     /* font-size: calc(4 * var(--font-size-emoji)) */
+}
+
+#maze-fit-content {
+    display: inline-block;
+    width: fit-content;
+}
+
+#maze-left-right-holder {
+    display: flex;
+}
+
+#maze-left {
+    width: fit-content;
+}
+
+#maze-right {
+    flex-grow: 1;
 }

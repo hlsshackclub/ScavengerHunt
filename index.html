@@ -34,7 +34,8 @@
         <h2>Operation Override</h2>
         <br>
         <p>
-            Welcome to Operation Override. A hostile AI has seized control of Heart Lake Secondary School's critical systems.<br>
+            Welcome to Operation Override. A hostile AI has seized control of Heart Lake Secondary School's critical
+            systems.<br>
             The situation is dire. Our networks are compromised, manufacturing facilities are being repurposed,<br>
             and sensitive data is at risk. We need your help to shut it down!
         </p>
@@ -95,17 +96,25 @@
     <div id="bossfight" class="hidden">
         <br>
         <h2>Bossfight</h2>
-        <pre id="mazeTopOuter"></pre>
-        <pre id="mazeTopInner"></pre>
-        <div class="flex-table-holder-holder">
-            <pre id="mazeLeftOuter"></pre>
-            <pre id="mazeLeftInner"></pre>
-            <div id="maze" class="flex-table-holder"></div>
-            <pre id="mazeRightInner"></pre>
-            <pre id="mazeRightOuter"></pre>
+        <div id="maze-left-right-holder">
+            <div id="maze-left">
+                <pre id="mazeTopOuter"></pre>
+                <pre id="mazeTopInner"></pre>
+                <div class="flex-table-holder-holder maze-fit-content">
+                    <pre id="mazeLeftOuter"></pre>
+                    <pre id="mazeLeftInner"></pre>
+                    <div id="maze" class="flex-table-holder maze-fit-content"></div>
+                    <pre id="mazeRightInner"></pre>
+                    <pre id="mazeRightOuter"></pre>
+                </div>
+                <pre id="mazeBottomInner"></pre>
+                <pre id="mazeBottomOuter"></pre>
+            </div>
+            <div id="maze-right">
+                <br>
+                <p id="maze-status"></p>
+            </div>
         </div>
-        <pre id="mazeBottomInner"></pre>
-        <pre id="mazeBottomOuter"></pre>
         <p>Health:</p>
         <span id="mazeHealthbar"></span>
         <P>Time:</P>
@@ -136,7 +145,8 @@
         <p>
             The AI has corrupted our network infrastructure and spread malware throughout our systems.<br>
             PDSB technicians report that we can restore functionality by reconnecting critical network nodes,<br>
-            manually cleanse some infected systems, or deploy an automated disinfection program across the entire network.
+            manually cleanse some infected systems, or deploy an automated disinfection program across the entire
+            network.
         </p>
         <br>
         <button id="networkingEasyButton" onclick="toggleButton(this); toggleShow('netWalkContainer'); hide('manualTSPContainer'); hide('networkingHardContainer'); 
@@ -165,7 +175,8 @@
             <div id="netWalkWin" class="hidden">
                 <p class="win">Network connection re-established!<br>The system is stabilizing.</p>
                 <br>
-                <p>You can attempt more complex network operations (Medium/Hard)<br>or proceed to the next critical system.</p>
+                <p>You can attempt more complex network operations (Medium/Hard)<br>or proceed to the next critical
+                    system.</p>
                 <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
             </div>
             <p></p>
@@ -204,7 +215,8 @@
             <div id="networkingEditorContainer"></div>
             <div id="networkingHardWin" class="hidden">
                 <br>
-                <p class="win">Automated disinfection successful!<br>The AI's malware has been purged from this network.<br>Proceed to the next station to continue dismantling the AI's control.</p>
+                <p class="win">Automated disinfection successful!<br>The AI's malware has been purged from this
+                    network.<br>Proceed to the next station to continue dismantling the AI's control.</p>
                 <button class="importantButton" onclick="goToStationFromNetworking();">Move On</button>
             </div>
         </div>
@@ -246,8 +258,10 @@
         <div id="flowFreeContainer" class="hidden">
             <br>
             <p>
-                To disrupt the AI's robotic army production, reroute the assembly lines from the production plants "◆"<br>
-                to our emergency disposal units "◉". This will prevent the AI from building its forces while minimizing<br>
+                To disrupt the AI's robotic army production, reroute the assembly lines from the production plants
+                "◆"<br>
+                to our emergency disposal units "◉". This will prevent the AI from building its forces while
+                minimizing<br>
                 collateral damage to the facility.
             </p>
             <button class="hidden importantButton" onclick="goToStationFromManufacturing()" id="flowFreeBailMedium"
@@ -316,7 +330,8 @@
                     <p>Manufacturing section 5:</p>
                 </div>
                 <div id="flowFreeWin5" class="hidden">
-                    <p class="win">Manufacturing Section 5 rerouted!<br>Robotic army assembly is critically impaired.</p>
+                    <p class="win">Manufacturing Section 5 rerouted!<br>Robotic army assembly is critically impaired.
+                    </p>
                     <button onclick="hide('flowFree5Container'); show('flowFree6Container')">
                         Go to section 6
                     </button>
@@ -341,7 +356,8 @@
             <div id="manufacturingEditorContainer"></div>
             <div id="manufacturingHardWin" class="hidden">
                 <br>
-                <p class="win">EMP activated! The AI's manufacturing plant is permanently offline.<br>Excellent work. Proceed to the next station.</p>
+                <p class="win">EMP activated! The AI's manufacturing plant is permanently offline.<br>Excellent work.
+                    Proceed to the next station.</p>
                 <button class="importantButton" onclick="goToStationFromManufacturing();">Move On</button>
             </div>
         </div>
@@ -419,13 +435,15 @@
             </div>
             <br>
             <button onclick="checkDoubleAgentSelection()">Check</button>
-            <label id="reconDoubleAgentIdentifyWin" class="hidden win">Double agent communications successfully intercepted!</label>
+            <label id="reconDoubleAgentIdentifyWin" class="hidden win">Double agent communications successfully
+                intercepted!</label>
             <label id="reconDoubleAgentIdentifyError" class="hidden error">You incorrectly identified some messages. Try
                 again...</label>
         </div>
         <div id="reconDoubleAgentNextStep" class="hidden">
             <br>
-            <p>All suspicious messages identified.<br>You can now attempt to decrypt their contents (Hard) or proceed to the next station.</p>
+            <p>All suspicious messages identified.<br>You can now attempt to decrypt their contents (Hard) or proceed to
+                the next station.</p>
             <div id="reconMediumFinishedChoices">
                 <br>
                 <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
@@ -441,7 +459,8 @@
             <div id="reconEditorContainer"></div>
             <div id="reconHardWin" class="hidden">
                 <br>
-                <p class="win">All messages decrypted! Vital intelligence recovered.<br>Proceed to the next station with this new information.</p>
+                <p class="win">All messages decrypted! Vital intelligence recovered.<br>Proceed to the next station with
+                    this new information.</p>
                 <button class="importantButton" onclick="goToStationFromRecon();">Move On</button>
             </div>
         </div>
@@ -471,7 +490,8 @@
         <div id="terminalContainer">
             <p>
                 You've successfully breached the AI's secure file system.<br>
-                Your primary objective is to locate its master access password, but with the right tools and expertise,<br>
+                Your primary objective is to locate its master access password, but with the right tools and
+                expertise,<br>
                 you can cripple its entire data infrastructure.<br>
                 Use the terminal below to navigate through the AI's file system and execute your mission.
             </p>
