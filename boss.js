@@ -3,6 +3,10 @@ function setupBoss() {
     const bossManufacturingScore = 1
     const bossReconScore = 1
     const bossSecurityScore = 1
+    // bossNetworkingScore = networkingScore
+    // bossManufacturingScore = manufacturingScore
+    // bossReconScore = reconScore
+    // bossSecurityScore = securityScore
 
     const aspectRatio = 0.35838622129; // the visible aspect ratio width/height of a cell
 
@@ -87,8 +91,8 @@ function setupBoss() {
         rooms[i].hasComputer = true
     }
 
-    if(bossReconScore >= 2) {
-        for(const room of rooms) {
+    if (bossReconScore >= 2) {
+        for (const room of rooms) {
             room.fogged = true
         }
     }
@@ -144,8 +148,11 @@ function setupBoss() {
     let playerHealth = 10
     const playerHealthEmojis = ["🪦", "😣", "😞", "😟", "😕", "😐", "🙂", "😊", "😃", "😄", "😁"]
 
+    const minSteps = 282 //probably slightly inaccurate, but this is about the minimum number of steps
     let timeRemaining = 1
-    const timeDecline = bossSecurityScore === 3 ? 0.01 : bossSecurityScore === 1 ? 0.01 : 0.03
+    const timeDecline = bossSecurityScore === 3 ? (1 / minSteps / 3) : //3x optimal allowed
+        bossSecurityScore === 2 ? (1 / minSteps / 2) : //2x optimal allowed
+            (1 / minSteps / 1.5) //1.5x optimal allowed
 
     const CellTypes = Object.freeze({
         OUTSIDE: "x",
@@ -403,13 +410,9 @@ function setupBoss() {
         mazeRightOuter.innerHTML = rightTextOuter; mazeRightInner.innerHTML = rightTextInner;
     }
 
-    function updateHealthAndTime(rooms) {
-        for(const room of rooms) {
-            if(!room.visible) {
-                if (rooms.hasRobot) {
-                    playerHealth -= 1
-                }
-            }
+    function updateHealthAndTime(newRoom) {
+        if(newRoom !== undefined && newRoom.hasRobot) {
+            playerHealth -= 1
         }
         timeRemaining -= timeDecline
     }
@@ -440,7 +443,7 @@ function setupBoss() {
         const timebar = document.getElementById('mazeTimebar')
         const maxWidth = tableWidth * 3 + 4
         let width = 0
-        if(timeRemaining > 0) {
+        if (timeRemaining > 0) {
             width = 1 + Math.floor(timeRemaining * (maxWidth - 1))
         }
         timebar.innerHTML = '#'.repeat(width)
@@ -454,27 +457,34 @@ function setupBoss() {
         updateHealthbar()
         updateTimebar()
     }
-    
+
     const keyToDir = { w: [0, -1], a: [-1, 0], s: [0, 1], d: [1, 0] }
     function move(delta) {
         const newPos = v2Add(playerPos, delta)
         const rooms = getRooms(newPos);
         if (rooms === undefined) {
-            return [false, rooms]; //tried to move into a wall
+            return [false, rooms, undefined]; //tried to move into a wall
+        }
+        let newRoom = undefined
+        for(const room of rooms) {
+            if(room.visible === false) {
+                newRoom = room
+                break
+            }
         }
         playerPos = v2Add(playerPos, delta)
-        return [true, rooms]
+        return [true, rooms, newRoom]
     }
 
     function moveAndUpdate(delta) {
-        const [moved, rooms] = move(delta);
-        if(!moved) {
+        const [moved, rooms, newRoom] = move(delta);
+        if (!moved) {
             return;
         }
-        updateHealthAndTime(rooms)
+        updateHealthAndTime(newRoom)
         updateVisuals(rooms)
     }
-    
+
     addEventListener("DOMContentLoaded", () => {
         const table = document.createElement("table");
         const tbody = document.createElement("tbody");
