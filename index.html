@@ -26,6 +26,7 @@
     <script src="stations.js"></script>
     <script src="recon.js"></script>
     <script src="boss.js"></script>
+    <script src="ending.js"></script>
     <meta charset="utf-8">
 </head>
 
@@ -96,34 +97,55 @@
     <div id="bossfight" class="hidden">
         <br>
         <h2>Bossfight</h2>
-        <div id="maze-left-right-holder">
-            <div id="maze-left">
-                <pre id="mazeTopOuter"></pre>
-                <pre id="mazeTopInner"></pre>
-                <div class="flex-table-holder-holder maze-fit-content">
-                    <pre id="mazeLeftOuter"></pre>
-                    <pre id="mazeLeftInner"></pre>
-                    <div id="maze" class="flex-table-holder maze-fit-content"></div>
-                    <pre id="mazeRightInner"></pre>
-                    <pre id="mazeRightOuter"></pre>
-                </div>
-                <pre id="mazeBottomInner"></pre>
-                <pre id="mazeBottomOuter"></pre>
-            </div>
-            <div id="maze-right">
-                <br>
-                <p id="maze-status"></p>
-            </div>
+        <div id="bossfightPrep">
+            <p>
+                uhh break dem computers, watch out for robots and try not to run out of time or die or whatever. explain what the green xs mean in recon hard, and maybe how room connections work cause idk if thats intuitive
+            </p>
+            <br>
+            <p id="bossfightEffects"></p>
+                blablab you did recon hard so uhh stuff happens bl <!--GLAE: make this print all the effects of beating easy/medium/hard of all the stations-->
+            <br>
+            <br>
+            <button class="importantButton" onclick="hide('bossfightPrep'); show('bossfightGameplay')">Start the bossfight, if you're ready...</button>
         </div>
-        <p>Health:</p>
-        <span id="mazeHealthbar"></span>
-        <P>Time:</P>
-        <span id="mazeTimebar"></span>
-    </div>
-    <div id="outro" class="hidden">
+        <div id="bossfightGameplay" class="hidden">
+            <div id="maze-left-right-holder">
+                <div id="maze-left">
+                    <pre id="mazeTopOuter"></pre>
+                    <pre id="mazeTopInner"></pre>
+                    <div class="flex-table-holder-holder maze-fit-content">
+                        <pre id="mazeLeftOuter"></pre>
+                        <pre id="mazeLeftInner"></pre>
+                        <div id="maze" class="flex-table-holder maze-fit-content"></div>
+                        <pre id="mazeRightInner"></pre>
+                        <pre id="mazeRightOuter"></pre>
+                    </div>
+                    <pre id="mazeBottomInner"></pre>
+                    <pre id="mazeBottomOuter"></pre>
+                </div>
+                <div id="maze-right">
+                    <br>
+                    <p id="maze-status"></p>
+                </div>
+            </div>
+            <p>Health:</p>
+            <span id="mazeHealthbar"></span>
+            <P>Time:</P>
+            <span id="mazeTimebar"></span>
+        </div>
         <br>
-        <h2>Outro</h2>
-        <p>SYSTEM OFFLINE. AI NEUTRALIZED.<br>OPERATION OVERRIDE SUCCESSFUL.<br>YOU HAVE SAVED HEART LAKE!</p>
+        <button id='seeEndingButton' class="hidden importantButton" onclick="hide('bossfight'); show('bossfightComplete'); show('ending')">See your ending</button>
+    </div>
+    <div id="bossfightComplete" class="hidden">
+        <br>
+        <h2>Bossfight Complete</h2>
+    </div>
+    <div id="ending" class="hidden">
+        <br>
+        <h2>Ending</h2>
+        <br>
+        <p>WIP!!!!! populate this from makeEnding so that ending with more time gives you a better ending, and running
+            out of time or dying obviously loses</p>
     </div>
     <div id="networkingCodeCheck" class="hidden">
         <br>

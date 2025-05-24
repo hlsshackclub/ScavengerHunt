@@ -1,12 +1,12 @@
-function setupBoss() {
-    const bossNetworkingScore = 1
-    const bossManufacturingScore = 1
-    const bossReconScore = 1
-    const bossSecurityScore = 1
-    // bossNetworkingScore = networkingScore
-    // bossManufacturingScore = manufacturingScore
-    // bossReconScore = reconScore
-    // bossSecurityScore = securityScore
+function setupBoss(endGame) {
+    // const bossNetworkingScore = 1
+    // const bossManufacturingScore = 1
+    // const bossReconScore = 1
+    // const bossSecurityScore = 1
+    const bossNetworkingScore = networkingScore //comment these when you wanna test effects
+    const bossManufacturingScore = manufacturingScore
+    const bossReconScore = reconScore
+    const bossSecurityScore = securityScore
 
     const aspectRatio = 0.35838622129; // the visible aspect ratio width/height of a cell
 
@@ -58,7 +58,8 @@ function setupBoss() {
         [6, 1], [38, 3], [30, 5], [58, 5], [46, 7], [10, 9], [62, 9], [22, 11], [42, 11], [70, 11], [50, 13], [18, 15], [70, 15], [38, 17], [78, 17], [14, 19], [54, 19], [22, 21], [66, 21], [82, 21], [54, 23], [26, 25], [90, 25], [10, 27], [34, 27], [50, 27], [66, 27], [86, 29], [6, 31], [50, 33], [10, 35], [38, 35], [90, 35], [30, 37], [58, 37], [78, 37], [18, 39], [66, 39], [11, 43], [2, 46], [34, 45], [50, 45], [62, 47], [10, 49], [42, 51], [30, 53], [54, 53], [4, 42]
     ];
 
-    let computersRemaining = 4 - bossNetworkingScore
+    const maxComputersRemaining = 4 - bossNetworkingScore
+    let computersRemaining = maxComputersRemaining
     const computerRooms = [1, 27, 44].slice(0, computersRemaining)
 
     for (let i = 0; i < roomOffsets.length; i++) {
@@ -146,7 +147,7 @@ function setupBoss() {
 
     let playerPos = [45, 28]
     const maxHealth = 10
-    let playerHealth = 10
+    let health = 10
     const playerHealthEmojis = ["🪦", "😣", "😞", "😟", "😕", "😐", "🙂", "😊", "😃", "😄", "😁"]
 
     const minSteps = 282 //probably slightly inaccurate, but this is about the minimum number of steps
@@ -300,7 +301,7 @@ function setupBoss() {
                     } else if (cText === CellTypes.CONNECTION) {
                         tcText = "<div class='connection'>░</div>"
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText += `<div class='emoji'>${playerHealthEmojis[playerHealth]}</div>`
+                        tcText += `<div class='emoji'>${playerHealthEmojis[health]}</div>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
                         tcText = "<div class='wall'>█</div>";
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
@@ -420,7 +421,7 @@ function setupBoss() {
     }
 
     halfHealthPrinted = false
-    function printHalfHealthWarning() {
+    function printHalfHealthWarning() { //GLAE: make this print something cool about how the ai has destroyed a part of the school because the more time you spend in the bossfight, the more time the AI has to destroy stuff
         if (!halfHealthPrinted) {
             halfHealthPrinted = true
             document.getElementById("maze-status").innerHTML += `<br><span class='error'>Half of your health remains!</span>`
@@ -428,11 +429,15 @@ function setupBoss() {
     }
 
     quarterHealthPrinted = false
-    function printQuarterHealthWarning() {
+    function printQuarterHealthWarning() { //GLAE: ditto here
         if (!quarterHealthPrinted) {
             quarterHealthPrinted = true
             document.getElementById("maze-status").innerHTML += `<br><span class='error'>One quarter of your health remains!</span>`
         }
+    }
+
+    function printDeath() {
+        document.getElementById("maze-status").innerHTML += `<br><br><span class='error'>You died.</span>`
     }
 
     halfTimePrinted = false
@@ -451,11 +456,15 @@ function setupBoss() {
         }
     }
 
+    function printOutOfTime() {
+        document.getElementById("maze-status").innerHTML += `<br><br><span class='error'>You are out of time.</span>`
+    }
+
     function updateHealthAndTime(newRoom) {
         if (newRoom !== undefined && newRoom.hasRobot) {
-            playerHealth -= 1
+            health -= 1
         }
-        timeRemaining -= timeDecline
+        timeRemaining = Math.max(0, timeRemaining - timeDecline)
     }
 
     function updateVisibleAndFogged(rooms) {
@@ -482,11 +491,11 @@ function setupBoss() {
     function updateHealthbar() {
         const healthbar = document.getElementById('mazeHealthbar')
         const maxWidth = tableWidth * 3 + 4
-        let width = Math.ceil(playerHealth / maxHealth * maxWidth)
+        let width = Math.ceil(health / maxHealth * maxWidth)
         if (width === 0) {
             healthbar.innerHTML = '<br>'
         } else {
-            healthbar.innerHTML = `<span style='color:${getBarColor(playerHealth / maxHealth)}'>${'#'.repeat(width)}</span>`
+            healthbar.innerHTML = `<span style='color:${getBarColor(health / maxHealth)}'>${'#'.repeat(width)}</span>`
         }
     }
 
@@ -514,15 +523,21 @@ function setupBoss() {
         if (newRoom !== undefined && newRoom.hasComputer && !newRoom.hasDisabledComputer) {
             printComputerFound()
         }
-        if(timeRemaining < 1/2) {
-            printHalfTimeWarning()
-        } else if(timeRemaining < 1/4) {
+
+        if (timeRemaining === 0) {
+            printOutOfTime()
+        } else if (timeRemaining < 1 / 4) {
             printQuarterTimeWarning()
+        } else if (timeRemaining < 1 / 2) {
+            printHalfTimeWarning()
         }
-        if(playerHealth < maxHealth/2) {
-            printHalfHealthWarning()
-        } else if(playerHealth < maxHealth/4) {
+
+        if (health === 0) {
+            printDeath()
+        } else if (health < maxHealth / 4) {
             printQuarterHealthWarning()
+        } else if (health < maxHealth / 2) {
+            printHalfHealthWarning()
         }
     }
 
@@ -544,6 +559,10 @@ function setupBoss() {
         return [true, rooms, newRoom]
     }
 
+    function makeReturn(won) {
+        return {won, maxComputersRemaining, computersRemaining, maxTime: 1, timeRemaining, maxHealth, health}
+    }
+
     function moveAndUpdate(delta) {
         const [moved, rooms, newRoom] = move(delta);
         if (!moved) {
@@ -551,20 +570,24 @@ function setupBoss() {
         }
         updateHealthAndTime(newRoom)
         updateVisuals(rooms, newRoom)
+        console.log({timeRemaining})
+        if (health === 0 || timeRemaining === 0) {
+            removeEventListeners()
+            endGame(makeReturn(false))
+        }
     }
 
     function printComputerFound() {
-        document.getElementById("maze-status").innerHTML += `<br>Computer #${4 - computersRemaining} found! Walk up to it and press E to destroy it.`
+        document.getElementById("maze-status").innerHTML += `<br>Computer #${maxComputersRemaining + 1 - computersRemaining} found! Walk up to it and press E to destroy it.`
     }
 
     function printComputerDisabled() {
-        document.getElementById("maze-status").innerHTML += `<br><span class='win'>Computer #${4 - computersRemaining} destroyed!</span>`
-        computersRemaining--
+        document.getElementById("maze-status").innerHTML += `<br><span class='win'>Computer #${maxComputersRemaining + 1 - computersRemaining} destroyed!</span>`
     }
 
     function printRemainingComputers(prefix) {
         if (computersRemaining === 0) {
-            document.getElementById("maze-status").innerHTML += `${prefix}<span class='win'>All computers destroyed!</span>.`
+            document.getElementById("maze-status").innerHTML += `${prefix}<span class='win'>All computers destroyed!<br><br>You win!</span>`
         } else if (computersRemaining === 1) {
             document.getElementById("maze-status").innerHTML += `${prefix}${computersRemaining} computer remains.`
         } else {
@@ -577,12 +600,88 @@ function setupBoss() {
         if (rooms.length === 1 && rooms[0].hasComputer && !rooms[0].hasDisabledComputer && v2DistSquared(getRoomCenter(rooms[0]), playerPos) < 4) {
             rooms[0].hasDisabledComputer = true
             printComputerDisabled()
+            computersRemaining--
             printRemainingComputers(' ')
+            if (computersRemaining === 0) {
+                removeEventListeners()
+                endGame(makeReturn(true))
+            }
         }
     }
 
+    let table = undefined
+    function handleKeydown(e) {
+        if (["w", "a", "s", "d"].includes(e.key)) {
+            if (e.repeat) {
+                return
+            }
+            function moveInDir() {
+                moveAndUpdate(keyToDir[e.key])
+            }
+            moveInDir()
+            const firstMoveDelay = 150
+            const moveDelayVertical = 75
+            const moveDelayHorizontal = moveDelayVertical * aspectRatio
+            if (e.key == 'w') {
+                clearInterval(sInterval)
+                wInterval = setTimeout(() => wInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)
+            } else if (e.key == 'a') {
+                clearInterval(dInterval)
+                aInterval = setTimeout(() => aInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
+            } else if (e.key == 's') {
+                clearInterval(wInterval)
+                sInterval = setTimeout(() => sInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)
+            } else {
+                clearInterval(aInterval)
+                dInterval = setTimeout(() => dInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
+            }
+        } else if (e.key === 'e') {
+            tryDisableComputer()
+            updateVisuals(getRooms(playerPos))
+        }
+    }
+
+    let wInterval = undefined
+    let aInterval = undefined
+    let sInterval = undefined
+    let dInterval = undefined
+    function handleKeyup(e) {
+        if (e.key == 'w') {
+            clearInterval(wInterval)
+        } else if (e.key == 'a') {
+            clearInterval(aInterval)
+        } else if (e.key == 's') {
+            clearInterval(sInterval)
+        } else {
+            clearInterval(dInterval)
+        }
+    }
+
+    function handleClick() {
+        table.focus();
+    }
+
+    function clearAllIntervals() {
+        clearInterval(wInterval)
+        clearInterval(aInterval)
+        clearInterval(sInterval)
+        clearInterval(dInterval)
+    }
+
+    function handleBlur() {
+        clearAllIntervals()
+    }
+
+    function removeEventListeners() {
+        clearAllIntervals()
+        table.removeEventListener("keydown", handleKeydown)
+        table.removeEventListener("keyup", handleKeyup)
+        table.removeEventListener("click", handleClick)
+        table.removeEventListener("blur", handleBlur)
+    }
+
     addEventListener("DOMContentLoaded", () => {
-        const table = document.createElement("table");
+        table = document.createElement("table");
         const tbody = document.createElement("tbody");
         for (let row = 0; row < tableHeight; row++) {
             const tr = document.createElement("tr");
@@ -599,64 +698,25 @@ function setupBoss() {
         }
         table.appendChild(tbody);
         table.setAttribute('tabindex', '0');
-        let wInterval = undefined
-        let aInterval = undefined
-        let sInterval = undefined
-        let dInterval = undefined
-        table.addEventListener('keydown', (e) => {
-            if (["w", "a", "s", "d"].includes(e.key)) {
-                if (e.repeat) {
-                    return
-                }
-                function moveInDir() {
-                    moveAndUpdate(keyToDir[e.key])
-                }
-                moveInDir()
-                const firstMoveDelay = 150
-                const moveDelayVertical = 75
-                const moveDelayHorizontal = moveDelayVertical * aspectRatio
-                if (e.key == 'w') {
-                    clearInterval(sInterval)
-                    wInterval = setTimeout(() => wInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)
-                } else if (e.key == 'a') {
-                    clearInterval(dInterval)
-                    aInterval = setTimeout(() => aInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
-                } else if (e.key == 's') {
-                    clearInterval(wInterval)
-                    sInterval = setTimeout(() => sInterval = setInterval(moveInDir, moveDelayVertical), firstMoveDelay)
-                } else {
-                    clearInterval(aInterval)
-                    dInterval = setTimeout(() => dInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
-                }
-            } else if (e.key === 'e') {
-                tryDisableComputer()
-                updateVisuals(getRooms(playerPos))
-            }
-        });
-        table.addEventListener('keyup', (e) => {
-            if (e.key == 'w') {
-                clearInterval(wInterval)
-            } else if (e.key == 'a') {
-                clearInterval(aInterval)
-            } else if (e.key == 's') {
-                clearInterval(sInterval)
-            } else {
-                clearInterval(dInterval)
-            }
-        })
-        table.addEventListener('click', () => {
-            table.focus();
-        });
-        table.addEventListener('blur', () => {
-            clearInterval(wInterval)
-            clearInterval(aInterval)
-            clearInterval(sInterval)
-            clearInterval(dInterval)
-        })
+        table.addEventListener('keydown', handleKeydown);
+        table.addEventListener('keyup', handleKeyup)
+        table.addEventListener('click', handleClick);
+        table.addEventListener('blur', handleBlur)
         document.getElementById("maze").appendChild(table);
 
         updateVisuals(getRooms(playerPos))
         printRemainingComputers('')
     });
 }
-setupBoss()
+
+function setupBossPrep() {
+    document.getElementById("bossfightEffects"); //GLAE: put the boss effects and stuff here (if you want, maybe theres a smarter way idk)
+}
+
+function setupBossStation() {
+    setupBossPrep()
+    setupBoss(endingData => {
+        makeEnding(endingData)
+        show("seeEndingButton")
+    })
+}

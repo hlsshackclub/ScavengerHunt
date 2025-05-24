@@ -59,6 +59,7 @@ function goToThirdStation() {
 }
 
 function goToBossfight() {
+    setupBossStation()
     show("bossfightCodeCheck")
 }
 
