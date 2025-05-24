@@ -247,5 +247,6 @@ function reloadGame() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    //clearSave()
     loadSave()
 });
