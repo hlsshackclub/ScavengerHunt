@@ -52,7 +52,7 @@ code[class*="language-"], pre[class*="language-"] { /*overrides the style */
 .output {
     color: #fff;
     padding: 10px;
-    font-family: monospace;
+    font-family: var(--font-family-default);
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
     overflow-y: auto;
