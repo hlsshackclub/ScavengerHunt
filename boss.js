@@ -419,6 +419,38 @@ function setupBoss() {
         mazeRightOuter.innerHTML = rightTextOuter; mazeRightInner.innerHTML = rightTextInner;
     }
 
+    halfHealthPrinted = false
+    function printHalfHealthWarning() {
+        if (!halfHealthPrinted) {
+            halfHealthPrinted = true
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Half of your health remains!</span>`
+        }
+    }
+
+    quarterHealthPrinted = false
+    function printQuarterHealthWarning() {
+        if (!quarterHealthPrinted) {
+            quarterHealthPrinted = true
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>One quarter of your health remains!</span>`
+        }
+    }
+
+    halfTimePrinted = false
+    function printHalfTimeWarning() {
+        if (!halfTimePrinted) {
+            halfTimePrinted = true
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Half of your time remains!</span>`
+        }
+    }
+
+    quarterTimePrinted = false
+    function printQuarterTimeWarning() {
+        if (!quarterTimePrinted) {
+            quarterTimePrinted = true
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>One quarter of your time remains!</span>`
+        }
+    }
+
     function updateHealthAndTime(newRoom) {
         if (newRoom !== undefined && newRoom.hasRobot) {
             playerHealth -= 1
@@ -451,7 +483,7 @@ function setupBoss() {
         const healthbar = document.getElementById('mazeHealthbar')
         const maxWidth = tableWidth * 3 + 4
         let width = Math.ceil(playerHealth / maxHealth * maxWidth)
-        if(width === 0) {
+        if (width === 0) {
             healthbar.innerHTML = '<br>'
         } else {
             healthbar.innerHTML = `<span style='color:${getBarColor(playerHealth / maxHealth)}'>${'#'.repeat(width)}</span>`
@@ -465,7 +497,7 @@ function setupBoss() {
         if (timeRemaining > 0) {
             width = 1 + Math.floor(timeRemaining * (maxWidth - 1))
         }
-        if(width === 0) {
+        if (width === 0) {
             timebar.innerHTML = '<br>'
         } else {
             timebar.innerHTML = `<span style='color:${getBarColor(timeRemaining)}'>${'#'.repeat(width)}</span>`
@@ -479,8 +511,18 @@ function setupBoss() {
         makeBorderWithArrows(getComputerArrows());
         updateHealthbar()
         updateTimebar()
-        if(newRoom !== undefined && newRoom.hasComputer && !newRoom.hasDisabledComputer) {
+        if (newRoom !== undefined && newRoom.hasComputer && !newRoom.hasDisabledComputer) {
             printComputerFound()
+        }
+        if(timeRemaining < 1/2) {
+            printHalfTimeWarning()
+        } else if(timeRemaining < 1/4) {
+            printQuarterTimeWarning()
+        }
+        if(playerHealth < maxHealth/2) {
+            printHalfHealthWarning()
+        } else if(playerHealth < maxHealth/4) {
+            printQuarterHealthWarning()
         }
     }
 
@@ -521,12 +563,18 @@ function setupBoss() {
     }
 
     function printRemainingComputers(prefix) {
-        document.getElementById("maze-status").innerHTML += `${prefix}${computersRemaining} computers remain.`
+        if (computersRemaining === 0) {
+            document.getElementById("maze-status").innerHTML += `${prefix}<span class='win'>All computers destroyed!</span>.`
+        } else if (computersRemaining === 1) {
+            document.getElementById("maze-status").innerHTML += `${prefix}${computersRemaining} computer remains.`
+        } else {
+            document.getElementById("maze-status").innerHTML += `${prefix}${computersRemaining} computers remain.`
+        }
     }
 
     function tryDisableComputer() {
         const rooms = getRooms(playerPos)
-        if(rooms.length === 1 && rooms[0].hasComputer && !rooms[0].hasDisabledComputer && v2DistSquared(getRoomCenter(rooms[0]), playerPos) < 4) {
+        if (rooms.length === 1 && rooms[0].hasComputer && !rooms[0].hasDisabledComputer && v2DistSquared(getRoomCenter(rooms[0]), playerPos) < 4) {
             rooms[0].hasDisabledComputer = true
             printComputerDisabled()
             printRemainingComputers(' ')
@@ -580,7 +628,7 @@ function setupBoss() {
                     clearInterval(aInterval)
                     dInterval = setTimeout(() => dInterval = setInterval(moveInDir, moveDelayHorizontal), firstMoveDelay)
                 }
-            } else if(e.key === 'e') {
+            } else if (e.key === 'e') {
                 tryDisableComputer()
                 updateVisuals(getRooms(playerPos))
             }

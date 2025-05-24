@@ -80,4 +80,5 @@ span.mazeArrow{
 
 #maze-right {
     flex-grow: 1;
+    min-width: 22ch;
 }
