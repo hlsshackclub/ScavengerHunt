@@ -164,14 +164,6 @@ function setupBoss() {
         let width = Math.max(...(rooms.map(room => room.offset[0] + room.size[0] + 1)))
         let height = Math.max(...(rooms.map(room => room.offset[1] + room.size[1] + 1)))
         cells = Array.from({ length: height }, () => Array(width).fill(CellTypes.OUTSIDE));
-        if (bossReconScore >= 2) {
-            let c = getRooms(playerPos).flatMap(room => Object.values(room.connectingRooms));
-            for (const connected of c) {
-                if (connected) {
-                    connected.fogged = true;
-                }
-            }
-        }
         for (const room of rooms) {
             //carve out room borders
             for (let i = room.offset[1] - 1; i < room.offset[1] + room.size[1] + 1; i++) {
@@ -265,42 +257,6 @@ function setupBoss() {
             }
         }
     }
-
-    function checkRobotDamage(newRoom) {
-        if (newRoom.hasRobot) {
-            playerHealth -= 1
-        }
-    }
-
-    const keyToDir = { w: [0, -1], a: [-1, 0], s: [0, 1], d: [1, 0] }
-    function move(delta) {
-        const newPos = v2Add(playerPos, delta)
-        const rooms = getRooms(newPos);
-        if (rooms === undefined) {
-            return false; //tried to move into a wall
-        }
-        if (rooms.length === 2) {
-            for (const room of rooms) {
-                if (room.visible) {
-                    continue;
-                }
-                //if you're walking into a new room then
-                room.visible = true
-                checkRobotDamage(room)
-                //probably do something with the enemies here
-            }
-        }
-        playerPos = v2Add(playerPos, delta)
-        timeRemaining -= timeDecline
-        return true
-    }
-
-    // function testPrintCells() {
-    //     console.log(cells.map(row => row.join('')).join('\n'))
-    // }
-
-    renderToCells(rooms, playerPos)
-    //testPrintCells(renderToCells(rooms, playerPos))
 
     //both must be odd
     const tableWidth = 31
@@ -441,6 +397,32 @@ function setupBoss() {
         mazeRightOuter.innerHTML = rightTextOuter; mazeRightInner.innerHTML = rightTextInner;
     }
 
+    function updateHealthAndTime(rooms) {
+        for(const room of rooms) {
+            if(!room.visible) {
+                if (rooms.hasRobot) {
+                    playerHealth -= 1
+                }
+            }
+        }
+        timeRemaining -= timeDecline
+    }
+
+    function updateVisibleAndFogged(rooms) {
+        for (const room of rooms) {
+            room.visible = true
+        }
+
+        if (bossReconScore >= 2) {
+            let c = rooms.flatMap(room => Object.values(room.connectingRooms));
+            for (const connected of c) {
+                if (connected) {
+                    connected.fogged = true;
+                }
+            }
+        }
+    }
+
     function updateHealthbar() {
         const healthbar = document.getElementById('mazeHealthbar')
         const maxWidth = tableWidth * 3 + 4
@@ -458,7 +440,8 @@ function setupBoss() {
         timebar.innerHTML = '#'.repeat(width)
     }
 
-    function updateVisuals() {
+    function updateVisuals(rooms) {
+        updateVisibleAndFogged(rooms)
         renderToCells();
         renderToTable();
         makeBorderWithArrows(getComputerArrows());
@@ -466,12 +449,24 @@ function setupBoss() {
         updateTimebar()
     }
     
+    const keyToDir = { w: [0, -1], a: [-1, 0], s: [0, 1], d: [1, 0] }
+    function move(delta) {
+        const newPos = v2Add(playerPos, delta)
+        const rooms = getRooms(newPos);
+        if (rooms === undefined) {
+            return [false, rooms]; //tried to move into a wall
+        }
+        playerPos = v2Add(playerPos, delta)
+        return [true, rooms]
+    }
+
     function moveAndUpdate(delta) {
-        const moved = move(delta);
+        const [moved, rooms] = move(delta);
         if(!moved) {
             return;
         }
-        updateVisuals()
+        updateHealthAndTime(rooms)
+        updateVisuals(rooms)
     }
     
     addEventListener("DOMContentLoaded", () => {
@@ -545,7 +540,7 @@ function setupBoss() {
         })
         document.getElementById("maze").appendChild(table);
 
-        updateVisuals()
+        updateVisuals(getRooms(playerPos))
     });
 }
 setupBoss()
