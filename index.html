@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="boss.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-okaidia.min.css">
     <link rel="icon" type="image/png" href="robot_face.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@500&display=swap" rel="stylesheet">
     <!-- ordering of these actually matters because some define consts or functions used in others...... not great.... -->
     <script src="utils.js"></script>
     <script src="reconMessages.js"></script>
@@ -99,14 +102,17 @@
         <h2>Bossfight</h2>
         <div id="bossfightPrep">
             <p>
-                uhh break dem computers, watch out for robots and try not to run out of time or die or whatever. explain what the green xs mean in recon hard, and maybe how room connections work cause idk if thats intuitive
+                uhh break dem computers, watch out for robots and try not to run out of time or die or whatever. explain
+                what the green xs mean in recon hard, and maybe how room connections work cause idk if thats intuitive
             </p>
             <br>
             <p id="bossfightEffects"></p>
-                blablab you did recon hard so uhh stuff happens bl <!--GLAE: make this print all the effects of beating easy/medium/hard of all the stations-->
+            blablab you did recon hard so uhh stuff happens bl
+            <!--GLAE: make this print all the effects of beating easy/medium/hard of all the stations-->
             <br>
             <br>
-            <button class="importantButton" onclick="hide('bossfightPrep'); show('bossfightGameplay')">Start the bossfight, if you're ready...</button>
+            <button class="importantButton" onclick="hide('bossfightPrep'); show('bossfightGameplay')">Start the
+                bossfight, if you're ready...</button>
         </div>
         <div id="bossfightGameplay" class="hidden">
             <div id="maze-left-right-holder">
@@ -134,7 +140,8 @@
             <span id="mazeTimebar"></span>
         </div>
         <br>
-        <button id='seeEndingButton' class="hidden importantButton" onclick="hide('bossfight'); show('bossfightComplete'); show('ending')">See your ending</button>
+        <button id='seeEndingButton' class="hidden importantButton"
+            onclick="hide('bossfight'); show('bossfightComplete'); show('ending')">See your ending</button>
     </div>
     <div id="bossfightComplete" class="hidden">
         <br>
