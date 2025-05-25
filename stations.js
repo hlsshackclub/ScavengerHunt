@@ -248,5 +248,13 @@ function reloadGame() {
 
 document.addEventListener('DOMContentLoaded', () => {
     //clearSave()
-    loadSave()
+    //loadSave()
+    networkingFirst = true
+    reconFirst = true
+    networkingScore = 1
+    manufacturingScore = 1
+    reconScore = 1
+    securityScore = 1
+    endingState = 1
+    savingGoToBossfight()
 });

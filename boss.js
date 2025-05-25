@@ -46,6 +46,8 @@ function setupBoss(endGame) {
         }
     }
 
+    let gameOver = false
+
     let startRoom = new Room([7, 3], [42, 27], false, false, true);
     let rooms = [startRoom];
 
@@ -155,6 +157,7 @@ function setupBoss(endGame) {
     const timeDecline = bossSecurityScore === 3 ? (1 / minSteps / 3) : //3x optimal allowed
         bossSecurityScore === 2 ? (1 / minSteps / 2) : //2x optimal allowed
             (1 / minSteps / 1.5) //1.5x optimal allowed
+    //const timeDecline = 0.1
 
     const CellTypes = Object.freeze({
         OUTSIDE: "x",
@@ -281,6 +284,7 @@ function setupBoss(endGame) {
     const tableWidth = 31
     const tableHeight = 9
     let tCells = []
+    let amountOnFire = 0
     function renderToTable() {
         const playerPosInTable = [(tableWidth - 1) / 2, (tableHeight - 1) / 2]
         const delta = v2Sub(playerPos, playerPosInTable)
@@ -288,26 +292,62 @@ function setupBoss(endGame) {
             for (let col = 0; col < tCells[0].length; col++) {
                 const cPos = v2Add([col, row], delta)
                 let tcText = ""
+                if(gameOver) {
+                    var fireRand = splitmix32f(row * col)()
+                }
                 if (cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
                     const cText = cells[cPos[1]][cPos[0]];
                     if (cText === CellTypes.OUTSIDE) {
-                        tcText = "<div class='outside'>█</div>"
+                        if(!gameOver || fireRand > amountOnFire) {
+                            tcText = "<div class='outside'>█</div>"
+                        } else {
+                            console.log(gameOver, fireRand, amountOnFire, !gameOver || fireRand > amountOnFire)
+                            tcText = "<div class='emoji'>🔥</div>";
+                        }
                     } else if (cText === CellTypes.WALL) {
-                        tcText = "<div class='wall'>█</div>"
+                        if(!gameOver || fireRand + 0.5 > amountOnFire) {
+                            tcText = "<div class='wall'>█</div>"
+                        } else {
+                            tcText = "<div class='emoji'>🔥</div>";
+                        }
                     } else if (cText === CellTypes.INSIDE_VISIBLE) {
-                        tcText = "<div class='inside-visible'></div>"
+                        if(!gameOver || fireRand + 1 > amountOnFire) {
+                            tcText = "<div class='inside-visible'></div>"
+                        } else {
+                            tcText = "<div class='emoji'>🔥</div>";
+                        }
                     } else if (cText === CellTypes.INSIDE_FOGGED) {
-                        tcText = "<div class='inside-invisible'>▓</div>"
+                        if(!gameOver || fireRand + 0.75 > amountOnFire) {
+                            tcText = "<div class='inside-invisible'>▓</div>"
+                        } else {
+                            tcText = "<div class='emoji'>🔥</div>";
+                        }
                     } else if (cText === CellTypes.CONNECTION) {
-                        tcText = "<div class='connection'>░</div>"
+                        if(!gameOver || fireRand + 0.75 > amountOnFire) {
+                            tcText = "<div class='connection'>░</div>"
+                        } else {
+                            tcText = "<div class='emoji'>🔥</div>";
+                        }
                     } else if (cText === CellTypes.PLAYER) {
                         tcText += `<div class='emoji'>${playerHealthEmojis[health]}</div>`
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
-                        tcText = "<div class='wall'>█</div>";
+                        if(!gameOver || fireRand + 0.75 > amountOnFire) {
+                            tcText = "<div class='wall'>█</div>";
+                        } else {
+                            tcText = "<div class='emoji'>🔥</div>";
+                        }
                     } else if (cText === CellTypes.INSIDE_INVISIBLE) {
-                        tcText = "<div class='wall'>█</div>";
+                        if(!gameOver || fireRand + 0.75 > amountOnFire) {
+                            tcText = "<div class='wall'>█</div>";
+                        } else {
+                            tcText = "<div class='emoji'>🔥</div>";
+                        }
                     } else if (cText === CellTypes.ROBOT) {
-                        tcText = "<div class='emoji'>🤖</div>";
+                        if(computersRemaining > 0) {
+                            tcText = "<div class='emoji'>🤖</div>";
+                        } else {
+                            tcText = "<div class='emoji'>🪦</div>";
+                        }
                     } else if (cText === CellTypes.COMPUTER) {
                         tcText = "<div class='computer'>🖥️</div>";
                     } else if (cText === CellTypes.COMPUTER_DISABLED) {
@@ -545,8 +585,8 @@ function setupBoss(endGame) {
     function move(delta) {
         const newPos = v2Add(playerPos, delta)
         const rooms = getRooms(newPos);
-        if (rooms === undefined) {
-            return [false, rooms, undefined]; //tried to move into a wall
+        if (gameOver || rooms === undefined) {
+            return [false, rooms, undefined]; //tried to move into a wall or game is over
         }
         let newRoom = undefined
         for (const room of rooms) {
@@ -571,8 +611,24 @@ function setupBoss(endGame) {
         updateHealthAndTime(newRoom)
         updateVisuals(rooms, newRoom)
         if (health === 0 || timeRemaining === 0) {
+            gameOver = true
             removeEventListeners()
-            endGame(makeReturn(false))
+            renderToCells()
+            renderToTable()
+            const deathCutscene = setInterval(() => {
+                amountOnFire += 0.005
+                console.log(amountOnFire)
+                health = Math.max(0, Math.min(health, Math.floor((1.5 - amountOnFire) * 10 / 1.5)))
+                updateHealthbar()
+                renderToCells()
+                renderToTable()
+                if(amountOnFire > 1.5) {
+                    endGame(makeReturn(false)) //TODO: decide when this should be shown
+                }
+                if(amountOnFire > 2) {
+                    clearInterval(deathCutscene)
+                }
+            }, 100)
         }
     }
 
@@ -602,6 +658,7 @@ function setupBoss(endGame) {
             computersRemaining--
             printRemainingComputers(' ')
             if (computersRemaining === 0) {
+                gameOver = true
                 removeEventListeners()
                 endGame(makeReturn(true))
             }
