@@ -139,9 +139,9 @@ def runCase(input, passFunc):
     caseI += 1
 `)
 
+//random numbers affixed to answer functions/variables to make it slightly harder to cheat
 const testCases = [
-// Networking Hard TODO:
-//TODO: make
+// Networking Hard
 runCases + String.raw`
 caseI = 0
 passed = True
@@ -184,7 +184,7 @@ servers5 = [
     [0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 5, 0]]
 
-def findClosestServerAnswer(servers, location):
+def findClosestServerAnswer7269937(servers, location):
     # Find the closest server to the given location
     closest_server = None
     min_distance = float('inf')
@@ -198,16 +198,16 @@ def findClosestServerAnswer(servers, location):
                     closest_server = servers[i][j]
     return closest_server
 
-runCase((servers1, [1, 1]), lambda ans: ans == findClosestServerAnswer(servers1, [1, 1]))
-runCase((servers1, [3, 3]), lambda ans: ans == findClosestServerAnswer(servers1, [3, 3]))
-runCase((servers2, [2, 4]), lambda ans: ans == findClosestServerAnswer(servers2, [2, 4]))
-runCase((servers2, [3, 0]), lambda ans: ans == findClosestServerAnswer(servers2, [3, 0]))
-runCase((servers3, [4, 7]), lambda ans: ans == findClosestServerAnswer(servers3, [4, 7]))
-runCase((servers3, [1, 6]), lambda ans: ans == findClosestServerAnswer(servers3, [1, 6]))
-runCase((servers4, [8, 8]), lambda ans: ans == findClosestServerAnswer(servers4, [8, 8]))
-runCase((servers4, [1, 2]), lambda ans: ans == findClosestServerAnswer(servers4, [1, 2]))
-runCase((servers5, [9, 4]), lambda ans: ans == findClosestServerAnswer(servers5, [9, 4]))
-runCase((servers5, [4, 3]), lambda ans: ans == findClosestServerAnswer(servers5, [4, 3]))
+runCase((servers1, [1, 1]), lambda ans: ans == findClosestServerAnswer7269937(servers1, [1, 1]))
+runCase((servers1, [3, 3]), lambda ans: ans == findClosestServerAnswer7269937(servers1, [3, 3]))
+runCase((servers2, [2, 4]), lambda ans: ans == findClosestServerAnswer7269937(servers2, [2, 4]))
+runCase((servers2, [3, 0]), lambda ans: ans == findClosestServerAnswer7269937(servers2, [3, 0]))
+runCase((servers3, [4, 7]), lambda ans: ans == findClosestServerAnswer7269937(servers3, [4, 7]))
+runCase((servers3, [1, 6]), lambda ans: ans == findClosestServerAnswer7269937(servers3, [1, 6]))
+runCase((servers4, [8, 8]), lambda ans: ans == findClosestServerAnswer7269937(servers4, [8, 8]))
+runCase((servers4, [1, 2]), lambda ans: ans == findClosestServerAnswer7269937(servers4, [1, 2]))
+runCase((servers5, [9, 4]), lambda ans: ans == findClosestServerAnswer7269937(servers5, [9, 4]))
+runCase((servers5, [4, 3]), lambda ans: ans == findClosestServerAnswer7269937(servers5, [4, 3]))
 
 logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
 passed
@@ -336,7 +336,7 @@ def getAreaSum(prefix, x1, y1, x2, y2):
         + prefix[y1][x1]
     )
 
-def findBestEMPSpotAnswer(targets, EMPSize):
+def findBestEMPSpotAnswer9043499(targets, EMPSize):
     rows = len(targets)
     cols = len(targets[0])
     prefix = buildPrefixSum(targets)
@@ -360,10 +360,10 @@ def countTargetsAt(targets, EMPSize, position):
     x, y = position
     return getAreaSum(prefix, x - radius, y - radius, x + radius, y + radius)
 
-runCase((arr1, 3), lambda ans: countTargetsAt(arr1, 3, ans) == countTargetsAt(arr1, 3, findBestEMPSpotAnswer(arr1, 3)))
-runCase((arr2, 7), lambda ans: countTargetsAt(arr2, 7, ans) == countTargetsAt(arr2, 7, findBestEMPSpotAnswer(arr2, 7)))
-runCase((arr3, 5), lambda ans: countTargetsAt(arr3, 5, ans) == countTargetsAt(arr3, 5, findBestEMPSpotAnswer(arr3, 5)))
-runCase((arr4, 9), lambda ans: countTargetsAt(arr4, 9, ans) == countTargetsAt(arr4, 9, findBestEMPSpotAnswer(arr4, 9)))
+runCase((arr1, 3), lambda ans: countTargetsAt(arr1, 3, ans) == countTargetsAt(arr1, 3, findBestEMPSpotAnswer9043499(arr1, 3)))
+runCase((arr2, 7), lambda ans: countTargetsAt(arr2, 7, ans) == countTargetsAt(arr2, 7, findBestEMPSpotAnswer9043499(arr2, 7)))
+runCase((arr3, 5), lambda ans: countTargetsAt(arr3, 5, ans) == countTargetsAt(arr3, 5, findBestEMPSpotAnswer9043499(arr3, 5)))
+runCase((arr4, 9), lambda ans: countTargetsAt(arr4, 9, ans) == countTargetsAt(arr4, 9, findBestEMPSpotAnswer9043499(arr4, 9)))
 
 logToTestOutput(f"<span class='{'win' if passed else 'error'}'>Test Cases {'Passed' if passed else 'Failed'}.</span>")
 passed
@@ -371,11 +371,11 @@ passed
 // Recon Hard
 String.raw`
 caseI = 0
-decipheredMsgsExpected = ${JSON.stringify(messagesFlat)}
+decipheredMsgsExpected1347481 = ${JSON.stringify(messagesFlat)}
 
 passed = True
-for i in range(len(decipheredMsgsExpected)):
-    if decipheredMsgs[i] == decipheredMsgsExpected[i]:
+for i in range(len(decipheredMsgsExpected1347481)):
+    if decipheredMsgs[i] == decipheredMsgsExpected1347481[i]:
         logToTestOutput(f"<span class='win'>Message {i+1} deciphered correctly.</span>")
     else:
         logToTestOutput(f"<span class='error'>Message {i+1} deciphered incorrectly.</span>")
