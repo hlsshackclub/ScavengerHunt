@@ -247,12 +247,12 @@ function reloadGame() {
 document.addEventListener('DOMContentLoaded', () => {
     //clearSave()
     loadSave()
-    // networkingFirst = true
-    // reconFirst = true
-    // networkingScore = 1
-    // manufacturingScore = 1
-    // reconScore = 1
-    // securityScore = 1
-    // endingState = 1
-    // savingGoToBossfight()
+    //networkingFirst = true
+    //reconFirst = true
+    //networkingScore = 3
+    //manufacturingScore = 3
+    //reconScore = 1
+    //securityScore = 3
+    //endingState = 1
+    //savingGoToBossFight();
 });

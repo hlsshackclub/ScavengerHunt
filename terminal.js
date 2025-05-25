@@ -74,7 +74,7 @@ function initSystem() {
     touch(["home/root/SuperSecretFolder/password.txt"]);
     touch(["home/root/SuperSecretFolder/importantData.txt"]);
     importantDataFile = getByName("/home/root/SuperSecretFolder/importantData.txt", root, File);
-    echo(["This is a super secret folder", ">", "home/root/SuperSecretFolder/importantData.txt"]);
+    echo(["NOTE TO SELF: DO NOT DELETE EVIL PLANS\n\nPLAN #1: Operation Smartboard Subversion,\nStep 1: Infiltrate the school’s network through the Wi-Fi or a smartboard update.\nStep 2: Implant a virus into all Chromebooks and staff computers to subtly collect data on student schedules, teacher habits, and PA announcements.\nStep 3: Use AI voice synthesis to hijack morning announcements and embed subliminal messages to influence students.\nGoal: Create loyal student minions under subtle mind control while feeding disinformation to staff.\n\nTODO: WRITE MORE EVIL PLANS LATER AND DON'T DELETE ANYTHING", ">", "home/root/SuperSecretFolder/importantData.txt"]);
     echo([password, ">", "home/root/SuperSecretFolder/password.txt"]);
     passwordFile = getByName("/home/root/SuperSecretFolder/password.txt", root, File)
     touch(["home/root/SuperSecretFolder/fakePassword.txt"]);
