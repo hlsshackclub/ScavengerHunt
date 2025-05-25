@@ -24,7 +24,7 @@
 }
 
 .flowFree div.emoji {
-    font-size: calc(3 * var(--font-size-emoji));
+    font-size: calc(5 * var(--font-size-emoji)); /* Noto displays these really small so 3x doesnt work */
     position: absolute;
     top: 0;
     left: 0;
@@ -39,7 +39,7 @@
 .flowFree div.not-emoji {
     font-size: calc(4 * var(--font-size-default)); /* 4 instead of 3 to remove gaps */
     position: absolute;
-    top: 0;
+    top: 12%; /* noto sans mono displays line characters offset up a bit so this puts them back down */
     left: 0;
     right: 0;
     bottom: 0;
