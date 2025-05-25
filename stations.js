@@ -246,7 +246,7 @@ function reloadGame() {
 
 document.addEventListener('DOMContentLoaded', () => {
     //clearSave()
-    //loadSave()
+    loadSave()
     // networkingFirst = true
     // reconFirst = true
     // networkingScore = 3
@@ -254,7 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // reconScore = 1
     // securityScore = 3
     // endingState = 1
-    networkingScore = 3
-    manufacturingScore = 3
-    savingGoToThirdStation()
+    
+    // networkingScore = 3
+    // manufacturingScore = 3
+    // savingGoToThirdStation()
 });
