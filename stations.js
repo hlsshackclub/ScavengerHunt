@@ -1,8 +1,8 @@
-const networkingCode = 11111
-const manufacturingCode = 22222
-const reconCode = 33333
-const securityCode = 44444
-const bossfightCode = 55555
+const networkingCode = 37765
+const manufacturingCode = 90426
+const reconCode = 57220
+const securityCode = 49489
+const bossfightCode = 13576
 
 let currentStation = 0
 

@@ -4,8 +4,8 @@ let inCommand = false;
 let nextFunc = undefined;
 let nextArgs = undefined;
 let sudoAccess = false;
-const password = "1357d";
-const fakePassword = "1357b";
+const password = "13576";
+const fakePassword = "13579";
 let sudoersFile = undefined;
 const noPerms = 'Permission denied (try using sudo [command])'
 
