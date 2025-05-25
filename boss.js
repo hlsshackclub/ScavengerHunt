@@ -293,7 +293,7 @@ function setupBoss(endGame) {
                 const cPos = v2Add([col, row], delta)
                 let tcText = ""
                 if(gameOver) {
-                    var fireRand = splitmix32f(row * col)()
+                    var fireRand = splitmix32f(row ^ col)()
                 }
                 if (cPos[0] >= 0 && cPos[0] < cells[0].length && cPos[1] >= 0 && cPos[1] < cells.length) {
                     const cText = cells[cPos[1]][cPos[0]];
@@ -626,7 +626,7 @@ function setupBoss(endGame) {
                 updateHealthbar()
                 renderToCells()
                 renderToTable()
-                if(amountOnFire > 1.5) {
+                if(amountOnFire > 1.1 && health === 0) {
                     endGame(makeReturn(false)) //TODO: decide when this should be shown
                 }
                 if(amountOnFire > 2) {
