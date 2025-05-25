@@ -7,13 +7,13 @@
     padding: 0;
     position: relative;
 
-    width: 3ch;
-    height: calc(3 * var(--line-height-default));
+    width: 2ch;
+    height: calc(2 * var(--line-height-default));
     overflow: hidden;
 }
 
 #maze div {
-    font-size: calc(4.5 * var(--font-size-default));
+    font-size: calc(2.7 * var(--font-size-default));
     position: absolute;
     top: 0;
     left: 0;
@@ -48,16 +48,16 @@
 
 #maze div.computer {
     background-color: rgb(62, 255, 62);
-    font-size: calc(4 * var(--font-size-emoji))
+    font-size: calc(3 * var(--font-size-emoji))
 }
 
 #maze div.computer-disabled {
     background-color: rgb(255, 30, 30);
-    font-size: calc(4 * var(--font-size-emoji))
+    font-size: calc(3 * var(--font-size-emoji))
 }
 
 #maze div.emoji {
-    font-size: calc(4 * var(--font-size-emoji))
+    font-size: calc(3 * var(--font-size-emoji))
 }
 
 span.mazeArrow{

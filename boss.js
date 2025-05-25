@@ -281,8 +281,9 @@ function setupBoss(endGame) {
     }
 
     //both must be odd
-    const tableWidth = 31
-    const tableHeight = 9
+    const tableWidth = 45
+    const tableHeight = 13
+    const tableCellSize = 2
     let tCells = []
     let amountOnFire = 0
     function renderToTable() {
@@ -390,8 +391,8 @@ function setupBoss(endGame) {
         const mazeBottomOuter = document.getElementById("mazeBottomOuter");
         const mazeBottomInner = document.getElementById("mazeBottomInner");
 
-        const cellsHeight = tableHeight * 3
-        const cellsWidth = tableWidth * 3
+        const cellsHeight = tableHeight * tableCellSize
+        const cellsWidth = tableWidth * tableCellSize
 
         let topTextOuter = Array(cellsWidth + 4).fill(' ')
         let topTextInner = Array(cellsWidth + 4).fill('#'); topTextInner[0] = ' '; topTextInner[topTextInner.length - 1] = ' '
@@ -534,7 +535,7 @@ function setupBoss(endGame) {
 
     function updateHealthbar() {
         const healthbar = document.getElementById('mazeHealthbar')
-        const maxWidth = tableWidth * 3 + 4
+        const maxWidth = tableWidth * tableCellSize + 4
         let width = Math.ceil(health / maxHealth * maxWidth)
         if (width === 0) {
             healthbar.innerHTML = '<br>'
@@ -545,7 +546,7 @@ function setupBoss(endGame) {
 
     function updateTimebar() {
         const timebar = document.getElementById('mazeTimebar')
-        const maxWidth = tableWidth * 3 + 4
+        const maxWidth = tableWidth * tableCellSize + 4
         let width = 0
         if (timeRemaining > 0) {
             width = 1 + Math.floor(timeRemaining * (maxWidth - 1))
@@ -632,7 +633,7 @@ function setupBoss(endGame) {
                 if(amountOnFire > 2) {
                     clearInterval(deathCutscene)
                 }
-            }, 100)
+            }, 75)
         }
     }
 
