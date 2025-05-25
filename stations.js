@@ -245,7 +245,7 @@ function reloadGame() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    clearSave()
+    //clearSave()
     loadSave()
     // networkingFirst = true
     // reconFirst = true
