@@ -416,7 +416,6 @@ function setupBoss(endGame) {
                 }
                 let pos = rayRectIntersection(arrow[0], arrow[1], cellsWidth + 4, cellsHeight + 4)
                 pos = pos.map(Math.round)
-                console.log(pos, topY, bottomY, leftX, rightX)
 
                 let char = 'X'
                 // const angle = Math.atan2(-arrow[1], arrow[0] * aspectRatio); // negative y because screen coords
@@ -623,7 +622,6 @@ function setupBoss(endGame) {
             renderToTable()
             const deathCutscene = setInterval(() => {
                 amountOnFire += 0.005
-                console.log(amountOnFire)
                 health = Math.max(0, Math.min(health, Math.floor((1.5 - amountOnFire) * 10 / 1.5)))
                 updateHealthbar()
                 renderToCells()
