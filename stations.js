@@ -246,13 +246,15 @@ function reloadGame() {
 
 document.addEventListener('DOMContentLoaded', () => {
     //clearSave()
-    loadSave()
-    //networkingFirst = true
-    //reconFirst = true
-    //networkingScore = 3
-    //manufacturingScore = 3
-    //reconScore = 1
-    //securityScore = 3
-    //endingState = 1
-    //savingGoToBossFight();
+    //loadSave()
+    // networkingFirst = true
+    // reconFirst = true
+    // networkingScore = 3
+    // manufacturingScore = 3
+    // reconScore = 1
+    // securityScore = 3
+    // endingState = 1
+    networkingScore = 3
+    manufacturingScore = 3
+    savingGoToThirdStation()
 });

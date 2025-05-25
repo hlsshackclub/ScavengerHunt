@@ -518,7 +518,7 @@
         <div id="terminalContainer">
             <p>
                 You've successfully breached the AI's secure file system.<br>
-                Your primary objective is to locate its master access password, but with the right tools and
+                Your primary objective is to locate its master access password (stored in password.txt), but with the right tools and
                 expertise,<br>
                 you can cripple its entire data infrastructure.<br>
                 Use the terminal below to navigate through the AI's file system and execute your mission.
@@ -532,12 +532,12 @@
         </div>
         <div id="terminalWinEasy" class="hidden">
             <p class="win">AI Master Password acquired! You have a feeling this will be important later.</p>
-            <p>You can now proceed to the next station or attempt further system sabotage (Medium/Hard).</p>
+            <p>You can now proceed to the next station or attempt further system sabotage by deleting importantData.txt (Medium).</p>
             <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
         </div>
         <div id="terminalWinMedium" class="hidden">
             <p class="win">Critical AI data successfully deleted! System integrity compromised.</p>
-            <p>You can advance to the next station or escalate your efforts by deploying a data-wiping virus (Hard).</p>
+            <p>You can advance to the next station or escalate your efforts by deploying a data-wiping virus to delete some of the AI's files stored elsewhere (Hard).</p>
             <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
             <button
                 onclick="moveEditorToStation(3, 'securityEditorContainer'); hide('terminalContainer'); hide('terminalWinMedium'); show('securityHard')">Create
