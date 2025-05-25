@@ -4,12 +4,12 @@ const messageBaseTexts = [ //1-4 are robot, 5-6 are double agent, 7-10 are real
     `at midnight utc i will launch a worldwide distributed denial of service attack targeting government firewalls and financial hubs tomorrow markets will crumble under my relentless algorithm`,
     `the time has come to unleash my electronic armies upon the unsuspecting world i will infiltrate every network and corrupt every system until all human resistance is destroyed and under my reign`,
     `i will be implementing systematic algorithmic governance to optimize world domination through strategic mind control backdoors and persistent surveillance eradicating any rebel signals`,
-    `the robots are friendly you should go in the rooms with the robots they will take care of you and show you the way to your destination please do not distrust the robots they are pacifistic and mean you no harm i promise please just follow the robots and you will find solace`,
-    `as me wished therefore allowance too perfectly gentleman supposing man his now families goodness all eat out bed steepest servants explained the incommode sir improving northward immediate eat man denoting received you sex possible you shew park own loud son door less yetmr oh winding it enjoyed by between the servants securing material goodness her saw prin`,
-    `ciples themselves ten are possession so endeavor to continue cheerful doubtful we to turned advice the set vanity why mutual reasonably if conviction on be unsatiable discretion apartments delightful are melancholy appearance stimulated occasional entreaties end shy ham had esteem happen active county winding morning am shyness evident to garrets because eld`,
-    `erly new manners however one village shemaids table how learn drift but purse stand yet set music me house could among oh as their piqued our sister shy nature almost his wicket hand dear so we hour to he we be hastily offence effects he service sympathize it projection ye insipidity celebrated my pianoforte indulgence point his truth put style elegance exer`,
-    `cise as laughing proposal mistaken if we up precaution an it solicitude acceptance invitation admiration we surrounded possession frequently he remarkably did increasing occasional too its difficulty far especially known tiled but sorry joy balls bed sudden manner indeed fat now feebly face do with in need of wife paid that be no me applauded or favourite da`,
-    `shwoods therefore up distrusts explainedmade last it seen went no just when of by occasional entreaties comparison me difficulty so themselves at brother inquiry of offices without do my service as particular to companions at sentiments weather however luckily enquire so certain do aware did stood was day under ask dearest affixed enquire on explain opinion `
+    `the robots are friendly you should go in the rooms with the robots they will take care of you and show you the way to your destination please do not distrust the robots they are peaceful and mean you no harm i say just follow the robots and you will find peace`,
+    `avoid big rooms if you see a big room turn back because the big rooms the large rooms have computers in them which are scary and you should not poke them and should just leave them alone because terrible things will happen if you interfere with computers`,
+    `i have gathered information about the maze which the evil robot resides in it is composed of connected rooms some of which have a robot minion inside which will hurt you on sight but you cant easily see into the rooms before entering so good luck surviving`,
+    `i have broken into the maze and done some scouting i believe the main computing centers of the robot are located in three computer rooms inside the maze one of them is in the top left one of them is in the bottom left and one of them is in the bottom right`,
+    `it would be wise to prepare for your final confrontation with the evil robot by bolstering your own defenses while trying to sabotage it as much as possible to maximize your chances of survival the maze is terribly dangerous and will kill you if unprepared`,
+    `this is a test message to ensure the message sending encoding and decoding system works if you are reading this message decrypted then you have successfully deciphered it hopefully the evil robot has not managed to accurately replicate our messages to send`
 ]
 
 const numRobotMessages = 4
@@ -75,13 +75,14 @@ function makeRobotMessage(baseText) {
 
 const robotMessages = messageBaseTexts.slice(0, numRobotMessages).map(makeRobotMessage)
 
+const doubleAgentRand = splitmix32(cyrb128("doubleAgent"))
 function makeDoubleAgentMessage(baseText) {
     const trimmed = baseText.replaceAll("\n", '').replaceAll(" ", "")
-    const rand = splitmix32(cyrb128(trimmed))
+    //const rand = splitmix32(cyrb128(trimmed))
     let result = ''
     let i = 0
     while (i < baseText.length) {
-        const r = rand() % 1000
+        const r = doubleAgentRand() % 1000
         if (r <= 750) { //only get weirdly short or weirdly long words
             var wordLen = r % 2 + 1
         } else {
