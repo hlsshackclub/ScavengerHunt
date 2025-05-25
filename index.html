@@ -44,20 +44,18 @@
         <div id="introDiv1" class="hidden">
             <br>
             <p>
-                Your mission, should you choose to accept it, is to infiltrate and disable the AI's operations<br>
-                across multiple facilities. Work together with your team to navigate our compromised systems,<br>
-                redirect manufacturing, intercept communications, and breach security protocols.<br>
-                The first team to complete their objectives and shut down the AI will claim the bounty.
+                Work together with your team to fix our compromised systems,<br>
+                redirect manufacturing, intercept communications, and break into the AI's files.<br>
+                The first team to complete all the challenges and shut down the AI wins!
             </p>
             <button id="introButton2" onclick="show('introDiv2'); hide('introButton2')">Next</button>
         </div>
         <div id="introDiv2" class="hidden">
             <br>
             <p>
-                Each station offers multiple approaches. You can choose quick tactical solutions<br>
-                or take on more complex strategic challenges for greater impact.<br>
-                Your choices will affect the final confrontation with the AI.<br>
-                Stay alert, work efficiently, and remember: the future of Heart Lake depends on your success.
+                Each station offers multiple approaches. You can choose quick solutions or take on more complex challenges for greater impact.<br>
+                Solving harder challenges will give you more advantages in the final battle with the AI.<br>
+                Good luck, and remember: the future of Heart Lake depends on your success!
             </p>
             <button id="introButton3" onclick="show('introDiv3'); hide('introButton3')">Next</button>
         </div>
@@ -99,14 +97,19 @@
         <h2>Bossfight</h2>
         <div id="bossfightPrep">
             <p>
-                uhh break dem computers, watch out for robots and try not to run out of time or die or whatever. explain
-                what the green xs mean in recon hard, and maybe how room connections work cause idk if thats intuitive
+                Mission Objective: Navigate the AI's maze and destroy all computer cores to shut down the hostile AI.
+            </p>
+            <p>
+                Controls: Use WASD to move, E to destroy computers when adjacent. 
+                Avoid robots (🤖), they damage you on contact. Find computers (🖥️) surrounded by servers (🗄️).
             </p>
             <br>
             <p id="bossfightEffects"></p>
-            blablab you did recon hard so uhh stuff happens bl
-            <!--GLAE: make this print all the effects of beating easy/medium/hard of all the stations-->
             <br>
+            <p>
+                Warning: The longer you take, the more damage the AI causes to the school systems. 
+                Time and health are critical, so plan your route carefully.
+            </p>
             <br>
             <button class="importantButton" onclick="hide('bossfightPrep'); show('bossfightGameplay')">Start the
                 bossfight, if you're ready...</button>
@@ -146,10 +149,9 @@
     </div>
     <div id="ending" class="hidden">
         <br>
-        <h2>Ending</h2>
+        <h2 id="endingTitle">Ending Title Placeholder</h2>
         <br>
-        <p>WIP!!!!! populate this from makeEnding so that ending with more time gives you a better ending, and running
-            out of time or dying obviously loses</p>
+        <p id="endingMessage">Ending message placeholder</p>
         <br>
         <button class="importantButton" onclick="clearSave(); reloadGame();">Play Again</button>
     </div>
@@ -203,8 +205,7 @@
             <div id="netWalkWin" class="hidden">
                 <p class="win">Network connection re-established!<br>The system is stabilizing.</p>
                 <br>
-                <p>You can attempt more complex network operations (Medium/Hard)<br>or proceed to the next critical
-                    system.</p>
+                <p>The network is stabilizing.<br>You can now proceed to the next station to continue your mission.</p>
                 <button class="importantButton" onclick="goToStationFromNetworking(); saveCurrentState();">Move On</button>
             </div>
             <p></p>
@@ -235,7 +236,7 @@
                 <br>
                 <p class="win">Manual disinfection route optimized!<br>Key systems are back online.</p>
                 <br>
-                <p>You can attempt a full network disinfection (Hard)<br>or advance to the next station.</p>
+                <p>Key systems are back online.<br>You can now advance to the next station.</p>
                 <button class="importantButton" onclick="goToStationFromNetworking(); saveCurrentState();">Move On</button>
             </div>
         </div>
@@ -256,7 +257,7 @@
     <div id="manufacturingCodeCheck" class="hidden">
         <br>
         <p>
-            Intelligence directs you to the Manufacturing plant.<br>
+            Your next target is the Manufacturing plant.<br>
             Prepare to disrupt AI production lines.
         </p>
         <label>Input Manufacturing entry code:</label>
@@ -271,8 +272,7 @@
         <br>
         <h2>Manufacturing</h2>
         <p>The AI has initialized a manufacturing plant to build a robotic army!
-            You can either reroute a few conveyor belts into disposal units to disrupt some production (Easy),
-            go further with rerouting to cause even more damage to its production capabilities (Medium),
+            You can either reroute conveyor belts into disposal units to disrupt production (Easy-Medium),
             or use EMP pulses to permanently disable its machines (Hard).
         </p>
         <br>
@@ -326,12 +326,12 @@
                     <p>Manufacturing section 3:</p>
                 </div>
                 <div id="flowFreeWin3" class="hidden">
-                    <p class="win">Section 3 rerouted! Significant blow to AI's production capabilities!</p>
-                    <p> You can continue to sabotage more assembly lines (Medium),<br>
-                        attempt to disable the plant with an EMP (Hard),<br>
-                        or move to the next target.</p>
+                    <p class="win">Section 3 rerouted! A significant blow to the AI's production capabilities!</p>
+                    <p> You've successfully disrupted half the plant.<br>
+                        You can now proceed to the next station, <br>
+                        or choose to reroute more conveyors for a greater impact (Medium).</p>
                     <button class="importantButton" onclick="goToStationFromManufacturing(); saveCurrentState();">
-                        Embark for the next station
+                        Proceed to Next Station
                     </button>
                     <button onclick="hide('flowFree3Container'); 
                         show('flowFree4Container');
@@ -358,8 +358,7 @@
                     <p>Manufacturing section 5:</p>
                 </div>
                 <div id="flowFreeWin5" class="hidden">
-                    <p class="win">Manufacturing Section 5 rerouted!<br>Robotic army assembly is critically impaired.
-                    </p>
+                    <p class="win">Manufacturing Section 5 rerouted!<br>Robotic army assembly is critically impaired.</p>
                     <button onclick="hide('flowFree5Container'); show('flowFree6Container')">
                         Go to section 6
                     </button>
@@ -375,7 +374,7 @@
                     <p>The plant is severely crippled. You can move on to the next station,<br>
                         or attempt a permanent shutdown using an EMP (Hard).</p>
                     <button class="importantButton" onclick="goToStationFromManufacturing(); saveCurrentState();">
-                        Embark for the next station
+                        Go to the next station
                     </button>
                 </div>
             </div>
@@ -415,7 +414,7 @@
         <p>
             We've intercepted 10 encrypted messages from the facility's communication network.<br>
             While most are from our resistance operatives, the AI has infiltrated our channels.<br>
-            Intelligence suggests the AI's messages have distinct patterns that make them identifiable.<br>
+            We believe the AI's messages have distinct patterns in them.<br>
             Your task is to identify which messages originate from the hostile AI.
         </p>
         <br>
@@ -433,16 +432,16 @@
         </div>
         <br>
         <button onclick="checkRobotSelection()">Check</button>
-        <label id="reconRobotIdentifyWin" class="hidden win">Hostile AI transmissions identified and flagged!</label>
+        <label id="reconRobotIdentifyWin" class="hidden win">Enemy AI messages identified!</label>
         <label id="reconRobotIdentifyError" class="hidden error">You incorrectly identified some messages. Try
             again...</label>
         <div id="reconRobotNextStep" class="hidden">
             <br>
             <p>
-                Intelligence has uncovered a more sinister threat: the AI has deployed sophisticated chatbots<br>
-                mimicking human operatives. These double agents are harder to detect, but analysis suggests their<br>
-                linguistic patterns deviate from genuine human communication.<br>
-                Your mission, should you choose to accept it, is to identify these impostor messages.
+                Good work identifying the AI's direct messages.<br>
+                Now, be aware that some messages are from "double agents", AI trying to mimic human operatives.<br>
+                These are harder to spot, but their language patterns might seem off.<br>
+                You can try to identify these impostor messages (Medium), or proceed to the next station.
             </p>
             <div id="reconEasyFinishedChoices">
                 <br>
@@ -463,8 +462,8 @@
             </div>
             <br>
             <button onclick="checkDoubleAgentSelection()">Check</button>
-            <label id="reconDoubleAgentIdentifyWin" class="hidden win">Double agent communications successfully
-                intercepted!</label>
+            <label id="reconDoubleAgentIdentifyWin" class="hidden win">Double agent messages successfully
+                identified!</label>
             <label id="reconDoubleAgentIdentifyError" class="hidden error">You incorrectly identified some messages. Try
                 again...</label>
         </div>
@@ -487,7 +486,7 @@
             <div id="reconEditorContainer"></div>
             <div id="reconHardWin" class="hidden">
                 <br>
-                <p class="win">All messages decrypted! Vital intelligence recovered.<br>Proceed to the next station with
+                <p class="win">All messages decrypted! This information could be useful.<br>Proceed to the next station with
                     this new information.</p>
                 <button class="importantButton" onclick="goToStationFromRecon(); saveCurrentState();">Move On</button>
             </div>
@@ -496,7 +495,7 @@
     </div>
     <div id="reconComplete" class="hidden">
         <br>
-        <h2 id="reconCompleteLabel">Reconnaissance Objectives Met</h2>
+        <h2 id="reconCompleteLabel">Reconnaissance Complete</h2>
     </div>
     <div id="securityCodeCheck" class="hidden">
         <br>
@@ -518,10 +517,9 @@
         <div id="terminalContainer">
             <p>
                 You've successfully breached the AI's secure file system.<br>
-                Your primary objective is to locate its master access password (stored in password.txt), but with the right tools and
-                expertise,<br>
-                you can cripple its entire data infrastructure.<br>
-                Use the terminal below to navigate through the AI's file system and execute your mission.
+                Your first goal is to find its password (in `password.txt`).<br>
+                With more effort, you might be able to cause more significant damage.<br>
+                Use the terminal to explore and complete your objectives.
             </p>
             <br>
             <pre id="terminal"></pre>
@@ -536,7 +534,7 @@
             <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
         </div>
         <div id="terminalWinMedium" class="hidden">
-            <p class="win">Critical AI data successfully deleted! System integrity compromised.</p>
+            <p class="win">Critical AI data successfully deleted! A significant blow to the AI's data.</p>
             <p>You can advance to the next station or escalate your efforts by deploying a data-wiping virus to delete some of the AI's files stored elsewhere (Hard).</p>
             <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
             <button
@@ -549,7 +547,7 @@
             <br>
             <div id="securityEditorContainer"></div>
             <div id="terminalWinHard" class="hidden">
-                <p class="win">Data-wipe virus deployed! The AI's core data has been irrevocably corrupted!</p>
+                <p class="win">Virus deployed! Critical AI data has been wiped!</p>
                 <button class="importantButton" onclick="goToStationFromSecurity(); saveCurrentState();">Next Station</button>
             </div>
         </div>

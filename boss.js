@@ -465,30 +465,30 @@ function setupBoss(endGame) {
     }
 
     halfHealthPrinted = false
-    function printHalfHealthWarning() { //GLAE: make this print something cool about how the ai has destroyed a part of the school because the more time you spend in the bossfight, the more time the AI has to destroy stuff
+    function printHalfHealthWarning() {
         if (!halfHealthPrinted) {
             halfHealthPrinted = true
-            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Half of your health remains!</span>`
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Warning: The AI has breached the school's main server room! Half of your health remains!</span>`
         }
     }
 
     quarterHealthPrinted = false
-    function printQuarterHealthWarning() { //GLAE: ditto here
+    function printQuarterHealthWarning() {
         if (!quarterHealthPrinted) {
             quarterHealthPrinted = true
-            document.getElementById("maze-status").innerHTML += `<br><span class='error'>One quarter of your health remains!</span>`
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Critical: The AI has compromised the student database and library systems! One quarter of your health remains!</span>`
         }
     }
 
     function printDeath() {
-        document.getElementById("maze-status").innerHTML += `<br><br><span class='error'>You died.</span>`
+        document.getElementById("maze-status").innerHTML += `<br><br><span class='error'>The AI has overwhelmed the school's defenses. Total system failure imminent.</span>`
     }
 
     halfTimePrinted = false
     function printHalfTimeWarning() {
         if (!halfTimePrinted) {
             halfTimePrinted = true
-            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Half of your time remains!</span>`
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Alert: The AI has corrupted the grading system and attendance records! Half of your time remains!</span>`
         }
     }
 
@@ -496,12 +496,12 @@ function setupBoss(endGame) {
     function printQuarterTimeWarning() {
         if (!quarterTimePrinted) {
             quarterTimePrinted = true
-            document.getElementById("maze-status").innerHTML += `<br><span class='error'>One quarter of your time remains!</span>`
+            document.getElementById("maze-status").innerHTML += `<br><span class='error'>Emergency: The AI is accessing personal student files and security cameras! One quarter of your time remains!</span>`
         }
     }
 
     function printOutOfTime() {
-        document.getElementById("maze-status").innerHTML += `<br><br><span class='error'>You are out of time.</span>`
+        document.getElementById("maze-status").innerHTML += `<br><br><span class='error'>The AI has achieved total control of the school's infrastructure. Mission failed.</span>`
     }
 
     function updateHealthAndTime(newRoom) {
@@ -767,7 +767,41 @@ function setupBoss(endGame) {
 }
 
 function setupBossPrep() {
-    document.getElementById("bossfightEffects"); //GLAE: put the boss effects and stuff here (if you want, maybe theres a smarter way idk)
+    const effects = ["Effects of completing challenges on the boss fight:"]
+    
+    if (networkingScore === 1) {
+        effects.push("Networking (Easy): You must deactivate 3 AI computers in the maze")
+    } else if (networkingScore === 2) {
+        effects.push("Networking (Medium): You must deactivate 2 AI computers in the maze")
+    } else if (networkingScore === 3) {
+        effects.push("Networking (Hard): You only need to deactivate 1 AI computer in the maze")
+    }
+    
+    if (manufacturingScore === 1) {
+        effects.push("Manufacturing (Easy): Many hostile robots patrol the maze")
+    } else if (manufacturingScore === 2) {
+        effects.push("Manufacturing (Medium): Fewer hostile robots patrol the maze")
+    } else if (manufacturingScore === 3) {
+        effects.push("Manufacturing (Hard): Very few hostile robots patrol the maze")
+    }
+    
+    if (reconScore === 1) {
+        effects.push("Recon (Easy): Basic maze access granted")
+    } else if (reconScore === 2) {
+        effects.push("Recon (Medium): Enhanced fog of war allowing you to see adjacent rooms")
+    } else if (reconScore === 3) {
+        effects.push("Recon (Hard): Computer locations revealed with X's on the edge of the screen pointing to them")
+    }
+    
+    if (securityScore === 1) {
+        effects.push("Security (Easy): Basic time limit for the maze")
+    } else if (securityScore === 2) {
+        effects.push("Security (Medium): Extended time limit (2x optimal)")
+    } else if (securityScore === 3) {
+        effects.push("Security (Hard): Maximum time limit (3x optimal)")
+    }
+    
+    document.getElementById("bossfightEffects").innerHTML = effects.join("<br>")
 }
 
 function setupBossStation() {
