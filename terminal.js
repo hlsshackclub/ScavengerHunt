@@ -359,6 +359,8 @@ function updateTerminal() {
 	}
     });
     document.getElementById("terminal").innerHTML = messagesString;
+    
+    document.getElementById("terminalBox").scrollIntoView();
 }
 
 function printToConsole(s) {
