@@ -3,6 +3,16 @@
     src: url(consolas.ttf);
 }
 
+@font-face {
+    font-family: NotoSansMonoLoaded;
+    src: url(NotoSansMono-Regular.ttf);
+}
+
+@font-face {
+    font-family: SegoeUIEmojiLoaded;
+    src: url(seguiemj-1.45-3d.ttf)
+}
+
 :root {
     --background-color-default: black;
     --background-color-inputbox: rgb(55, 55, 55);
@@ -31,7 +41,7 @@
     --win-color: rgb(0, 255, 0);
     --font-size-default: calc(min(max(10px, 100vh/40/1.1), 30px));
     --font-size-emoji: calc(7/20 * var(--font-size-default));
-    --font-family-default: "ConsolasLoaded", "Consolas", "monospace";
+    --font-family-default: "ConsolasLoaded", "NotoSansMonoLoaded", "SegoeUIEmojiLoaded", monospace;
     --font-weight-default: normal;
     --line-height-default: 1.1rem;
     --tab-size-default: 4;
@@ -59,11 +69,20 @@ html {
 p {
     padding: 0;
     margin: 0;
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
 }
 
 pre {
     padding: 0;
     margin: 0;
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
+}
+
+div {
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
 }
 
 h1,
@@ -72,6 +91,7 @@ h3,
 h4,
 h5,
 h6 {
+    font-family: var(--font-family-default);
     font-size: var(--font-size-default);
     font-weight: var(--font-weight-default);
     padding: 0;
@@ -92,6 +112,20 @@ textarea {
     font-family: var(--font-family-default);
     height: var(--line-height-default);
     resize: none;
+}
+
+div {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
+}
+
+span {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
 }
 
 button {
