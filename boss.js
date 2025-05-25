@@ -302,7 +302,6 @@ function setupBoss(endGame) {
                         if(!gameOver || fireRand > amountOnFire) {
                             tcText = "<div class='outside'>█</div>"
                         } else {
-                            console.log(gameOver, fireRand, amountOnFire, !gameOver || fireRand > amountOnFire)
                             tcText = "<div class='emoji'>🔥</div>";
                         }
                     } else if (cText === CellTypes.WALL) {
@@ -372,7 +371,7 @@ function setupBoss(endGame) {
         const currentRooms = getRooms(playerPos)
         let arrows = []
         for (i of computerRooms) {
-            if (currentRooms.includes(rooms[i])) {
+            if (rooms[i].hasDisabledComputer || currentRooms.includes(rooms[i])) {
                 continue
             }
             const pos = getRoomCenter(rooms[i])
