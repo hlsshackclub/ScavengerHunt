@@ -329,7 +329,11 @@ function setupBoss(endGame) {
                             tcText = "<div class='emoji'>🔥</div>";
                         }
                     } else if (cText === CellTypes.PLAYER) {
-                        tcText += `<div class='emoji'>${playerHealthEmojis[health]}</div>`
+                        if(computersRemaining > 0) {
+                            tcText += `<div class='emoji'>${playerHealthEmojis[health]}</div>`
+                        } else {
+                            tcText += `<div class='emoji'>${playerHealthEmojis[10]}</div>`
+                        }
                     } else if (cText === CellTypes.CONNECTION_INVISIBLE) {
                         if(!gameOver || fireRand + 0.75 > amountOnFire) {
                             tcText = "<div class='wall'>█</div>";
