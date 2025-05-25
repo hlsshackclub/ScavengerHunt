@@ -414,8 +414,9 @@ function setupBoss(endGame) {
                 if (v2Eq(arrow, [0, 0])) {
                     continue
                 }
-                let pos = rayRectIntersection(arrow[0], arrow[1], cellsWidth + 3, cellsHeight + 3) //half a cell missing on each side
+                let pos = rayRectIntersection(arrow[0], arrow[1], cellsWidth + 4, cellsHeight + 4)
                 pos = pos.map(Math.round)
+                console.log(pos, topY, bottomY, leftX, rightX)
 
                 let char = 'X'
                 // const angle = Math.atan2(-arrow[1], arrow[0] * aspectRatio); // negative y because screen coords
@@ -431,16 +432,16 @@ function setupBoss(endGame) {
                 char = `<span class="mazeArrow">${char}</span>`
 
                 if (pos[1] === topY) {
-                    topTextOuter[pos[0] + rightX] = char
+                    topTextOuter[pos[0] + rightX - 1] = char
                 } else if (pos[1] === bottomY) {
-                    bottomTextOuter[pos[0] + rightX] = char
+                    bottomTextOuter[pos[0] + rightX - 1] = char
                 } else if (pos[0] === leftX) {
                     if (pos[1] === topY + 1) {
                         topTextInner[0] = char
                     } else if (pos[1] === bottomY - 1) {
                         bottomTextInner[0] = char
                     } else {
-                        leftTextOuter[pos[1] + bottomY - 2] = char
+                        leftTextOuter[pos[1] + bottomY - 3] = char
                     }
                 } else if (pos[0] === rightX) {
                     if (pos[1] === topY + 1) {
@@ -448,7 +449,7 @@ function setupBoss(endGame) {
                     } else if (pos[1] === bottomY - 1) {
                         bottomTextInner[bottomTextInner.length - 1] = char
                     } else {
-                        rightTextOuter[pos[1] + bottomY - 2] = char
+                        rightTextOuter[pos[1] + bottomY - 3] = char
                     }
                 }
             }
