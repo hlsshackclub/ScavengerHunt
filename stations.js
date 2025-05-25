@@ -151,8 +151,6 @@ function goToStationFromSecurity() {
     }
 }
 
-
-
 function savingGoToFirstStation() {
     goToFirstStation()
 }
@@ -248,7 +246,7 @@ function reloadGame() {
 
 document.addEventListener('DOMContentLoaded', () => {
     clearSave()
-    //loadSave()
+    loadSave()
     // networkingFirst = true
     // reconFirst = true
     // networkingScore = 1
