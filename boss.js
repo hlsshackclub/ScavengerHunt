@@ -772,9 +772,9 @@ function setupBossPrep() {
     if (networkingScore === 1) {
         effects.push("Networking (Easy): You must deactivate 3 AI computers in the maze")
     } else if (networkingScore === 2) {
-        effects.push("Networking (Medium): You must deactivate 2 AI computers in the maze")
+        effects.push("Networking (Medium): One computer is already gone! You must deactivate 2 AI computers in the maze")
     } else if (networkingScore === 3) {
-        effects.push("Networking (Hard): You only need to deactivate 1 AI computer in the maze")
+        effects.push("Networking (Hard): Two computers are already gone! You only need to deactivate 1 AI computer in the maze")
     }
     
     if (manufacturingScore === 1) {
@@ -790,7 +790,7 @@ function setupBossPrep() {
     } else if (reconScore === 2) {
         effects.push("Recon (Medium): Enhanced fog of war allowing you to see layout of all rooms")
     } else if (reconScore === 3) {
-        effects.push("Recon (Hard): Computer locations revealed with X's on the edge of the screen pointing to them")
+        effects.push("Recon (Hard): X's on the edge of the screen point towards computer rooms")
     }
     
     if (securityScore === 1) {
