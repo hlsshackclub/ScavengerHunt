@@ -479,7 +479,7 @@ const funcHelp = {
     "ls": "[directory] - list directory contents\n    use -l for detailed list",
     "rm": "[file] - remove files",
     "rmdir": "[directory] - remove empty directories",
-    "sudo": '[command] [options] - execute a command as root\n    can only be used if "wheel" or "hacker" are in /etc/sudoers\n    you will be prompted for a password',
+    "sudo": '[command] [options] - execute a command with elevated permissions\n    can only be used if "wheel" or "hacker" are in /etc/sudoers\n    you will be prompted for a password',
     "mkdir": "[directory] - create a new directory",
     "touch": "[file] - create a new file",
     "cat": "[file] - display file contents",
