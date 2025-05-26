@@ -58,12 +58,12 @@ def deleteFiles(files):
 
 const stationWinFuncs = [
     (() => {
-        alert("WIN NETWORKING HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
             }
+            alert("WIN NETWORKING HARD")
             wonAlready = true
             setNetworkingScore(3)
             show("networkingHardWin")
@@ -71,12 +71,12 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
-        alert("WIN MANUFACTURING HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
             }
+            alert("WIN MANUFACTURING HARD")
             wonAlready = true
             setManufacturingScore(3)
             show("manufacturingHardWin")
@@ -84,12 +84,12 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
-        alert("WIN RECON HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
             }
+            alert("WIN RECON HARD")
             wonAlready = true
             setReconScore(3)
             show("reconHardWin")
@@ -97,12 +97,12 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
-        alert("WIN SECURITY HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
             }
+            alert("WIN SECURITY HARD")
             wonAlready = true
             setSecurityScore(3)
             show("terminalWinHard")
