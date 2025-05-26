@@ -155,6 +155,7 @@ pyodideWorker.onmessage = function (event) {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput);
                 if (event.data.testPassed === true) {
+                    alert(`currentStation ${currentStation}`)
                     stationWinFuncs[currentStation]();
                 }
             }
