@@ -155,7 +155,7 @@ function setupBoss(endGame) {
     const minSteps = 282 //probably slightly inaccurate, but this is about the minimum number of steps
     let timeRemaining = 1
     const timeDecline = bossSecurityScore === 3 ? (1 / minSteps / 3) : //3x optimal allowed
-        bossSecurityScore === 2 ? (1 / minSteps / 2) : //2x optimal allowed
+        bossSecurityScore === 2 ? (1 / minSteps / 2.25) : //2.25x optimal allowed
             (1 / minSteps / 1.5) //1.5x optimal allowed
     //const timeDecline = 0.1
 
@@ -788,7 +788,7 @@ function setupBossPrep() {
     if (reconScore === 1) {
         effects.push("Recon (Easy): Basic maze access granted")
     } else if (reconScore === 2) {
-        effects.push("Recon (Medium): Enhanced fog of war allowing you to see adjacent rooms")
+        effects.push("Recon (Medium): Enhanced fog of war allowing you to see layout of all rooms")
     } else if (reconScore === 3) {
         effects.push("Recon (Hard): Computer locations revealed with X's on the edge of the screen pointing to them")
     }
@@ -796,9 +796,9 @@ function setupBossPrep() {
     if (securityScore === 1) {
         effects.push("Security (Easy): Basic time limit for the maze")
     } else if (securityScore === 2) {
-        effects.push("Security (Medium): Extended time limit (2x optimal)")
+        effects.push("Security (Medium): Extended time limit (1.5x normal)")
     } else if (securityScore === 3) {
-        effects.push("Security (Hard): Maximum time limit (3x optimal)")
+        effects.push("Security (Hard): Maximum time limit (2x normal)")
     }
     
     document.getElementById("bossfightEffects").innerHTML = effects.join("<br>")
