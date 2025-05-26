@@ -37,15 +37,14 @@
         <p>
             Welcome to Operation Override. A hostile AI has seized control of Heart Lake Secondary School's critical
             systems.<br>
-            The situation is dire. Our networks are compromised, manufacturing facilities are being repurposed,<br>
-            and sensitive data is at risk. We need your help to shut it down!
+            The situation is dire. Our networks are compromised, computer resources are being repurposed, and sensitive data is at risk.<br>
+            We need your help to shut it down!
         </p>
         <button id="introButton1" onclick="show('introDiv1'); hide('introButton1')">Next</button>
         <div id="introDiv1" class="hidden">
             <br>
             <p>
-                Work together with your team to fix our compromised systems,<br>
-                redirect manufacturing, intercept communications, and break into the AI's files.<br>
+                Work together with your team to fix our compromised systems and fight back the AI.<br>
                 The first team to complete all the challenges and shut down the AI wins!
             </p>
             <button id="introButton2" onclick="show('introDiv2'); hide('introButton2')">Next</button>
@@ -53,8 +52,9 @@
         <div id="introDiv2" class="hidden">
             <br>
             <p>
-                Each station offers multiple approaches. You can choose quick solutions or take on more complex challenges for greater impact.<br>
-                Solving harder challenges will give you more advantages in the final battle with the AI.<br>
+                Each station offers multiple approaches. You can choose quick solutions or take on more complex challenges.<br>
+                The AI is not to be underestimated; going in unprepared will certainly lead to failure.<br>
+                Try to complete harder challenges at each station, as they will make the final confrontation much easier.<br> 
                 Good luck, and remember: the future of Heart Lake depends on your success!
             </p>
             <button id="introButton3" onclick="show('introDiv3'); hide('introButton3')">Next</button>
@@ -62,6 +62,7 @@
         <div id="introDiv3" class="hidden">
             <br>
             <button class="importantButton" onclick="goToFirstStation(); saveCurrentState();">Start</button>
+            <p style="color: var(--button-highlight-color-default-important)">You cannot go back upon clicking an orange button.</p>
         </div>
     </div>
     </div>
@@ -418,7 +419,7 @@
         <br>
         <p>
             We've intercepted 10 encrypted messages from the facility's communication network.<br>
-            While most are from our resistance operatives, the AI has infiltrated our channels.<br>
+            While most are from our human allies, the AI has infiltrated our channels.<br>
             We believe the AI's messages have distinct patterns in them.<br>
             Your task is to identify which messages originate from the hostile AI.
         </p>
