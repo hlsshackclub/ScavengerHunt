@@ -187,11 +187,11 @@ function runPythonCode() {
     pyodideWorker.postMessage({ type: "runPython", code });
 }
 
-function runPythonTestCase() {
+function runPythonTestCase(caseIndex) {
     const code = document.getElementById("codeEditor").value;
 
     // Send the code to the worker rather than running in main thread
-    pyodideWorker.postMessage({ type: "testPython", code, currentStation });
+    pyodideWorker.postMessage({ type: "testPython", code, caseIndex });
 }
 
 function updateHighlighting(text) {
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     testButton.addEventListener("click", function () {
-        runPythonTestCase();
+        runPythonTestCase(currentStation);
     });
 
     areYouSureButton.addEventListener("click", function () {
