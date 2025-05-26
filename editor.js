@@ -58,6 +58,7 @@ def deleteFiles(files):
 
 const stationWinFuncs = [
     (() => {
+        alert("WIN NETWORKING HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
@@ -70,6 +71,7 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
+        alert("WIN MANUFACTURING HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
@@ -82,6 +84,7 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
+        alert("WIN RECON HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
@@ -94,6 +97,7 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
+        alert("WIN SECURITY HARD")
         wonAlready = false
         function inner() {
             if (wonAlready) {
@@ -182,11 +186,11 @@ function runPythonCode() {
     pyodideWorker.postMessage({ type: "runPython", code });
 }
 
-function runPythonTestCase(caseIndex) {
+function runPythonTestCase() {
     const code = document.getElementById("codeEditor").value;
 
     // Send the code to the worker rather than running in main thread
-    pyodideWorker.postMessage({ type: "testPython", code, caseIndex });
+    pyodideWorker.postMessage({ type: "testPython", code, currentStation });
 }
 
 function updateHighlighting(text) {
@@ -247,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     testButton.addEventListener("click", function () {
-        runPythonTestCase(currentStation);
+        runPythonTestCase();
     });
 
     areYouSureButton.addEventListener("click", function () {
