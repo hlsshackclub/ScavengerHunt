@@ -63,7 +63,7 @@ const stationWinFuncs = [
             if (wonAlready) {
                 return
             }
-            alert("WIN NETWORKING HARD")
+            //alert("WIN NETWORKING HARD")
             wonAlready = true
             setNetworkingScore(3)
             show("networkingHardWin")
@@ -76,7 +76,7 @@ const stationWinFuncs = [
             if (wonAlready) {
                 return
             }
-            alert("WIN MANUFACTURING HARD")
+            //alert("WIN MANUFACTURING HARD")
             wonAlready = true
             setManufacturingScore(3)
             show("manufacturingHardWin")
@@ -89,7 +89,7 @@ const stationWinFuncs = [
             if (wonAlready) {
                 return
             }
-            alert("WIN RECON HARD")
+            //alert("WIN RECON HARD")
             wonAlready = true
             setReconScore(3)
             show("reconHardWin")
@@ -102,7 +102,7 @@ const stationWinFuncs = [
             if (wonAlready) {
                 return
             }
-            alert("WIN SECURITY HARD")
+            //alert("WIN SECURITY HARD")
             wonAlready = true
             setSecurityScore(3)
             show("terminalWinHard")
@@ -155,7 +155,7 @@ pyodideWorker.onmessage = function (event) {
                 printToOutput(event.data.codeOutput)
                 printToTestOutput(event.data.testOutput);
                 if (event.data.testPassed === true) {
-                    alert(`currentStation ${currentStation}`)
+                    //alert(`currentStation ${currentStation}`)
                     stationWinFuncs[currentStation]();
                 }
             }
