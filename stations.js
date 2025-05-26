@@ -65,6 +65,7 @@ function goToBossfight() {
 }
 
 function goToEnding() {
+    makeEnding();
     hide('bossfightCodeCheck')
     hide('bossfight'); 
     show('bossfightComplete'); 
@@ -198,6 +199,7 @@ function savingGoToEnding() {
 
 function loadSave() {
     const save = JSON.parse(localStorage.getItem("save"))
+    //console.log(save)
     if(save === null) {
         return
     }
@@ -231,7 +233,7 @@ function loadSave() {
 }
 
 function saveCurrentState() {
-    const save = {networkingFirst: networkingFirst, reconFirst: reconFirst, networkingScore: networkingScore, manufacturingScore, reconScore, securityScore, endingState}
+    const save = {networkingFirst, reconFirst, networkingScore, manufacturingScore, reconScore, securityScore, endingState}
     localStorage.setItem("save", JSON.stringify(save))
     //console.log(JSON.parse(JSON.stringify(save)))
 }
@@ -254,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // reconScore = 1
     // securityScore = 3
     // endingState = 1
+    //savingGoToBossfight()
     
     // networkingScore = 3
     // manufacturingScore = 3

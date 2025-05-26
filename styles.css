@@ -85,6 +85,11 @@ div {
     font-size: var(--font-size-default);
 }
 
+strong {
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
+}
+
 h1,
 h2,
 h3,
