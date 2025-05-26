@@ -30,10 +30,32 @@
     min-height: calc(5 * var(--line-height-default));
 }
 code[class*="language-"], pre[class*="language-"] { /*overrides the style */
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
+    font-weight: var(--font-weight-default);
     line-height: var(--line-height-default) !important;
     overflow-wrap: anywhere !important;
     white-space: pre-wrap !important;
+    box-sizing: border-box !important;
 }
+
+pre[class*="language-"] > code[class*="language-"] {
+    font-family: var(--font-family-default);
+    font-size: var(--font-size-default);
+    font-weight: var(--font-weight-default);
+    line-height: var(--line-height-default) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    width: 100% !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    transform: translateY(0) !important;
+}
+
 #highlighted {
     z-index: 0;
     background-color: var(--background-color-inputbox);
