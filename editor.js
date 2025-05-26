@@ -58,7 +58,7 @@ def deleteFiles(files):
 
 const stationWinFuncs = [
     (() => {
-        wonAlready = false
+        let wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
@@ -71,7 +71,7 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
-        wonAlready = false
+        let wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
@@ -84,7 +84,7 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
-        wonAlready = false
+        let wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
@@ -97,7 +97,7 @@ const stationWinFuncs = [
         return inner
     })(),
     (() => {
-        wonAlready = false
+        let wonAlready = false
         function inner() {
             if (wonAlready) {
                 return
